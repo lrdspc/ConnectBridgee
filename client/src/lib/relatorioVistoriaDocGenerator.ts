@@ -383,44 +383,58 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
     }]
   });
   
-  // Se houver fotos, adicionar seção de fotos
+  // Se houver fotos, criar uma segunda seção no documento
   if (relatorio.fotos && relatorio.fotos.length > 0) {
-    // Criar seção de fotos
-    const fotosSection = {
-      properties: {
-        type: SectionType.NEXT_PAGE
-      },
-      children: [
-        new Paragraph({
-          text: "ANEXO: REGISTRO FOTOGRÁFICO",
-          heading: HeadingLevel.HEADING_2,
-          spacing: { before: 400, after: 400 }
-        })
-      ]
-    };
-    
-    // @ts-ignore - Sabemos que a API permite adicionar seções
-    doc.addSection(fotosSection);
-    
-    // Adicionar fotos
-    for (let i = 0; i < relatorio.fotos.length; i++) {
-      try {
-        // Texto da foto
-        doc.addParagraph(
-          new Paragraph({
-            children: [
-              new TextRun({ 
-                text: `Foto ${i+1}: ${relatorio.fotos[i].descricao || "Sem descrição"}`,
-                bold: true
+    // Criar documento com duas seções
+    const doc = new Document({
+      sections: [
+        // Primeira seção - conteúdo principal
+        {
+          properties: {},
+          headers: {
+            default: criarCabecalho(),
+          },
+          footers: {
+            default: criarRodape(),
+          },
+          children: mainContent
+        },
+        // Segunda seção - fotos
+        {
+          properties: {
+            type: SectionType.NEXT_PAGE
+          },
+          headers: {
+            default: criarCabecalho(),
+          },
+          footers: {
+            default: criarRodape(),
+          },
+          children: [
+            // Título da seção de fotos
+            new Paragraph({
+              text: "ANEXO: REGISTRO FOTOGRÁFICO",
+              heading: HeadingLevel.HEADING_2,
+              spacing: { before: 400, after: 400 }
+            }),
+            // Descrição das fotos
+            ...relatorio.fotos.map((foto, index) => 
+              new Paragraph({
+                children: [
+                  new TextRun({ 
+                    text: `Foto ${index+1}: ${foto.descricao || "Sem descrição"}`,
+                    bold: true
+                  })
+                ],
+                spacing: { before: 200, after: 100 }
               })
-            ],
-            spacing: { before: 200, after: 100 }
-          })
-        );
-      } catch (error) {
-        console.error("Erro ao processar foto:", error);
-      }
-    }
+            )
+          ]
+        }
+      ]
+    });
+    
+    return Packer.toBlob(doc);
   }
   
   return Packer.toBlob(doc);
