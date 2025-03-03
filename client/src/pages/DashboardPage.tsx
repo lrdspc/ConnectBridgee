@@ -87,10 +87,10 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
             <div className="flex items-center gap-3">
-              <Link href="/formulario-far">
+              <Link href="/vistoria-far">
                 <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md">
                   <FileText className="mr-2 h-5 w-5" />
-                  Novo Relatório Técnico
+                  Nova Inspeção
                 </Button>
               </Link>
               <span className="text-sm text-gray-500">
@@ -275,9 +275,9 @@ export default function DashboardPage() {
                     <p className="text-blue-100">
                       Crie relatórios técnicos de vistoria para telhas e fibrocimento Brasilit.
                     </p>
-                    <Link href="/formulario-far">
+                    <Link href="/vistoria-far">
                       <Button className="w-full bg-white text-blue-700 hover:bg-blue-50">
-                        <FileText className="mr-2 h-4 w-4" /> Acessar Formulário Completo
+                        <FileText className="mr-2 h-4 w-4" /> Nova Inspeção
                       </Button>
                     </Link>
                   </div>
