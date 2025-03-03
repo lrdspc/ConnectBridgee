@@ -22,7 +22,7 @@ import {
   HorizontalPositionRelativeFrom,
   PageOrientation
 } from "docx";
-import { FARReport } from "../../shared/farReportSchema";
+import { FARReport } from "../../../shared/farReportSchema";
 
 // Converte dataURL para um Buffer que pode ser usado pelo docx
 async function dataUrlToBuffer(dataUrl: string): Promise<Uint8Array> {
@@ -281,7 +281,7 @@ function generateIntroductionSection(report: FARReport): Paragraph[] {
 
   paragraphs.push(
     new Paragraph({
-      heading: 1,
+      heading: "Heading1",
       children: [
         new TextRun({
           text: "1. INTRODUÇÃO",
@@ -321,7 +321,7 @@ O modelo de telha escolhido para a edificação foi: ${report.telhas[0]?.modelo 
   // Subseção de dados do produto
   paragraphs.push(
     new Paragraph({
-      heading: 2,
+      heading: "Heading3",
       children: [
         new TextRun({
           text: "1.1 DADOS DO PRODUTO",
@@ -383,7 +383,7 @@ function generateTechnicalAnalysisSection(report: FARReport): Paragraph[] {
 
   paragraphs.push(
     new Paragraph({
-      heading: 1,
+      heading: "Heading1",
       children: [
         new TextRun({
           text: "2. ANÁLISE TÉCNICA",
@@ -415,7 +415,7 @@ function generateTechnicalAnalysisSection(report: FARReport): Paragraph[] {
   // Subseção de não conformidades
   paragraphs.push(
     new Paragraph({
-      heading: 2,
+      heading: "Heading3",
       children: [
         new TextRun({
           text: "2.1 NÃO CONFORMIDADES IDENTIFICADAS",
@@ -495,7 +495,7 @@ function generateConclusionSection(report: FARReport): Paragraph[] {
 
   paragraphs.push(
     new Paragraph({
-      heading: 1,
+      heading: "Heading1",
       children: [
         new TextRun({
           text: "3. CONCLUSÃO",
@@ -749,7 +749,7 @@ async function processImages(report: FARReport): Promise<Paragraph[]> {
   
   paragraphs.push(
     new Paragraph({
-      heading: 1,
+      heading: "Heading1",
       children: [
         new TextRun({
           text: "4. REGISTRO FOTOGRÁFICO",

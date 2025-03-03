@@ -65,6 +65,9 @@ export const farReportSchema = z.object({
   assinadoPor: z.string().optional().default(""),
   assinadoEm: z.string().optional().default(""),
   
+  // Resultado da vistoria
+  resultado: z.enum(["PROCEDENTE", "IMPROCEDENTE"]).optional().default("IMPROCEDENTE"),
+  
   // Metadados do relatório
   id: z.string().optional(),
   createdAt: z.string().optional(),
