@@ -13,8 +13,8 @@ import {
   Footer,
   Header,
   PageNumber,
-  PageOrientation,
-  SectionType
+  SectionType,
+  Packer
 } from 'docx';
 import { RelatorioVistoria } from '../../../shared/relatorioVistoriaSchema';
 
@@ -127,74 +127,102 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
               size: 40,
               type: WidthType.PERCENTAGE
             },
-            children: [new Paragraph({ text: "Protocolo/FAR:", bold: true })],
+            children: [new Paragraph({ 
+              children: [new TextRun({ text: "Protocolo/FAR:", bold: true })]
+            })],
           }),
           new TableCell({
             width: {
               size: 60,
               type: WidthType.PERCENTAGE
             },
-            children: [new Paragraph(relatorio.protocolo)],
+            children: [new Paragraph({
+              children: [new TextRun({ text: relatorio.protocolo || "" })]
+            })],
           }),
         ],
       }),
       new TableRow({
         children: [
           new TableCell({
-            children: [new Paragraph({ text: "Data de vistoria:", bold: true })],
+            children: [new Paragraph({ 
+              children: [new TextRun({ text: "Data de vistoria:", bold: true })]
+            })],
           }),
           new TableCell({
-            children: [new Paragraph(relatorio.dataVistoria)],
-          }),
-        ],
-      }),
-      new TableRow({
-        children: [
-          new TableCell({
-            children: [new Paragraph({ text: "Cliente:", bold: true })],
-          }),
-          new TableCell({
-            children: [new Paragraph(relatorio.cliente)],
+            children: [new Paragraph({
+              children: [new TextRun({ text: relatorio.dataVistoria || "" })]
+            })],
           }),
         ],
       }),
       new TableRow({
         children: [
           new TableCell({
-            children: [new Paragraph({ text: "Empreendimento:", bold: true })],
+            children: [new Paragraph({ 
+              children: [new TextRun({ text: "Cliente:", bold: true })]
+            })],
           }),
           new TableCell({
-            children: [new Paragraph(relatorio.empreendimento)],
-          }),
-        ],
-      }),
-      new TableRow({
-        children: [
-          new TableCell({
-            children: [new Paragraph({ text: "Endereço:", bold: true })],
-          }),
-          new TableCell({
-            children: [new Paragraph(relatorio.endereco)],
+            children: [new Paragraph({
+              children: [new TextRun({ text: relatorio.cliente || "" })]
+            })],
           }),
         ],
       }),
       new TableRow({
         children: [
           new TableCell({
-            children: [new Paragraph({ text: "Cidade/UF:", bold: true })],
+            children: [new Paragraph({ 
+              children: [new TextRun({ text: "Empreendimento:", bold: true })]
+            })],
           }),
           new TableCell({
-            children: [new Paragraph(`${relatorio.cidade} - ${relatorio.uf}`)],
+            children: [new Paragraph({
+              children: [new TextRun({ text: relatorio.empreendimento || "" })]
+            })],
           }),
         ],
       }),
       new TableRow({
         children: [
           new TableCell({
-            children: [new Paragraph({ text: "Assunto:", bold: true })],
+            children: [new Paragraph({ 
+              children: [new TextRun({ text: "Endereço:", bold: true })]
+            })],
           }),
           new TableCell({
-            children: [new Paragraph(relatorio.assunto)],
+            children: [new Paragraph({
+              children: [new TextRun({ text: relatorio.endereco || "" })]
+            })],
+          }),
+        ],
+      }),
+      new TableRow({
+        children: [
+          new TableCell({
+            children: [new Paragraph({ 
+              children: [new TextRun({ text: "Cidade/UF:", bold: true })]
+            })],
+          }),
+          new TableCell({
+            children: [new Paragraph({
+              children: [new TextRun({ text: `${relatorio.cidade || ""} - ${relatorio.uf || ""}` })]
+            })],
+          }),
+        ],
+      }),
+      new TableRow({
+        children: [
+          new TableCell({
+            children: [new Paragraph({ 
+              children: [new TextRun({ text: "Assunto:", bold: true })]
+            })],
+          }),
+          new TableCell({
+            children: [new Paragraph({
+              children: [new TextRun({ text: relatorio.assunto || "" })]
+            })],
           }),
         ],
       }),
@@ -237,64 +265,88 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
               size: 40,
               type: WidthType.PERCENTAGE
             },
-            children: [new Paragraph({ text: "Elaborado por:", bold: true })],
+            children: [new Paragraph({ 
+              children: [new TextRun({ text: "Elaborado por:", bold: true })]
+            })],
           }),
           new TableCell({
             width: {
               size: 60,
               type: WidthType.PERCENTAGE
             },
-            children: [new Paragraph(relatorio.elaboradoPor)],
+            children: [new Paragraph({
+              children: [new TextRun({ text: relatorio.elaboradoPor || "" })]
+            })],
           }),
         ],
       }),
       new TableRow({
         children: [
           new TableCell({
-            children: [new Paragraph({ text: "Departamento:", bold: true })],
+            children: [new Paragraph({ 
+              children: [new TextRun({ text: "Departamento:", bold: true })]
+            })],
           }),
           new TableCell({
-            children: [new Paragraph(relatorio.departamento)],
-          }),
-        ],
-      }),
-      new TableRow({
-        children: [
-          new TableCell({
-            children: [new Paragraph({ text: "Unidade:", bold: true })],
-          }),
-          new TableCell({
-            children: [new Paragraph(relatorio.unidade)],
+            children: [new Paragraph({
+              children: [new TextRun({ text: relatorio.departamento || "" })]
+            })],
           }),
         ],
       }),
       new TableRow({
         children: [
           new TableCell({
-            children: [new Paragraph({ text: "Coordenador:", bold: true })],
+            children: [new Paragraph({ 
+              children: [new TextRun({ text: "Unidade:", bold: true })]
+            })],
           }),
           new TableCell({
-            children: [new Paragraph(relatorio.coordenador)],
-          }),
-        ],
-      }),
-      new TableRow({
-        children: [
-          new TableCell({
-            children: [new Paragraph({ text: "Gerente:", bold: true })],
-          }),
-          new TableCell({
-            children: [new Paragraph(relatorio.gerente)],
+            children: [new Paragraph({
+              children: [new TextRun({ text: relatorio.unidade || "" })]
+            })],
           }),
         ],
       }),
       new TableRow({
         children: [
           new TableCell({
-            children: [new Paragraph({ text: "Regional:", bold: true })],
+            children: [new Paragraph({ 
+              children: [new TextRun({ text: "Coordenador:", bold: true })]
+            })],
           }),
           new TableCell({
-            children: [new Paragraph(relatorio.regional)],
+            children: [new Paragraph({
+              children: [new TextRun({ text: relatorio.coordenador || "" })]
+            })],
+          }),
+        ],
+      }),
+      new TableRow({
+        children: [
+          new TableCell({
+            children: [new Paragraph({ 
+              children: [new TextRun({ text: "Gerente:", bold: true })]
+            })],
+          }),
+          new TableCell({
+            children: [new Paragraph({
+              children: [new TextRun({ text: relatorio.gerente || "" })]
+            })],
+          }),
+        ],
+      }),
+      new TableRow({
+        children: [
+          new TableCell({
+            children: [new Paragraph({ 
+              children: [new TextRun({ text: "Regional:", bold: true })]
+            })],
+          }),
+          new TableCell({
+            children: [new Paragraph({
+              children: [new TextRun({ text: relatorio.regional || "" })]
+            })],
           }),
         ],
       }),
@@ -317,7 +369,9 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
 
   children.push(
     new Paragraph({
-      text: relatorio.introducao || "Não informado.",
+      children: [
+        new TextRun({ text: relatorio.introducao || "Não informado." })
+      ],
       spacing: {
         after: 200
       }
@@ -358,34 +412,46 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
               size: 40,
               type: WidthType.PERCENTAGE
             },
-            children: [new Paragraph({ text: "Quantidade:", bold: true })],
+            children: [new Paragraph({ 
+              children: [new TextRun({ text: "Quantidade:", bold: true })]
+            })],
           }),
           new TableCell({
             width: {
               size: 60,
               type: WidthType.PERCENTAGE
             },
-            children: [new Paragraph(relatorio.quantidade.toString())],
+            children: [new Paragraph({
+              children: [new TextRun({ text: relatorio.quantidade?.toString() || "0" })]
+            })],
           }),
         ],
       }),
       new TableRow({
         children: [
           new TableCell({
-            children: [new Paragraph({ text: "Modelo:", bold: true })],
+            children: [new Paragraph({ 
+              children: [new TextRun({ text: "Modelo:", bold: true })]
+            })],
           }),
           new TableCell({
-            children: [new Paragraph(`${relatorio.modeloTelha} ${relatorio.espessura}mm CRFS`)],
+            children: [new Paragraph({
+              children: [new TextRun({ text: `${relatorio.modeloTelha || ""} ${relatorio.espessura || ""}mm CRFS` })]
+            })],
           }),
         ],
       }),
       new TableRow({
         children: [
           new TableCell({
-            children: [new Paragraph({ text: "Área coberta:", bold: true })],
+            children: [new Paragraph({ 
+              children: [new TextRun({ text: "Área coberta:", bold: true })]
+            })],
           }),
           new TableCell({
-            children: [new Paragraph(`${relatorio.area}m² (aproximadamente)`)],
+            children: [new Paragraph({
+              children: [new TextRun({ text: `${relatorio.area || "0"}m² (aproximadamente)` })]
+            })],
           }),
         ],
       }),
@@ -408,7 +474,9 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
 
   children.push(
     new Paragraph({
-      text: relatorio.analiseTecnica || "Não informado.",
+      children: [
+        new TextRun({ text: relatorio.analiseTecnica || "Não informado." })
+      ],
       spacing: {
         after: 200
       }
@@ -437,7 +505,9 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
           bullet: {
             level: 0
           },
-          text: nc.titulo,
+          children: [
+            new TextRun({ text: nc.titulo || "" })
+          ],
           spacing: {
             after: 100
           }
@@ -447,7 +517,9 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
       if (nc.descricao) {
         children.push(
           new Paragraph({
-            text: nc.descricao,
+            children: [
+              new TextRun({ text: nc.descricao })
+            ],
             indent: {
               left: 720 // ~0.5 inch in twips
             },
@@ -461,7 +533,9 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   } else {
     children.push(
       new Paragraph({
-        text: "Não foram identificadas não conformidades.",
+        children: [
+          new TextRun({ text: "Não foram identificadas não conformidades." })
+        ],
         spacing: {
           after: 200
         }
@@ -483,7 +557,9 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
 
   children.push(
     new Paragraph({
-      text: "Com base na análise técnica realizada, foram identificadas as seguintes não conformidades:",
+      children: [
+        new TextRun({ text: "Com base na análise técnica realizada, foram identificadas as seguintes não conformidades:" })
+      ],
       spacing: {
         after: 200
       }
@@ -498,7 +574,9 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
           bullet: {
             level: 0
           },
-          text: nc.titulo,
+          children: [
+            new TextRun({ text: nc.titulo || "" })
+          ],
           spacing: {
             after: 100
           }
@@ -508,7 +586,9 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   } else {
     children.push(
       new Paragraph({
-        text: "Não foram identificadas não conformidades.",
+        children: [
+          new TextRun({ text: "Não foram identificadas não conformidades." })
+        ],
         spacing: {
           after: 200
         }
@@ -519,7 +599,9 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   if (relatorio.conclusao) {
     children.push(
       new Paragraph({
-        text: relatorio.conclusao,
+        children: [
+          new TextRun({ text: relatorio.conclusao })
+        ],
         spacing: {
           before: 200,
           after: 200
@@ -531,7 +613,14 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   // Texto padrão de conclusão
   children.push(
     new Paragraph({
-      text: `Em função das não conformidades constatadas no manuseio e instalação das chapas Brasilit, finalizamos o atendimento considerando a reclamação como ${relatorio.resultado}, onde os problemas reclamados se dão pelo incorreto manuseio e instalação das telhas e não a problemas relacionados à qualidade do material.`,
+      children: [
+        new TextRun({ 
+          text: `Em função das não conformidades constatadas no manuseio e instalação das chapas Brasilit, ` +
+                `finalizamos o atendimento considerando a reclamação como ${relatorio.resultado}, ` +
+                `onde os problemas reclamados se dão pelo incorreto manuseio e instalação das telhas e não a ` +
+                `problemas relacionados à qualidade do material.`
+        })
+      ],
       spacing: {
         after: 200
       }
@@ -540,7 +629,16 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
 
   children.push(
     new Paragraph({
-      text: `As telhas BRASILIT modelo FIBROCIMENTO ${relatorio.modeloTelha.toUpperCase()} possuem ${relatorio.anosGarantiaTotal} anos de garantia com relação a problemas de fabricação. A garantia Brasilit está condicionada a correta aplicação do produto, seguindo rigorosamente as instruções de instalação contidas no Guia Técnico de Telhas de Fibrocimento e Acessórios para Telhado — Brasilit. Este guia técnico está sempre disponível em: http://www.brasilit.com.br.`,
+      children: [
+        new TextRun({ 
+          text: `As telhas BRASILIT modelo FIBROCIMENTO ${relatorio.modeloTelha?.toUpperCase() || ""} ` +
+                `possuem ${relatorio.anosGarantiaTotal || ""} anos de garantia com relação a problemas de ` +
+                `fabricação. A garantia Brasilit está condicionada a correta aplicação do produto, seguindo ` +
+                `rigorosamente as instruções de instalação contidas no Guia Técnico de Telhas de Fibrocimento ` +
+                `e Acessórios para Telhado — Brasilit. Este guia técnico está sempre disponível em: ` +
+                `http://www.brasilit.com.br.`
+        })
+      ],
       spacing: {
         after: 200
       }
@@ -549,7 +647,13 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
 
   children.push(
     new Paragraph({
-      text: "Ratificamos que os produtos Brasilit atendem as Normas da Associação Brasileira de Normas Técnicas — ABNT, específicas para cada linha de produto, e cumprimos as exigências legais de garantia de produtos conforme a legislação em vigor.",
+      children: [
+        new TextRun({ 
+          text: "Ratificamos que os produtos Brasilit atendem as Normas da Associação Brasileira de Normas Técnicas — ABNT, " +
+                "específicas para cada linha de produto, e cumprimos as exigências legais de garantia de produtos conforme a " +
+                "legislação em vigor."
+        })
+      ],
       spacing: {
         after: 200
       }
@@ -559,7 +663,9 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   if (relatorio.recomendacao) {
     children.push(
       new Paragraph({
-        text: relatorio.recomendacao,
+        children: [
+          new TextRun({ text: relatorio.recomendacao })
+        ],
         spacing: {
           after: 200
         }
@@ -569,7 +675,11 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
 
   children.push(
     new Paragraph({
-      text: "Desde já, agradecemos e nos colocamos à disposição para quaisquer esclarecimentos que se fizerem necessário.",
+      children: [
+        new TextRun({ 
+          text: "Desde já, agradecemos e nos colocamos à disposição para quaisquer esclarecimentos que se fizerem necessário."
+        })
+      ],
       spacing: {
         after: 200
       }
@@ -578,7 +688,9 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
 
   children.push(
     new Paragraph({
-      text: "Atenciosamente,",
+      children: [
+        new TextRun({ text: "Atenciosamente," })
+      ],
       spacing: {
         after: 400
       }
@@ -588,8 +700,12 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   // Assinatura
   children.push(
     new Paragraph({
-      text: "Saint-Gobain do Brasil Prod. Ind. e para Cons. Civil Ltda.",
-      bold: true,
+      children: [
+        new TextRun({ 
+          text: "Saint-Gobain do Brasil Prod. Ind. e para Cons. Civil Ltda.",
+          bold: true
+        })
+      ],
       spacing: {
         after: 80
       }
@@ -598,8 +714,12 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
 
   children.push(
     new Paragraph({
-      text: "Divisão Produtos Para Construção",
-      bold: true,
+      children: [
+        new TextRun({ 
+          text: "Divisão Produtos Para Construção",
+          bold: true
+        })
+      ],
       spacing: {
         after: 80
       }
@@ -608,8 +728,12 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
 
   children.push(
     new Paragraph({
-      text: "Departamento de Assistência Técnica",
-      bold: true,
+      children: [
+        new TextRun({ 
+          text: "Departamento de Assistência Técnica",
+          bold: true
+        })
+      ],
       spacing: {
         after: 400
       }
@@ -632,7 +756,9 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
 
   children.push(
     new Paragraph({
-      text: relatorio.elaboradoPor,
+      children: [
+        new TextRun({ text: relatorio.elaboradoPor || "" })
+      ],
       spacing: {
         after: 80
       }
@@ -641,7 +767,9 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
 
   children.push(
     new Paragraph({
-      text: `${relatorio.departamento} - ${relatorio.unidade}`,
+      children: [
+        new TextRun({ text: `${relatorio.departamento || ""} - ${relatorio.unidade || ""}` })
+      ],
       spacing: {
         after: 80
       }
@@ -650,87 +778,17 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
 
   children.push(
     new Paragraph({
-      text: `CREA/CAU ${relatorio.numeroRegistro}`,
+      children: [
+        new TextRun({ text: `CREA/CAU ${relatorio.numeroRegistro || ""}` })
+      ],
       spacing: {
         after: 400
       }
     })
   );
 
-  // Fotos
-  if (relatorio.fotos && relatorio.fotos.length > 0) {
-    // Página para fotos
-    const doc = new Document({
-      sections: [
-        {
-          properties: {},
-          children: children,
-        },
-        {
-          properties: {
-            type: SectionType.NEXT_PAGE,
-          },
-          children: [
-            new Paragraph({
-              text: "ANEXO: REGISTRO FOTOGRÁFICO",
-              heading: HeadingLevel.HEADING_2,
-              spacing: {
-                before: 400,
-                after: 400
-              }
-            }),
-          ],
-        },
-      ],
-      features: {
-        updateFields: true,
-      },
-    });
-
-    const fotosSection = doc.sections[1];
-
-    // Adicionar as fotos
-    for (let i = 0; i < relatorio.fotos.length; i++) {
-      try {
-        const foto = relatorio.fotos[i];
-        const imgBuffer = await dataUrlToArrayBuffer(foto.dataUrl);
-        
-        fotosSection.addChildElement(
-          new Paragraph({
-            spacing: {
-              before: 200,
-              after: 100
-            },
-            children: [
-              new ImageRun({
-                data: imgBuffer,
-                transformation: {
-                  width: 400,
-                  height: 300,
-                }
-              })
-            ]
-          })
-        );
-        
-        fotosSection.addChildElement(
-          new Paragraph({
-            text: `Imagem ${i + 1}: ${foto.descricao || "Sem descrição"}`,
-            spacing: {
-              after: 400
-            }
-          })
-        );
-      } catch (error) {
-        console.error("Erro ao processar imagem:", error);
-      }
-    }
-
-    return Packer.toBlob(doc);
-  }
-
-  // Se não houver fotos, criar um documento normal
-  const doc = new Document({
+  // Documento sem fotos (padrão)
+  let doc = new Document({
     sections: [
       {
         properties: {},
@@ -748,7 +806,79 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
     },
   });
 
+  // Se houver fotos, criar uma seção adicional
+  if (relatorio.fotos && relatorio.fotos.length > 0) {
+    try {
+      // Criar uma nova seção para fotos
+      const fotoSection = {
+        properties: {
+          type: SectionType.NEXT_PAGE,
+        },
+        children: [
+          new Paragraph({
+            text: "ANEXO: REGISTRO FOTOGRÁFICO",
+            heading: HeadingLevel.HEADING_2,
+            spacing: {
+              before: 400,
+              after: 400
+            }
+          }),
+        ],
+      };
+
+      // Adicionar a seção de fotos ao documento
+      doc.addSection(fotoSection);
+
+      // Processar e adicionar cada foto
+      for (let i = 0; i < relatorio.fotos.length; i++) {
+        const foto = relatorio.fotos[i];
+        try {
+          const imgBuffer = await dataUrlToArrayBuffer(foto.dataUrl);
+          
+          // Adicionar imagem
+          doc.addParagraph(
+            new Paragraph({
+              spacing: {
+                before: 200,
+                after: 100
+              },
+              children: [
+                new ImageRun({
+                  data: imgBuffer,
+                  transformation: {
+                    width: 400,
+                    height: 300
+                  },
+                  altText: {
+                    title: `Imagem ${i + 1}`,
+                    description: foto.descricao || "Sem descrição",
+                    name: `imagem-${i + 1}`
+                  }
+                })
+              ]
+            })
+          );
+          
+          // Adicionar legenda
+          doc.addParagraph(
+            new Paragraph({
+              children: [
+                new TextRun({ text: `Imagem ${i + 1}: ${foto.descricao || "Sem descrição"}` })
+              ],
+              spacing: {
+                after: 400
+              }
+            })
+          );
+        } catch (error) {
+          console.error("Erro ao processar imagem:", error);
+        }
+      }
+    } catch (error) {
+      console.error("Erro ao adicionar fotos ao documento:", error);
+    }
+  }
+
+  // Gerar o documento final
   return Packer.toBlob(doc);
 }
-
-import { Packer } from 'docx';

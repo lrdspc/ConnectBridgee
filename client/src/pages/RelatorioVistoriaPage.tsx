@@ -448,6 +448,26 @@ export default function RelatorioVistoriaPage() {
               </TabsTrigger>
             </TabsList>
             
+            {/* Botão para gerar dados aleatórios */}
+            <div className="mb-4 flex justify-end">
+              <Button 
+                type="button" 
+                variant="outline" 
+                className="gap-2" 
+                onClick={() => {
+                  const dadosAleatorios = gerarRelatorioAleatorio();
+                  form.reset(dadosAleatorios);
+                  setFotos(dadosAleatorios.fotos || []);
+                  toast({
+                    title: "Dados gerados com sucesso",
+                    description: "O formulário foi preenchido com dados de teste aleatórios.",
+                  });
+                }}
+              >
+                <HardHat className="h-4 w-4" /> Gerar Dados de Teste
+              </Button>
+            </div>
+            
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 {/* Tab de Informações Básicas */}
