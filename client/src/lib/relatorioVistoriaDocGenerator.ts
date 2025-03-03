@@ -19,10 +19,17 @@ import {
 import { RelatorioVistoria, naoConformidadesDisponiveis } from '../../../shared/relatorioVistoriaSchema';
 
 // Converte dataURL para ArrayBuffer para inserção de imagem
+// Converte dataURL para ArrayBuffer para inserção de imagem
 async function dataUrlToArrayBuffer(dataUrl: string): Promise<ArrayBuffer> {
-  const response = await fetch(dataUrl);
-  const blob = await response.blob();
-  return await blob.arrayBuffer();
+  try {
+    const response = await fetch(dataUrl);
+    const blob = await response.blob();
+    return await blob.arrayBuffer();
+  } catch (error) {
+    console.error("Erro ao converter dataURL para ArrayBuffer:", error);
+    // Retornar um buffer vazio em caso de erro
+    return new ArrayBuffer(0);
+  }
 }
 
 // Função para criar um cabeçalho
@@ -415,73 +422,80 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
     })
   );
   
-  // Criar documento
-  const doc = new Document({
-    sections: [{
-      properties: {},
+  // Preparar seções do documento
+  const sections = [];
+  
+  // Primeira seção - conteúdo principal
+  sections.push({
+    properties: {},
+    headers: {
+      default: criarCabecalho(),
+    },
+    footers: {
+      default: criarRodape(),
+    },
+    children: mainContent
+  });
+  
+  // Se houver fotos, adicionar uma segunda seção no documento
+  if (relatorio.fotos && relatorio.fotos.length > 0) {
+    const fotosContent: Paragraph[] = [
+      // Título da seção de fotos
+      new Paragraph({
+        text: "ANEXO: REGISTRO FOTOGRÁFICO",
+        heading: HeadingLevel.HEADING_2,
+        spacing: { before: 400, after: 400 }
+      })
+    ];
+    
+    // Adicionar as fotos (processadas assincronamente mais acima)
+    for (let i = 0; i < relatorio.fotos.length; i++) {
+      const foto = relatorio.fotos[i];
+      
+      fotosContent.push(
+        new Paragraph({
+          children: [
+            new TextRun({ 
+              text: `Foto ${i+1}: ${foto.descricao || "Sem descrição"}`,
+              bold: true
+            })
+          ],
+          spacing: { before: 200, after: 100 }
+        })
+      );
+      
+      // Apenas adicionar texto para a foto - imagens são complexas de manipular no Word
+      fotosContent.push(
+        new Paragraph({
+          children: [
+            new TextRun({ 
+              text: "[Imagem: Consultar registro fotográfico original]",
+              italics: true
+            })
+          ],
+          spacing: { after: 200 }
+        })
+      );
+    }
+    
+    // Adicionar a seção de fotos
+    sections.push({
+      properties: {
+        type: SectionType.NEXT_PAGE
+      },
       headers: {
         default: criarCabecalho(),
       },
       footers: {
         default: criarRodape(),
       },
-      children: mainContent
-    }]
-  });
-  
-  // Se houver fotos, criar uma segunda seção no documento
-  if (relatorio.fotos && relatorio.fotos.length > 0) {
-    // Criar documento com duas seções
-    const doc = new Document({
-      sections: [
-        // Primeira seção - conteúdo principal
-        {
-          properties: {},
-          headers: {
-            default: criarCabecalho(),
-          },
-          footers: {
-            default: criarRodape(),
-          },
-          children: mainContent
-        },
-        // Segunda seção - fotos
-        {
-          properties: {
-            type: SectionType.NEXT_PAGE
-          },
-          headers: {
-            default: criarCabecalho(),
-          },
-          footers: {
-            default: criarRodape(),
-          },
-          children: [
-            // Título da seção de fotos
-            new Paragraph({
-              text: "ANEXO: REGISTRO FOTOGRÁFICO",
-              heading: HeadingLevel.HEADING_2,
-              spacing: { before: 400, after: 400 }
-            }),
-            // Descrição das fotos
-            ...relatorio.fotos.map((foto, index) => 
-              new Paragraph({
-                children: [
-                  new TextRun({ 
-                    text: `Foto ${index+1}: ${foto.descricao || "Sem descrição"}`,
-                    bold: true
-                  })
-                ],
-                spacing: { before: 200, after: 100 }
-              })
-            )
-          ]
-        }
-      ]
+      children: fotosContent
     });
-    
-    return Packer.toBlob(doc);
   }
   
+  // Criar o documento com todas as seções
+  const doc = new Document({ sections });
+  
+  // Retornar o blob
   return Packer.toBlob(doc);
 }
