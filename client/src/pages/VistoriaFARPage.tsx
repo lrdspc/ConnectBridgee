@@ -31,6 +31,7 @@ import {
   espessurasTelhasFAR,
   FARReport
 } from "../../../shared/farReportSchema";
+import { generateFARReport } from "../lib/farReportGenerator";
 
 type TelhaSpec = {
   id: string;
