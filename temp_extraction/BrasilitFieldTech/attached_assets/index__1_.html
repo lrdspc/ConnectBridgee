@@ -1,0 +1,408 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Dashboard and Task List
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+            font-family: 'Inter', sans-serif;
+        }
+        .hidden {
+            display: none;
+        }
+  </style>
+ </head>
+ <body class="bg-purple-100 p-4">
+  <div id="app">
+   <!-- Dashboard Page -->
+   <div class="page" id="dashboard">
+    <div class="bg-white rounded-2xl shadow-lg p-4 w-full max-w-md mx-auto">
+     <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold">
+       Dashboard
+      </h1>
+      <i class="fas fa-cog text-xl">
+      </i>
+     </div>
+     <div class="grid grid-cols-2 gap-4 mb-4">
+      <div class="bg-purple-200 rounded-xl p-4 relative">
+       <h2 class="text-xl font-bold">
+        24
+       </h2>
+       <p class="text-sm">
+        Em Andamento
+       </p>
+       <img alt="Graph" class="absolute bottom-2 right-2 w-16 h-8" height="32" src="https://storage.googleapis.com/a1aa/image/vXykz-_MyhX5beQmaFTtyzJSCmvwPMwLKlNsXWv4AFA.jpg" width="64"/>
+      </div>
+      <div class="bg-pink-200 rounded-xl p-4 relative">
+       <h2 class="text-xl font-bold">
+        56
+       </h2>
+       <p class="text-sm">
+        Em Revisão
+       </p>
+       <img alt="Graph" class="absolute bottom-2 right-2 w-16 h-8" height="32" src="https://storage.googleapis.com/a1aa/image/vXykz-_MyhX5beQmaFTtyzJSCmvwPMwLKlNsXWv4AFA.jpg" width="64"/>
+      </div>
+      <div class="bg-yellow-200 rounded-xl p-4 relative">
+       <h2 class="text-xl font-bold">
+        16
+       </h2>
+       <p class="text-sm">
+        Pendentes
+       </p>
+       <img alt="Graph" class="absolute bottom-2 right-2 w-16 h-8" height="32" src="https://storage.googleapis.com/a1aa/image/vXykz-_MyhX5beQmaFTtyzJSCmvwPMwLKlNsXWv4AFA.jpg" width="64"/>
+      </div>
+      <div class="bg-green-200 rounded-xl p-4 relative">
+       <h2 class="text-xl font-bold">
+        45
+       </h2>
+       <p class="text-sm">
+        Concluídas
+       </p>
+       <img alt="Graph" class="absolute bottom-2 right-2 w-16 h-8" height="32" src="https://storage.googleapis.com/a1aa/image/vXykz-_MyhX5beQmaFTtyzJSCmvwPMwLKlNsXWv4AFA.jpg" width="64"/>
+      </div>
+     </div>
+     <div class="mb-4">
+      <h2 class="text-lg font-bold mb-2">
+       Estatísticas de Visitas
+      </h2>
+      <img alt="Bar chart showing project statistics" class="w-full rounded-lg" height="150" src="https://storage.googleapis.com/a1aa/image/sh7-60Bp45OH2h5QoMSyfDdgGdKcBxVh2yWWehRiOd0.jpg" width="300"/>
+     </div>
+     <div class="flex justify-between items-center">
+      <div class="text-center">
+       <p class="text-sm">
+        Tempo Total Trabalhado
+       </p>
+       <p class="text-lg font-bold">
+        50:25:06
+       </p>
+      </div>
+      <div class="text-center">
+       <p class="text-sm">
+        Total de Visitas
+       </p>
+       <p class="text-lg font-bold">
+        125 Visitas
+       </p>
+      </div>
+     </div>
+    </div>
+   </div>
+   <!-- Task List Page -->
+   <div class="page hidden" id="taskList">
+    <div class="bg-white rounded-2xl shadow-lg p-4 w-full max-w-md mx-auto">
+     <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold flex items-center">
+       <i class="fas fa-tasks mr-2">
+       </i>
+       Lista de Visitas
+      </h1>
+      <div class="flex items-center space-x-2">
+       <i class="fas fa-search text-xl">
+       </i>
+       <i class="fas fa-ellipsis-h text-xl">
+       </i>
+      </div>
+     </div>
+     <div class="flex justify-between items-center mb-4">
+      <button class="bg-black text-white rounded-full px-4 py-1">
+       Concluídas
+      </button>
+      <button class="bg-green-200 text-green-800 rounded-full px-4 py-1">
+       Agendadas
+      </button>
+      <button class="bg-yellow-200 text-yellow-800 rounded-full px-4 py-1">
+       Pendentes
+      </button>
+     </div>
+     <div class="space-y-4">
+      <div class="bg-white border rounded-xl p-4 shadow-sm">
+       <div class="flex justify-between items-center mb-2">
+        <h2 class="text-lg font-bold">
+         Visita Cliente [Nome]
+        </h2>
+        <div class="flex space-x-2">
+         <span class="bg-red-200 text-red-800 rounded-full px-2 py-1 text-xs">
+          Urgente
+         </span>
+         <span class="bg-purple-200 text-purple-800 rounded-full px-2 py-1 text-xs">
+          Agendada
+         </span>
+        </div>
+       </div>
+       <div class="flex justify-between items-center">
+        <p class="text-sm text-gray-500">
+         14 Oct 2022
+        </p>
+        <div class="flex items-center space-x-2">
+         <i class="fas fa-exclamation-circle text-gray-500">
+         </i>
+         <span>
+          2
+         </span>
+         <i class="fas fa-camera text-gray-500">
+         </i>
+         <span>
+          5
+         </span>
+         <i class="fas fa-file-alt text-gray-500">
+         </i>
+         <i class="fas fa-clock text-gray-500">
+         </i>
+         <img alt="User avatar" class="rounded-full w-6 h-6" height="30" src="https://storage.googleapis.com/a1aa/image/LNLH0Vz7povcIL5UnISrbfyNYywJELb-pO5CP2368BM.jpg" width="30"/>
+        </div>
+       </div>
+      </div>
+      <div class="bg-white border rounded-xl p-4 shadow-sm">
+       <div class="flex justify-between items-center mb-2">
+        <h2 class="text-lg font-bold">
+         Visita Cliente [Nome]
+        </h2>
+        <div class="flex space-x-2">
+         <span class="bg-green-200 text-green-800 rounded-full px-2 py-1 text-xs">
+          Improcedente
+         </span>
+         <span class="bg-blue-200 text-blue-800 rounded-full px-2 py-1 text-xs">
+          Agendada
+         </span>
+        </div>
+       </div>
+       <div class="flex justify-between items-center">
+        <p class="text-sm text-gray-500">
+         14 Oct 2022
+        </p>
+        <div class="flex items-center space-x-2">
+         <i class="fas fa-exclamation-circle text-gray-500">
+         </i>
+         <span>
+          2
+         </span>
+         <i class="fas fa-camera text-gray-500">
+         </i>
+         <span>
+          4
+         </span>
+         <i class="fas fa-file-alt text-gray-500">
+         </i>
+         <i class="fas fa-clock text-gray-500">
+         </i>
+         <img alt="User avatar" class="rounded-full w-6 h-6" height="30" src="https://storage.googleapis.com/a1aa/image/LNLH0Vz7povcIL5UnISrbfyNYywJELb-pO5CP2368BM.jpg" width="30"/>
+        </div>
+       </div>
+      </div>
+      <div class="bg-white border rounded-xl p-4 shadow-sm">
+       <div class="flex justify-between items-center mb-2">
+        <h2 class="text-lg font-bold">
+         Visita Cliente [Nome]
+        </h2>
+        <div class="flex space-x-2">
+         <span class="bg-black text-white rounded-full px-2 py-1 text-xs">
+          Urgente
+         </span>
+         <span class="bg-green-200 text-green-800 rounded-full px-2 py-1 text-xs">
+          Agendada
+         </span>
+        </div>
+       </div>
+       <div class="flex justify-between items-center">
+        <p class="text-sm text-gray-500">
+         14 Oct 2022
+        </p>
+        <div class="flex items-center space-x-2">
+         <i class="fas fa-exclamation-circle text-gray-500">
+         </i>
+         <span>
+          6
+         </span>
+         <i class="fas fa-camera text-gray-500">
+         </i>
+         <span>
+          8
+         </span>
+         <i class="fas fa-file-alt text-gray-500">
+         </i>
+         <i class="fas fa-clock text-gray-500">
+         </i>
+         <img alt="User avatar" class="rounded-full w-6 h-6" height="30" src="https://storage.googleapis.com/a1aa/image/LNLH0Vz7povcIL5UnISrbfyNYywJELb-pO5CP2368BM.jpg" width="30"/>
+        </div>
+       </div>
+      </div>
+      <div class="bg-white border rounded-xl p-4 shadow-sm">
+       <div class="flex justify-between items-center mb-2">
+        <h2 class="text-lg font-bold">
+         Visita Cliente [Nome]
+        </h2>
+        <div class="flex space-x-2">
+         <span class="bg-yellow-200 text-yellow-800 rounded-full px-2 py-1 text-xs">
+          Improcedente
+         </span>
+         <span class="bg-purple-200 text-purple-800 rounded-full px-2 py-1 text-xs">
+          Agendada
+         </span>
+        </div>
+       </div>
+       <div class="flex justify-between items-center">
+        <p class="text-sm text-gray-500">
+         14 Oct 2022
+        </p>
+        <div class="flex items-center space-x-2">
+         <i class="fas fa-exclamation-circle text-gray-500">
+         </i>
+         <span>
+          5
+         </span>
+         <i class="fas fa-camera text-gray-500">
+         </i>
+         <span>
+          5
+         </span>
+         <i class="fas fa-file-alt text-gray-500">
+         </i>
+         <i class="fas fa-clock text-gray-500">
+         </i>
+         <img alt="User avatar" class="rounded-full w-6 h-6" height="30" src="https://storage.googleapis.com/a1aa/image/LNLH0Vz7povcIL5UnISrbfyNYywJELb-pO5CP2368BM.jpg" width="30"/>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <!-- Create Report Page -->
+   <div class="page hidden" id="createReport">
+    <div class="bg-white rounded-2xl shadow-lg p-4 w-full max-w-md mx-auto">
+     <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold">
+       Criar Relatório
+      </h1>
+      <i class="fas fa-cog text-xl">
+      </i>
+     </div>
+     <form>
+      <div class="mb-4">
+       <label class="block text-sm font-bold mb-2" for="clientName">
+        Nome do Cliente
+       </label>
+       <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="clientName" placeholder="Nome do Cliente" type="text"/>
+      </div>
+      <div class="mb-4">
+       <label class="block text-sm font-bold mb-2" for="visitDate">
+        Data da Visita
+       </label>
+       <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="visitDate" type="date"/>
+      </div>
+      <div class="mb-4">
+       <label class="block text-sm font-bold mb-2" for="visitStatus">
+        Status da Visita
+       </label>
+       <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="visitStatus">
+        <option>
+         Agendada
+        </option>
+        <option>
+         Concluída
+        </option>
+        <option>
+         Pendente
+        </option>
+        <option>
+         Improcedente
+        </option>
+       </select>
+      </div>
+      <div class="mb-4">
+       <label class="block text-sm font-bold mb-2" for="visitNotes">
+        Notas da Visita
+       </label>
+       <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="visitNotes" placeholder="Notas da Visita"></textarea>
+      </div>
+      <div class="flex items-center justify-between">
+       <button class="bg-purple-500 text-white rounded-full px-4 py-2" onclick="navigateTo('dashboard')" type="button">
+        Cancelar
+       </button>
+       <button class="bg-purple-500 text-white rounded-full px-4 py-2" type="submit">
+        Salvar
+       </button>
+      </div>
+     </form>
+    </div>
+   </div>
+   <!-- Technician Profile Page -->
+   <div class="page hidden" id="technicianProfile">
+    <div class="bg-white rounded-2xl shadow-lg p-4 w-full max-w-md mx-auto">
+     <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold">
+       Perfil do Técnico
+      </h1>
+      <i class="fas fa-cog text-xl">
+      </i>
+     </div>
+     <form>
+      <div class="mb-4">
+       <label class="block text-sm font-bold mb-2" for="technicianName">
+        Nome
+       </label>
+       <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="technicianName" placeholder="Nome do Técnico" type="text"/>
+      </div>
+      <div class="mb-4">
+       <label class="block text-sm font-bold mb-2" for="technicianEmail">
+        Email
+       </label>
+       <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="technicianEmail" placeholder="Email do Técnico" type="email"/>
+      </div>
+      <div class="mb-4">
+       <label class="block text-sm font-bold mb-2" for="technicianPhone">
+        Telefone
+       </label>
+       <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="technicianPhone" placeholder="Telefone do Técnico" type="tel"/>
+      </div>
+      <div class="mb-4">
+       <label class="block text-sm font-bold mb-2" for="technicianAddress">
+        Endereço
+       </label>
+       <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="technicianAddress" placeholder="Endereço do Técnico" type="text"/>
+      </div>
+      <div class="flex items-center justify-between">
+       <button class="bg-purple-500 text-white rounded-full px-4 py-2" onclick="navigateTo('dashboard')" type="button">
+        Cancelar
+       </button>
+       <button class="bg-purple-500 text-white rounded-full px-4 py-2" type="submit">
+        Salvar
+       </button>
+      </div>
+     </form>
+    </div>
+   </div>
+  </div>
+  <!-- Bottom Navigation -->
+  <div class="fixed bottom-0 left-0 right-0 bg-white shadow-lg p-4 flex justify-around">
+   <button class="text-purple-500" onclick="navigateTo('dashboard')">
+    <i class="fas fa-home text-2xl">
+    </i>
+   </button>
+   <button class="text-purple-500" onclick="navigateTo('taskList')">
+    <i class="fas fa-tasks text-2xl">
+    </i>
+   </button>
+   <button class="text-purple-500" onclick="navigateTo('createReport')">
+    <i class="fas fa-plus text-2xl">
+    </i>
+   </button>
+   <button class="text-purple-500" onclick="navigateTo('technicianProfile')">
+    <i class="fas fa-user text-2xl">
+    </i>
+   </button>
+  </div>
+  <script>
+   function navigateTo(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+            document.getElementById(page).classList.remove('hidden');
+        }
+  </script>
+ </body>
+</html>
