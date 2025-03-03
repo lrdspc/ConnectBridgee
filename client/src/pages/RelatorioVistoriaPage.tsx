@@ -10,6 +10,7 @@ import {
   espessurasTelhas,
   novoRelatorioVistoria
 } from '../../../shared/relatorioVistoriaSchema';
+import { gerarRelatorioVistoriaDoc } from '@/lib/relatorioVistoriaDocGenerator';
 
 import { DashboardLayoutNew } from '@/layouts/DashboardLayoutNew';
 import { PageTransition } from '@/components/ui/loading-animation';
@@ -348,7 +349,7 @@ export default function RelatorioVistoriaPage() {
   };
   
   // Função para baixar o relatório em HTML
-  const baixarRelatorio = () => {
+  const baixarRelatorioHTML = () => {
     const blob = new Blob([previewHTML], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -358,6 +359,44 @@ export default function RelatorioVistoriaPage() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+  
+  // Estado para controlar o carregamento ao gerar DOCX
+  const [isGeneratingDocx, setIsGeneratingDocx] = useState(false);
+  
+  // Função para baixar o relatório em DOCX
+  const baixarRelatorioDocx = async () => {
+    try {
+      setIsGeneratingDocx(true);
+      const formData = form.getValues();
+      
+      // Gerar o documento usando a biblioteca docx
+      const blob = await gerarRelatorioVistoriaDoc(formData);
+      
+      // Download do arquivo
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `relatorio-vistoria-${formData.protocolo || 'novo'}.docx`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      toast({
+        title: 'Documento Word gerado com sucesso!',
+        description: 'O relatório foi gerado em formato DOCX e está pronto para download.',
+      });
+    } catch (error) {
+      console.error('Erro ao gerar documento Word:', error);
+      toast({
+        title: 'Erro ao gerar documento Word',
+        description: 'Não foi possível gerar o documento. Tente novamente.',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsGeneratingDocx(false);
+    }
   };
   
   return (
