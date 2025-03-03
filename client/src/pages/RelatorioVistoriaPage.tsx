@@ -8,7 +8,8 @@ import {
   naoConformidadesDisponiveis,
   modelosTelhas,
   espessurasTelhas,
-  novoRelatorioVistoria
+  novoRelatorioVistoria,
+  gerarRelatorioAleatorio
 } from '../../../shared/relatorioVistoriaSchema';
 import { gerarRelatorioVistoriaDoc } from '@/lib/relatorioVistoriaDocGenerator';
 

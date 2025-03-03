@@ -22,29 +22,29 @@ export const espessuraTelhaEnum = z.enum([
 
 export const relatorioVistoriaSchema = z.object({
   id: z.string().optional().default(() => uuidv4()),
-  protocolo: z.string().min(3, { message: "Protocolo é obrigatório" }),
-  dataVistoria: z.string().min(1, { message: "Data da vistoria é obrigatória" }),
-  cliente: z.string().min(3, { message: "Nome do cliente é obrigatório" }),
-  empreendimento: z.string().min(3, { message: "Nome do empreendimento é obrigatório" }),
-  endereco: z.string().min(3, { message: "Endereço é obrigatório" }),
-  cidade: z.string().min(2, { message: "Cidade é obrigatória" }),
-  uf: z.string().length(2, { message: "UF deve ter 2 caracteres" }),
-  assunto: z.string().min(3, { message: "Assunto é obrigatório" }).default("AT - BRA - PERMEABILIDADE - Telhado com vazamento Geral"),
+  protocolo: z.string().optional().default(""),
+  dataVistoria: z.string().optional().default(() => new Date().toISOString().split('T')[0]),
+  cliente: z.string().optional().default(""),
+  empreendimento: z.string().optional().default(""),
+  endereco: z.string().optional().default(""),
+  cidade: z.string().optional().default(""),
+  uf: z.string().optional().default(""),
+  assunto: z.string().optional().default("AT - BRA - PERMEABILIDADE - Telhado com vazamento Geral"),
   
   // Responsáveis técnicos
-  elaboradoPor: z.string().min(3, { message: "Nome do técnico é obrigatório" }),
-  departamento: z.string().min(3, { message: "Departamento é obrigatório" }).default("Assistência Técnica"),
-  unidade: z.string().min(2, { message: "Unidade é obrigatória" }),
-  coordenador: z.string().min(3, { message: "Nome do coordenador é obrigatório" }),
-  gerente: z.string().min(3, { message: "Nome do gerente é obrigatório" }),
-  regional: z.string().min(2, { message: "Regional é obrigatória" }),
-  numeroRegistro: z.string().min(3, { message: "Número de registro CREA/CAU é obrigatório" }),
+  elaboradoPor: z.string().optional().default(""),
+  departamento: z.string().optional().default("Assistência Técnica"),
+  unidade: z.string().optional().default(""),
+  coordenador: z.string().optional().default(""),
+  gerente: z.string().optional().default(""),
+  regional: z.string().optional().default(""),
+  numeroRegistro: z.string().optional().default(""),
   
   // Produto
-  espessura: espessuraTelhaEnum,
-  modeloTelha: modeloTelhaEnum,
-  quantidade: z.number().min(1, { message: "A quantidade deve ser maior que zero" }),
-  area: z.number().min(1, { message: "A área deve ser maior que zero" }),
+  espessura: espessuraTelhaEnum.optional().default("6"),
+  modeloTelha: modeloTelhaEnum.optional().default("Ondulada"),
+  quantidade: z.number().optional().default(0),
+  area: z.number().optional().default(0),
   anosGarantia: z.string().default("5"),
   anosGarantiaSistemaCompleto: z.string().default("10"),
   anosGarantiaTotal: z.string().default("10"),
@@ -207,6 +207,93 @@ export function novoRelatorioVistoria(): RelatorioVistoria {
     fotos: [],
     
     resultado: "IMPROCEDENTE",
+    
+    dataCriacao: new Date().toISOString(),
+    dataAtualizacao: new Date().toISOString(),
+    status: "rascunho"
+  };
+}
+
+// Função auxiliar para sortear um item de um array
+function getRandomItem<T>(array: T[]): T {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
+// Função para gerar um relatório com dados aleatórios para testes
+export function gerarRelatorioAleatorio(): RelatorioVistoria {
+  // Lista de nomes de cidades e UFs para escolha aleatória
+  const cidades = ["São Paulo", "Rio de Janeiro", "Belo Horizonte", "Brasília", "Salvador", "Fortaleza", "Curitiba", "Recife"];
+  const ufs = ["SP", "RJ", "MG", "DF", "BA", "CE", "PR", "PE"];
+  
+  // Lista de nomes de clientes para escolha aleatória
+  const clientes = ["Construtora Nova Era", "Empreendimentos Alvorada", "Incorporadora Horizonte", "Grupo Construtivo Brasil", "Residencial Vista Verde"];
+  
+  // Lista de nomes para escolha aleatória
+  const nomes = ["Carlos Silva", "Ana Oliveira", "Roberto Santos", "Juliana Pereira", "Marcos Andrade", "Maria Costa", "João Vieira", "Fernanda Lima"];
+  
+  // Seleção aleatória de não conformidades
+  const naoConformidadesSelecionadas = naoConformidadesDisponiveis.map(nc => ({
+    id: nc.id,
+    titulo: nc.titulo,
+    descricao: nc.descricao,
+    selecionado: Math.random() > 0.7 // 30% de chance de estar selecionado
+  }));
+  
+  // Cálculo de área com base na quantidade e modelo
+  const quantidade = Math.floor(Math.random() * 1000) + 200; // entre 200 e 1200
+  const area = quantidade * 0.5 + Math.floor(Math.random() * 300); // área aproximada
+  
+  // Data aleatória nos últimos 30 dias
+  const dataVistoriaDate = new Date();
+  dataVistoriaDate.setDate(dataVistoriaDate.getDate() - Math.floor(Math.random() * 30));
+  const dataVistoria = dataVistoriaDate.toISOString().split('T')[0];
+  
+  // Gerar número de protocolo FAR aleatório
+  const numeroProtocolo = Math.floor(Math.random() * 900000) + 100000;
+  const protocolo = `FAR-${numeroProtocolo}`;
+  
+  return {
+    id: uuidv4(),
+    protocolo: protocolo,
+    dataVistoria: dataVistoria,
+    cliente: getRandomItem(clientes),
+    empreendimento: `Obra ${Math.floor(Math.random() * 100) + 1} - ${getRandomItem(clientes)}`,
+    endereco: `Rua dos Ipês, ${Math.floor(Math.random() * 1000) + 1}, Bairro Jardim`,
+    cidade: getRandomItem(cidades),
+    uf: getRandomItem(ufs),
+    assunto: "AT - BRA - PERMEABILIDADE - Telhado com vazamento Geral",
+    
+    elaboradoPor: getRandomItem(nomes),
+    departamento: "Assistência Técnica",
+    unidade: "São Paulo",
+    coordenador: getRandomItem(nomes),
+    gerente: getRandomItem(nomes),
+    regional: "Sudeste",
+    numeroRegistro: `${Math.floor(Math.random() * 90000) + 10000}-D`,
+    
+    espessura: getRandomItem(espessurasTelhas),
+    modeloTelha: getRandomItem(modelosTelhas),
+    quantidade: quantidade,
+    area: area,
+    anosGarantia: "5",
+    anosGarantiaSistemaCompleto: "10",
+    anosGarantiaTotal: "10",
+    
+    introducao: "Foi realizada vistoria técnica na data supracitada, para análise da reclamação do cliente referente a problemas de vazamento no telhado. Durante a inspeção, foram constatadas diversas não conformidades em relação às especificações técnicas de instalação dos produtos Brasilit.",
+    
+    analiseTecnica: "Durante a inspeção técnica realizada, foram identificadas as não conformidades listadas neste relatório. As telhas apresentavam instalação inadequada, com recobrimentos insuficientes e fixação irregular, resultando nos problemas relatados pelo cliente. A estrutura de apoio também apresentava irregularidades em relação ao espaçamento e alinhamento.",
+    
+    conclusao: "Com base nas análises realizadas, concluímos que os problemas apresentados são decorrentes de falhas na instalação e não de defeitos no produto.",
+    
+    recomendacao: "Recomendamos a correção das não conformidades identificadas neste relatório, seguindo rigorosamente as especificações técnicas do fabricante disponíveis no site da Brasilit. É essencial que as telhas sejam instaladas por profissionais qualificados e que todas as recomendações técnicas sejam observadas para garantir o desempenho adequado do produto.",
+    
+    observacoesGerais: "O cliente foi orientado sobre a importância de contratar profissionais especializados para a correção dos problemas identificados.",
+    
+    naoConformidades: naoConformidadesSelecionadas,
+    
+    fotos: [],
+    
+    resultado: Math.random() > 0.2 ? "IMPROCEDENTE" : "PROCEDENTE", // 80% improcedente
     
     dataCriacao: new Date().toISOString(),
     dataAtualizacao: new Date().toISOString(),
