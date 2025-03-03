@@ -792,6 +792,7 @@ async function processImages(report: FARReport): Promise<Paragraph[]> {
                   width: 400,
                   height: 300,
                 },
+                type: "png",
               }),
             ],
             spacing: {

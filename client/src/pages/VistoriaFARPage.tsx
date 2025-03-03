@@ -684,6 +684,80 @@ const VistoriaFARPage = () => {
     return Object.keys(errors).length === 0;
   };
   
+  // Função para gerar o relatório em formato Word
+  const handleGenerateDocxReport = async () => {
+    try {
+      setIsSubmitting(true);
+      
+      if (!validarFormulario()) {
+        // Exibir erro ao usuário
+        toast({
+          title: "Erro de validação",
+          description: "Por favor, preencha os campos obrigatórios para gerar o relatório.",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      // Converter os dados do formulário para o formato esperado pelo gerador de relatórios
+      const farReport: FARReport = {
+        dataVistoria: formData.dataVistoria,
+        farProtocolo: formData.farProtocolo,
+        assunto: formData.assunto,
+        cliente: formData.cliente,
+        empreendimento: formData.empreendimento,
+        cidade: formData.cidade,
+        uf: formData.uf,
+        endereco: formData.endereco,
+        elaboradoPor: formData.elaboradoPor,
+        departamento: formData.departamento,
+        regional: formData.regional,
+        unidade: formData.unidade,
+        coordenador: formData.coordenador,
+        gerente: formData.gerente,
+        telhas: formData.telhas,
+        problemas: formData.problemas,
+        introducao: formData.introducao,
+        analiseTecnica: formData.analiseTecnica,
+        conclusao: formData.conclusao,
+        recomendacao: formData.recomendacao,
+        observacoesGerais: formData.observacoesGerais,
+        anosGarantia: formData.anosGarantia,
+        anosGarantiaSistemaCompleto: formData.anosGarantiaSistemaCompleto,
+        anosGarantiaTotal: formData.anosGarantiaTotal,
+        resultado: formData.resultado as "PROCEDENTE" | "IMPROCEDENTE",
+        status: "draft"
+      };
+      
+      // Gerar o relatório
+      const docBlob = await generateFARReport(farReport);
+      
+      // Criar um URL para o blob e fazer download
+      const url = URL.createObjectURL(docBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Relatório FAR - ${formData.cliente} - ${formData.farProtocolo}.docx`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      toast({
+        title: "Relatório gerado com sucesso",
+        description: "O documento Word foi gerado e está sendo baixado.",
+      });
+    } catch (error) {
+      console.error("Erro ao gerar relatório Word:", error);
+      toast({
+        title: "Erro ao gerar relatório",
+        description: error instanceof Error ? error.message : "Ocorreu um erro ao gerar o documento Word.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
