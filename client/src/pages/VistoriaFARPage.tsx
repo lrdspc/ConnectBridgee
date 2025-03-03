@@ -20,7 +20,7 @@ import {
   DialogFooter,
   DialogClose
 } from "@/components/ui/dialog";
-import { X, Camera, Image as ImageIcon, Trash2, Save, CheckCircle2, FileText, ChevronLeft } from "lucide-react";
+import { X, Camera, Image as ImageIcon, Trash2, Save, CheckCircle2 } from "lucide-react";
 import { v4 as uuidv4 } from 'uuid';
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -31,7 +31,6 @@ import {
   espessurasTelhasFAR,
   FARReport
 } from "../../../shared/farReportSchema";
-import { generateFARReport } from "../lib/farReportGenerator";
 
 type TelhaSpec = {
   id: string;
@@ -682,80 +681,6 @@ const VistoriaFARPage = () => {
     
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
-  };
-  
-  // Função para gerar o relatório em formato Word
-  const handleGenerateDocxReport = async () => {
-    try {
-      setIsSubmitting(true);
-      
-      if (!validarFormulario()) {
-        // Exibir erro ao usuário
-        toast({
-          title: "Erro de validação",
-          description: "Por favor, preencha os campos obrigatórios para gerar o relatório.",
-          variant: "destructive"
-        });
-        return;
-      }
-      
-      // Converter os dados do formulário para o formato esperado pelo gerador de relatórios
-      const farReport: FARReport = {
-        dataVistoria: formData.dataVistoria,
-        farProtocolo: formData.farProtocolo,
-        assunto: formData.assunto,
-        cliente: formData.cliente,
-        empreendimento: formData.empreendimento,
-        cidade: formData.cidade,
-        uf: formData.uf,
-        endereco: formData.endereco,
-        elaboradoPor: formData.elaboradoPor,
-        departamento: formData.departamento,
-        regional: formData.regional,
-        unidade: formData.unidade,
-        coordenador: formData.coordenador,
-        gerente: formData.gerente,
-        telhas: formData.telhas,
-        problemas: formData.problemas,
-        introducao: formData.introducao,
-        analiseTecnica: formData.analiseTecnica,
-        conclusao: formData.conclusao,
-        recomendacao: formData.recomendacao,
-        observacoesGerais: formData.observacoesGerais,
-        anosGarantia: formData.anosGarantia,
-        anosGarantiaSistemaCompleto: formData.anosGarantiaSistemaCompleto,
-        anosGarantiaTotal: formData.anosGarantiaTotal,
-        resultado: formData.resultado as "PROCEDENTE" | "IMPROCEDENTE",
-        status: "draft"
-      };
-      
-      // Gerar o relatório
-      const docBlob = await generateFARReport(farReport);
-      
-      // Criar um URL para o blob e fazer download
-      const url = URL.createObjectURL(docBlob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `Relatório FAR - ${formData.cliente} - ${formData.farProtocolo}.docx`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      
-      toast({
-        title: "Relatório gerado com sucesso",
-        description: "O documento Word foi gerado e está sendo baixado.",
-      });
-    } catch (error) {
-      console.error("Erro ao gerar relatório Word:", error);
-      toast({
-        title: "Erro ao gerar relatório",
-        description: error instanceof Error ? error.message : "Ocorreu um erro ao gerar o documento Word.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
   };
   
   const handleSubmit = async (e: React.FormEvent) => {
@@ -1625,7 +1550,7 @@ Observações Gerais: ${formData.observacoesGerais}`,
                 </div>
               </Card>
               
-              <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex justify-between gap-2">
                 <Button 
                   type="button" 
                   variant="outline" 
@@ -1633,46 +1558,23 @@ Observações Gerais: ${formData.observacoesGerais}`,
                 >
                   Anterior
                 </Button>
-                
-                <div className="flex-grow flex flex-wrap gap-3 justify-end">
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    onClick={handleGenerateDocxReport}
-                    disabled={isSubmitting}
-                    className="flex items-center"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <LoadingAnimation size="sm" className="mr-2" />
-                        Gerando...
-                      </>
-                    ) : (
-                      <>
-                        <FileText className="w-4 h-4 mr-2" />
-                        Gerar Documento Word
-                      </>
-                    )}
-                  </Button>
-                  
-                  <Button 
-                    type="submit" 
-                    className="bg-green-600 hover:bg-green-700"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <LoadingAnimation size="sm" className="mr-2" />
-                        Salvando...
-                      </>
-                    ) : (
-                      <>
-                        <Save className="w-4 h-4 mr-2" />
-                        Salvar Vistoria
-                      </>
-                    )}
-                  </Button>
-                </div>
+                <Button 
+                  type="submit" 
+                  className="bg-green-600 hover:bg-green-700"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <LoadingAnimation size="sm" className="mr-2" />
+                      Salvando...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4 mr-2" />
+                      Salvar Vistoria
+                    </>
+                  )}
+                </Button>
               </div>
             </TabsContent>
           </form>

@@ -64,10 +64,6 @@ export const farReportSchema = z.object({
   // Campos de assinatura
   assinadoPor: z.string().optional().default(""),
   assinadoEm: z.string().optional().default(""),
-  numeroRegistro: z.string().optional(),
-  
-  // Resultado da vistoria
-  resultado: z.enum(["PROCEDENTE", "IMPROCEDENTE"]).optional().default("IMPROCEDENTE"),
   
   // Metadados do relatório
   id: z.string().optional(),
@@ -286,7 +282,6 @@ export function gerarFARReportAleatorio(): FARReport {
     assinadoPor: getRandomItem(responsaveis),
     assinadoEm: dataVistoria,
     
-    status: "draft",
-    resultado: "IMPROCEDENTE"
+    status: "draft"
   };
 }
