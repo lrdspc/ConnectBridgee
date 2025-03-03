@@ -268,27 +268,32 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   
   if (naoConformidadesSelecionadas.length > 0) {
     naoConformidadesSelecionadas.forEach(nc => {
+      // Título com formatação em negrito
       mainContent.push(
         new Paragraph({
           bullet: { level: 0 },
           children: [
-            new TextRun({ text: nc.titulo || "" })
+            new TextRun({ 
+              text: nc.titulo || "", 
+              bold: true
+            })
           ],
           spacing: { after: 100 }
         })
       );
       
-      if (nc.descricao) {
-        mainContent.push(
-          new Paragraph({
-            children: [
-              new TextRun({ text: nc.descricao })
-            ],
-            indent: { left: 720 },
-            spacing: { after: 200 }
-          })
-        );
-      }
+      // Descrição com recuo, garantindo que sempre apareça
+      mainContent.push(
+        new Paragraph({
+          children: [
+            new TextRun({ 
+              text: nc.descricao || "Descrição não disponível" 
+            })
+          ],
+          indent: { left: 720 },
+          spacing: { after: 200 }
+        })
+      );
     });
   } else {
     mainContent.push(
