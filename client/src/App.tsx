@@ -14,12 +14,7 @@ import { Toaster } from '@/components/ui/toaster';
 // Novas páginas para o fluxo revisado
 import ClientesPage from './pages/ClientesPage';
 import ClienteDetalhesPage from './pages/ClienteDetalhesPage';
-import InspecoesPage from './pages/InspecoesPage';
-import NovaInspecaoPage from './pages/NovaInspecaoPage';
-import InspecoesTelhadosPage from './pages/InspecoesTelhadosPage';
-import InspecaoDetalhesPage from './pages/InspecaoDetalhesPage';
-import RelatoriosPage from './pages/RelatoriosPage';
-import VistoriaFARPage from './pages/VistoriaFARPage';
+import RelatorioVistoriaPage from './pages/RelatorioVistoriaPage';
 
 function App() {
   return (
@@ -39,16 +34,9 @@ function App() {
           {/* Novas páginas do fluxo revisado */}
           <Route path="/clientes" component={ClientesPage} />
           <Route path="/clientes/:id" component={ClienteDetalhesPage} />
-          <Route path="/inspecoes" component={InspecoesPage} />
-          <Route path="/inspecoes/novo" component={NovaInspecaoPage} />
-          <Route path="/inspecoes/telhados" component={InspecoesTelhadosPage} />
-          <Route path="/inspecoes/:id" component={InspecaoDetalhesPage} />
           
-          {/* Página de relatórios */}
-          <Route path="/relatorios" component={RelatoriosPage} />
-          
-          {/* Página de vistoria FAR */}
-          <Route path="/vistoria-far" component={VistoriaFARPage} />
+          {/* Página do relatório de vistoria técnica */}
+          <Route path="/relatorio-vistoria" component={RelatorioVistoriaPage} />
           
           <Route component={NotFound} />
         </Switch>

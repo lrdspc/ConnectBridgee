@@ -14,7 +14,9 @@ import {
   ChevronRight,
   Bell,
   Search,
-  HelpCircle
+  HelpCircle,
+  ClipboardList,
+  FileText
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -38,6 +40,8 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
   const menuItems = [
     { name: 'Dashboard', path: '/', icon: <Home className="w-5 h-5" />, badge: null },
     { name: 'Rotas', path: '/rotas', icon: <MapPin className="w-5 h-5" />, badge: null },
+    { name: 'Relatório de Vistoria', path: '/relatorio-vistoria', icon: <ClipboardList className="w-5 h-5" />, badge: null },
+    { name: 'Relatórios', path: '/relatorios', icon: <FileText className="w-5 h-5" />, badge: null },
     { name: 'Meu Perfil', path: '/perfil', icon: <User className="w-5 h-5" />, badge: null },
   ];
 
