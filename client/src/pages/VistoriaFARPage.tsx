@@ -20,7 +20,7 @@ import {
   DialogFooter,
   DialogClose
 } from "@/components/ui/dialog";
-import { X, Camera, Image as ImageIcon, Trash2, Save, CheckCircle2 } from "lucide-react";
+import { X, Camera, Image as ImageIcon, Trash2, Save, CheckCircle2, FileText, ChevronLeft } from "lucide-react";
 import { v4 as uuidv4 } from 'uuid';
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -1625,7 +1625,7 @@ Observações Gerais: ${formData.observacoesGerais}`,
                 </div>
               </Card>
               
-              <div className="flex justify-between gap-2">
+              <div className="flex flex-col md:flex-row gap-4">
                 <Button 
                   type="button" 
                   variant="outline" 
@@ -1633,23 +1633,46 @@ Observações Gerais: ${formData.observacoesGerais}`,
                 >
                   Anterior
                 </Button>
-                <Button 
-                  type="submit" 
-                  className="bg-green-600 hover:bg-green-700"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <LoadingAnimation size="sm" className="mr-2" />
-                      Salvando...
-                    </>
-                  ) : (
-                    <>
-                      <Save className="w-4 h-4 mr-2" />
-                      Salvar Vistoria
-                    </>
-                  )}
-                </Button>
+                
+                <div className="flex-grow flex flex-wrap gap-3 justify-end">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={handleGenerateDocxReport}
+                    disabled={isSubmitting}
+                    className="flex items-center"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <LoadingAnimation size="sm" className="mr-2" />
+                        Gerando...
+                      </>
+                    ) : (
+                      <>
+                        <FileText className="w-4 h-4 mr-2" />
+                        Gerar Documento Word
+                      </>
+                    )}
+                  </Button>
+                  
+                  <Button 
+                    type="submit" 
+                    className="bg-green-600 hover:bg-green-700"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <LoadingAnimation size="sm" className="mr-2" />
+                        Salvando...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="w-4 h-4 mr-2" />
+                        Salvar Vistoria
+                      </>
+                    )}
+                  </Button>
+                </div>
               </div>
             </TabsContent>
           </form>
