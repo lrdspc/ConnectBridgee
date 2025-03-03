@@ -8,6 +8,70 @@
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply font-sans antialiased bg-neutral-100 text-foreground;
+    -webkit-tap-highlight-color: transparent;
   }
+}
+
+.page-transition {
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 4px;
+}
+
+/* Offline indicator */
+.offline-indicator {
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+/* Hide scrollbar for specific elements */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Estilos para o mapa do Leaflet */
+.leaflet-container {
+  z-index: 10;
+}
+
+.leaflet-bottom {
+  z-index: 990 !important;
+  margin-bottom: 60px !important;
+}
+
+.leaflet-control-attribution {
+  font-size: 8px !important;
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+}
+
+/* Garantir que os controles do mapa fiquem acima de outros elementos */
+.leaflet-top,
+.leaflet-control {
+  z-index: 990 !important;
+}
+
+.map-tiles {
+  filter: saturate(1.2) contrast(1.1);
 }

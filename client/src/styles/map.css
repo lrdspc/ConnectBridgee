@@ -1,0 +1,81 @@
+/* Estilos para otimizar mapa e versão responsiva */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+  isolation: isolate;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Estabilizar o mapa com hardware acceleration para reduzir piscadas */
+.leaflet-layer,
+.leaflet-control,
+.leaflet-pane {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Melhorias para desktop */
+@media (min-width: 768px) {
+  .desktop-tabs {
+    display: flex;
+    height: calc(100vh - 200px);
+  }
+  
+  .desktop-tabs [role="tablist"] {
+    flex-direction: column;
+    width: 150px;
+    height: 100%;
+  }
+  
+  .desktop-tabs [role="tabpanel"] {
+    flex: 1;
+    height: 100%;
+    overflow-y: auto;
+  }
+  
+  .desktop-content {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
+  }
+  
+  .desktop-content header {
+    grid-column: 1 / -1;
+  }
+  
+  .visits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 16px;
+  }
+  
+  .desktop-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .desktop-card > div:first-child {
+    flex: 1;
+  }
+}
+
+/* Classes de utilidade */
+.mobile-condensed {
+  font-size: 0.7rem;
+  line-height: 1.2;
+}
+
+.desktop-button {
+  min-width: 110px;
+}
+
+/* Animações suaves para mudanças de estado */
+.route-map-container, 
+.desktop-content, 
+.desktop-tabs {
+  transition: height 0.3s, width 0.3s, transform 0.3s;
+}
