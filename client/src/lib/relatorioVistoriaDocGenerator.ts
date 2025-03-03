@@ -16,7 +16,7 @@ import {
   SectionType,
   Packer
 } from 'docx';
-import { RelatorioVistoria } from '../../../shared/relatorioVistoriaSchema';
+import { RelatorioVistoria, naoConformidadesDisponiveis } from '../../../shared/relatorioVistoriaSchema';
 
 // Converte dataURL para ArrayBuffer para inserção de imagem
 async function dataUrlToArrayBuffer(dataUrl: string): Promise<ArrayBuffer> {
@@ -267,14 +267,19 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   const naoConformidadesSelecionadas = relatorio.naoConformidades.filter(nc => nc.selecionado);
   
   if (naoConformidadesSelecionadas.length > 0) {
+    // Usar as descrições completas das não conformidades disponíveis (importadas no topo do arquivo)
+    
     naoConformidadesSelecionadas.forEach(nc => {
+      // Buscar a não conformidade completa a partir dos dados disponíveis
+      const ncCompleta = naoConformidadesDisponiveis.find((item: {id: number, titulo: string, descricao: string}) => item.id === nc.id);
+      
       // Título com formatação em negrito
       mainContent.push(
         new Paragraph({
           bullet: { level: 0 },
           children: [
             new TextRun({ 
-              text: nc.titulo || "", 
+              text: ncCompleta?.titulo || nc.titulo || "", 
               bold: true
             })
           ],
@@ -287,7 +292,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
         new Paragraph({
           children: [
             new TextRun({ 
-              text: nc.descricao || "Descrição não disponível" 
+              text: ncCompleta?.descricao || nc.descricao || "Descrição não disponível" 
             })
           ],
           indent: { left: 720 },
