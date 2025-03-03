@@ -364,18 +364,7 @@ export default function RelatorioVistoriaPage() {
     }
   };
   
-  // Função para baixar o relatório em HTML
-  const baixarRelatorioHTML = () => {
-    const blob = new Blob([previewHTML], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `relatorio-vistoria-${form.getValues().protocolo || 'novo'}.html`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
+  // Removida a função para exportar HTML, mantendo apenas a exportação para DOCX
   
   // Estado para controlar o carregamento ao gerar DOCX
   const [isGeneratingDocx, setIsGeneratingDocx] = useState(false);
@@ -1176,18 +1165,8 @@ export default function RelatorioVistoriaPage() {
                       <Button 
                         variant="default"
                         size="sm"
-                        onClick={baixarRelatorioHTML}
-                        disabled={!previewHTML}
-                      >
-                        <Download className="mr-2 h-4 w-4" />
-                        Exportar HTML
-                      </Button>
-                      <Button 
-                        variant="default"
-                        size="sm"
                         onClick={baixarRelatorioDocx}
                         disabled={!form.formState.isValid}
-                        className="bg-blue-600 hover:bg-blue-700"
                       >
                         <FileText className="mr-2 h-4 w-4" />
                         {isGeneratingDocx ? "Gerando..." : "Exportar DOC"}
