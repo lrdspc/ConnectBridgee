@@ -38,9 +38,6 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
   const menuItems = [
     { name: 'Dashboard', path: '/', icon: <Home className="w-5 h-5" />, badge: null },
     { name: 'Rotas', path: '/rotas', icon: <MapPin className="w-5 h-5" />, badge: null },
-    { name: 'Clientes', path: '/clientes', icon: <Users className="w-5 h-5" />, badge: 3 },
-    { name: 'Inspeções', path: '/inspecoes', icon: <ClipboardCheck className="w-5 h-5" />, badge: null },
-    { name: 'Relatórios', path: '/relatorios', icon: <BarChart2 className="w-5 h-5" />, badge: null },
     { name: 'Meu Perfil', path: '/perfil', icon: <User className="w-5 h-5" />, badge: null },
   ];
 

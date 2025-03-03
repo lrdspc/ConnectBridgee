@@ -53,30 +53,21 @@ const BottomNavigation = () => {
             </a>
           </Link>
           
-          <Link href="/clientes">
-            <a className={`flex flex-col items-center justify-center ${isActive('/clientes') ? 'text-primary' : 'text-neutral-500'}`}>
-              <div className={`p-1.5 rounded-lg ${isActive('/clientes') ? 'bg-primary/10' : ''}`}>
-                <Users className="h-5 w-5" />
-              </div>
-              <span className="text-[10px] mt-1">Clientes</span>
-            </a>
-          </Link>
-          
           {/* Botão central de Adicionar */}
           <div className="flex justify-center">
-            <Link href="/inspecoes/novo">
+            <Link href="/vistoria-far">
               <a className="bg-primary text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg border-4 border-white -mt-6">
                 <Plus className="h-6 w-6" />
               </a>
             </Link>
           </div>
           
-          <Link href="/inspecoes">
-            <a className={`flex flex-col items-center justify-center ${isActive('/inspecoes') ? 'text-primary' : 'text-neutral-500'}`}>
-              <div className={`p-1.5 rounded-lg ${isActive('/inspecoes') ? 'bg-primary/10' : ''}`}>
-                <ClipboardCheck className="h-5 w-5" />
+          <Link href="/rotas">
+            <a className={`flex flex-col items-center justify-center ${isActive('/rotas') ? 'text-primary' : 'text-neutral-500'}`}>
+              <div className={`p-1.5 rounded-lg ${isActive('/rotas') ? 'bg-primary/10' : ''}`}>
+                <MapPin className="h-5 w-5" />
               </div>
-              <span className="text-[10px] mt-1">Inspeções</span>
+              <span className="text-[10px] mt-1">Rotas</span>
             </a>
           </Link>
           
@@ -113,14 +104,7 @@ const BottomNavigation = () => {
                   </a>
                 </Link>
                 
-                <Link href="/relatorios">
-                  <a className="flex flex-col items-center p-3 rounded-xl bg-gray-50 hover:bg-gray-100" onClick={() => setShowMore(false)}>
-                    <div className={`p-3 rounded-full ${isActive('/relatorios') ? 'bg-primary/10 text-primary' : 'bg-white text-neutral-700'} mb-2 shadow-sm`}>
-                      <FileSpreadsheet className="h-6 w-6" />
-                    </div>
-                    <span className="text-xs font-medium">Relatórios</span>
-                  </a>
-                </Link>
+
                 
                 <Link href="/rotas">
                   <a className="flex flex-col items-center p-3 rounded-xl bg-gray-50 hover:bg-gray-100" onClick={() => setShowMore(false)}>
