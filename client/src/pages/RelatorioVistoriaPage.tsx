@@ -151,12 +151,19 @@ export default function RelatorioVistoriaPage() {
         .filter(nc => nc.selecionado)
         .map(nc => {
           const completa = naoConformidadesDisponiveis.find(item => item.id === nc.id);
-          return completa?.titulo || '';
+          return {
+            titulo: completa?.titulo || '',
+            descricao: completa?.descricao || ''
+          };
         });
       
       // Montar a lista de não conformidades para a conclusão
       const listaNaoConformidades = naoConformidadesSelecionadas.length > 0
-        ? `<ul>${naoConformidadesSelecionadas.map(nc => `<li>${nc}</li>`).join('')}</ul>`
+        ? `<ul>${naoConformidadesSelecionadas.map(nc => 
+            `<li>
+              <strong>${nc.titulo}</strong>
+              <p style="margin-left: 20px; margin-top: 5px; margin-bottom: 15px;">${nc.descricao}</p>
+            </li>`).join('')}</ul>`
         : '<p>Não foram identificadas não conformidades.</p>';
       
       // Criar HTML para o preview
