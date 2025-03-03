@@ -18,17 +18,20 @@ import {
 } from 'docx';
 import { RelatorioVistoria, naoConformidadesDisponiveis } from '../../../shared/relatorioVistoriaSchema';
 
-// Converte dataURL para ArrayBuffer para inserção de imagem
-// Converte dataURL para ArrayBuffer para inserção de imagem
-async function dataUrlToArrayBuffer(dataUrl: string): Promise<ArrayBuffer> {
+// Função auxiliar para trabalhar com imagens (não utilizada diretamente)
+function dataUrlToBuffer(dataUrl: string): Buffer {
   try {
-    const response = await fetch(dataUrl);
-    const blob = await response.blob();
-    return await blob.arrayBuffer();
+    // Extrair a parte de dados do dataURL
+    const matches = dataUrl.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+    if (!matches || matches.length !== 3) {
+      throw new Error('Invalid data URL');
+    }
+    
+    // Converter base64 para buffer
+    return Buffer.from(matches[2], 'base64');
   } catch (error) {
-    console.error("Erro ao converter dataURL para ArrayBuffer:", error);
-    // Retornar um buffer vazio em caso de erro
-    return new ArrayBuffer(0);
+    console.error("Erro ao converter dataURL para buffer:", error);
+    return Buffer.alloc(0);
   }
 }
 
