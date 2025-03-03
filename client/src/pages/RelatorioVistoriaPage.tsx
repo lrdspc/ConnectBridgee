@@ -1136,15 +1136,27 @@ export default function RelatorioVistoriaPage() {
                       <FileCheck className="mr-2 h-4 w-4" />
                       Atualizar Preview
                     </Button>
-                    <Button
-                      variant="default"
-                      size="sm"
-                      onClick={baixarRelatorio}
-                      disabled={!previewHTML}
-                    >
-                      <Download className="mr-2 h-4 w-4" />
-                      Baixar Relatório
-                    </Button>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <Button 
+                        variant="default"
+                        size="sm"
+                        onClick={baixarRelatorioHTML}
+                        disabled={!previewHTML}
+                      >
+                        <Download className="mr-2 h-4 w-4" />
+                        Exportar HTML
+                      </Button>
+                      <Button 
+                        variant="default"
+                        size="sm"
+                        onClick={baixarRelatorioDocx}
+                        disabled={!form.formState.isValid}
+                        className="bg-blue-600 hover:bg-blue-700"
+                      >
+                        <FileText className="mr-2 h-4 w-4" />
+                        {isGeneratingDocx ? "Gerando..." : "Exportar DOC"}
+                      </Button>
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>
