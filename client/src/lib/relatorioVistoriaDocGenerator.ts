@@ -263,13 +263,13 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
     })
   );
   
-  // Listar não conformidades
-  const naoConformidadesSelecionadas = relatorio.naoConformidades.filter(nc => nc.selecionado);
+  // Filtrar não conformidades selecionadas para usar em várias seções do documento
+  const naosConformidadesSelecionadas = relatorio.naoConformidades.filter(nc => nc.selecionado);
   
-  if (naoConformidadesSelecionadas.length > 0) {
+  if (naosConformidadesSelecionadas.length > 0) {
     // Usar as descrições completas das não conformidades disponíveis (importadas no topo do arquivo)
     
-    naoConformidadesSelecionadas.forEach(nc => {
+    naosConformidadesSelecionadas.forEach(nc => {
       // Buscar a não conformidade completa a partir dos dados disponíveis
       const ncCompleta = naoConformidadesDisponiveis.find((item: {id: number, titulo: string, descricao: string}) => item.id === nc.id);
       
@@ -326,6 +326,42 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
         children: [
           new TextRun({ text: relatorio.conclusao })
         ],
+        spacing: { after: 200 }
+      })
+    );
+  }
+  
+  // Lista de não conformidades na conclusão (apenas títulos)
+  // Usamos a mesma lista filtrada anteriormente
+  if (naosConformidadesSelecionadas.length > 0) {
+    // Texto introdutório para a lista de não conformidades
+    mainContent.push(
+      new Paragraph({
+        children: [
+          new TextRun({ 
+            text: "Não conformidades identificadas que comprometem a reclamação:", 
+            bold: true 
+          })
+        ],
+        spacing: { before: 200, after: 120 }
+      })
+    );
+    
+    // Lista apenas com os títulos das não conformidades
+    naosConformidadesSelecionadas.forEach((nc: {id: number, titulo: string, descricao?: string, selecionado: boolean}) => {
+      mainContent.push(
+        new Paragraph({
+          bullet: { level: 0 },
+          children: [
+            new TextRun({ text: nc.titulo || "" })
+          ],
+          spacing: { after: 80 }
+        })
+      );
+    });
+    
+    mainContent.push(
+      new Paragraph({
         spacing: { after: 200 }
       })
     );
