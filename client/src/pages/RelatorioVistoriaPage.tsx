@@ -157,12 +157,20 @@ export default function RelatorioVistoriaPage() {
           };
         });
       
-      // Montar a lista de não conformidades para a conclusão
+      // Montar a lista de não conformidades com descrições completas (para a seção 2.1)
       const listaNaoConformidades = naoConformidadesSelecionadas.length > 0
         ? `<ul>${naoConformidadesSelecionadas.map(nc => 
             `<li>
               <strong>${nc.titulo}</strong>
               <p style="margin-left: 20px; margin-top: 5px; margin-bottom: 15px;">${nc.descricao}</p>
+            </li>`).join('')}</ul>`
+        : '<p>Não foram identificadas não conformidades.</p>';
+        
+      // Montar a lista de não conformidades apenas com títulos (para a conclusão)
+      const listaNaoConformidadesTitulos = naoConformidadesSelecionadas.length > 0
+        ? `<ul>${naoConformidadesSelecionadas.map(nc => 
+            `<li>
+              <strong>${nc.titulo}</strong>
             </li>`).join('')}</ul>`
         : '<p>Não foram identificadas não conformidades.</p>';
       
@@ -267,7 +275,7 @@ export default function RelatorioVistoriaPage() {
           <div style="margin-top: 20px;">
             <h2>3. CONCLUSÃO</h2>
             <p>Com base na análise técnica realizada, foram identificadas as seguintes não conformidades:</p>
-            ${listaNaoConformidades}
+            ${listaNaoConformidadesTitulos}
             <p>${formData.conclusao || ''}</p>
             <p>Em função das não conformidades constatadas no manuseio e instalação das chapas Brasilit, 
             finalizamos o atendimento considerando a reclamação como <strong>${formData.resultado}</strong>, 
