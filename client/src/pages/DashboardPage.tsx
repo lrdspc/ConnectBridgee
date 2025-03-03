@@ -86,13 +86,7 @@ export default function DashboardPage() {
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-            <div className="flex items-center gap-3">
-              <Link href="/vistoria-far">
-                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md">
-                  <FileText className="mr-2 h-5 w-5" />
-                  Nova Inspeção
-                </Button>
-              </Link>
+            <div className="flex items-center">
               <span className="text-sm text-gray-500">
                 {formatDate(today, 'dd/MM/yyyy')}
               </span>
