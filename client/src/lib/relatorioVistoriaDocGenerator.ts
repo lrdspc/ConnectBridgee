@@ -269,7 +269,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   if (naosConformidadesSelecionadas.length > 0) {
     // Usar as descrições completas das não conformidades disponíveis (importadas no topo do arquivo)
     
-    naosConformidadesSelecionadas.forEach(nc => {
+    naosConformidadesSelecionadas.forEach((nc: {id: number, titulo: string, descricao?: string, selecionado: boolean}) => {
       // Buscar a não conformidade completa a partir dos dados disponíveis
       const ncCompleta = naoConformidadesDisponiveis.find((item: {id: number, titulo: string, descricao: string}) => item.id === nc.id);
       
