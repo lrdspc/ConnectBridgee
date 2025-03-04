@@ -45,15 +45,15 @@ export default function MobileMenu() {
 
   return (
     <>
-      {/* Menu deslizante com botão hambúrguer no lado direito */}
+      {/* Menu deslizante com botão hambúrguer */}
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <button 
-            className="fixed bottom-16 right-4 w-12 h-12 bg-primary text-white rounded-full shadow-md flex items-center justify-center z-40 border-2 border-white"
+            className="hidden"
             aria-label="Abrir menu"
           >
             <MenuIcon 
-              className="h-6 w-6" 
+              className="h-5 w-5 text-gray-600" 
             />
           </button>
         </SheetTrigger>

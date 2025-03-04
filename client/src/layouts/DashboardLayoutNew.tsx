@@ -143,7 +143,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
         
         {/* Ações e perfil do usuário - versão simplificada para mobile */}
         <div className="flex items-center gap-2">
-          {/* Em mobile mostramos apenas o perfil e notificações */}
+          {/* Em mobile mostramos o menu hambúrguer, perfil e notificações */}
           {isMobile ? (
             <>
               <Button variant="ghost" size="icon" className="relative">
@@ -158,6 +158,14 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
                   {user?.name?.charAt(0) || 'U'}
                 </AvatarFallback>
               </Avatar>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="ml-1" 
+                onClick={() => setOpen(true)}
+              >
+                <MenuIcon className="h-6 w-6" />
+              </Button>
             </>
           ) : (
             <>
