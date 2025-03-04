@@ -25,7 +25,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import FloatingActionButton from '@/components/layout/FloatingActionButton';
+import MobileMenu from '@/components/layout/MobileMenu';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -43,7 +43,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
   // Função para detectar a direção da rolagem na página
   useEffect(() => {
     // Só aplica em dispositivos móveis
-    if (!isMobile || !mainRef.current) return;
+    if (!isMobile) return;
     
     const handleScroll = () => {
       const mainElement = mainRef.current;
@@ -51,11 +51,18 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
       
       const currentScrollY = mainElement.scrollTop;
       
-      // Determina a direção da rolagem
-      if (currentScrollY > lastScrollY.current + 10) {
+      // Sempre mostra o cabeçalho no topo da página
+      if (currentScrollY <= 10) {
+        setHeaderVisible(true);
+        lastScrollY.current = currentScrollY;
+        return;
+      }
+      
+      // Determina a direção da rolagem com um limiar menor para mais responsividade
+      if (currentScrollY > lastScrollY.current + 5) {
         // Rolando para baixo - esconde o cabeçalho
         setHeaderVisible(false);
-      } else if (currentScrollY < lastScrollY.current - 10) {
+      } else if (currentScrollY < lastScrollY.current - 5) {
         // Rolando para cima - mostra o cabeçalho
         setHeaderVisible(true);
       }
@@ -64,13 +71,19 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
       lastScrollY.current = currentScrollY;
     };
     
-    const mainElement = mainRef.current;
-    mainElement.addEventListener('scroll', handleScroll);
+    // Garantir que o cabeçalho esteja visível inicialmente
+    setHeaderVisible(true);
     
-    return () => {
-      mainElement.removeEventListener('scroll', handleScroll);
-    };
-  }, [isMobile]);
+    // Definir evento de rolagem no elemento main
+    const mainElement = mainRef.current;
+    if (mainElement) {
+      mainElement.addEventListener('scroll', handleScroll, { passive: true });
+      
+      return () => {
+        mainElement.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, [isMobile, mainRef.current]);
 
   const menuItems = [
     { name: 'Dashboard', path: '/', icon: <Home className="w-5 h-5" />, badge: null },
@@ -340,8 +353,8 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
         </main>
       </div>
       
-      {/* Botão de ação flutuante para mobile */}
-      {isMobile && <FloatingActionButton />}
+      {/* Menu deslizante para mobile */}
+      {isMobile && <MobileMenu />}
     </div>
   );
 }
