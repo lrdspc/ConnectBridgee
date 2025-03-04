@@ -87,31 +87,98 @@ const DashboardTiles: React.FC<DashboardTilesProps> = ({
     ],
   });
 
-  // Estado para controlar quais tiles estão expandidos/colapsados
-  const [expandedTiles, setExpandedTiles] = useState<Record<string, boolean>>({
-    stats: false,
-    chart: false,
-    visits: false,
-    reports: false,
-    weather: false,
-    route: false,
+  // Estado para controlar se os tiles são grandes ou pequenos (formato)
+  const [tileSize, setTileSize] = useState<Record<string, 'large' | 'small'>>({
+    stats: 'large',  // Este sempre será grande (ocupa linha inteira)
+    chart: 'large',  // Gráfico em formato grande por padrão
+    visits: 'small', // Lista de visitas em quadrado por padrão
+    reports: 'small',
+    weather: 'small',
+    route: 'small',
   });
   
   // Estado para controlar se o modo de edição está ativado
   const [editMode, setEditMode] = useState<boolean>(false);
 
-  // Função para alternar o estado expandido/colapsado de um tile
-  const toggleExpand = (id: string) => {
-    setExpandedTiles(prev => ({
+  // Função para alternar o tamanho do tile entre grande e pequeno
+  const toggleTileSize = (id: string) => {
+    if (id === 'stats') return; // Estatísticas sempre ocupam a linha inteira
+
+    setTileSize(prev => ({
       ...prev,
-      [id]: !prev[id]
+      [id]: prev[id] === 'large' ? 'small' : 'large'
     }));
   };
 
-  // Atualizar layouts quando os tiles expandidos mudarem
+  // Atualizar layouts quando o tamanho dos tiles mudar
   useEffect(() => {
-    // Poderia adicionar aqui lógica para ajustar layouts baseado em quais tiles estão expandidos
-  }, [expandedTiles]);
+    // Atualizamos os layouts quando o tamanho dos tiles muda
+    const newLayouts = {
+      lg: [
+        { i: 'stats', x: 0, y: 0, w: 12, h: 1, minW: 6, maxW: 12 },
+        ...tiles.filter(t => t.id !== 'stats').map((tile) => {
+          const isLarge = tileSize[tile.id] === 'large';
+          return {
+            i: tile.id,
+            x: isLarge ? 0 : (layouts.lg.find(l => l.i === tile.id)?.x || 0) % 6,
+            y: 1 + Math.floor((layouts.lg.find(l => l.i === tile.id)?.y || 1) / 2) * 2,
+            w: isLarge ? 12 : 6,
+            h: 2,
+            minW: isLarge ? 10 : 5,
+            maxW: isLarge ? 12 : 6
+          };
+        })
+      ],
+      md: [
+        { i: 'stats', x: 0, y: 0, w: 10, h: 1, minW: 6, maxW: 10 },
+        ...tiles.filter(t => t.id !== 'stats').map((tile) => {
+          const isLarge = tileSize[tile.id] === 'large';
+          return {
+            i: tile.id,
+            x: isLarge ? 0 : (layouts.md.find(l => l.i === tile.id)?.x || 0) % 5,
+            y: 1 + Math.floor((layouts.md.find(l => l.i === tile.id)?.y || 1) / 2) * 2,
+            w: isLarge ? 10 : 5,
+            h: 2,
+            minW: isLarge ? 8 : 4,
+            maxW: isLarge ? 10 : 5
+          };
+        })
+      ],
+      sm: [
+        { i: 'stats', x: 0, y: 0, w: 6, h: 1, minW: 6, maxW: 6 },
+        ...tiles.filter(t => t.id !== 'stats').map((tile) => {
+          const isLarge = tileSize[tile.id] === 'large';
+          return {
+            i: tile.id,
+            x: isLarge ? 0 : (layouts.sm.find(l => l.i === tile.id)?.x || 0) % 3,
+            y: 1 + Math.floor((layouts.sm.find(l => l.i === tile.id)?.y || 1) / 2) * 2,
+            w: isLarge ? 6 : 3,
+            h: 2,
+            minW: isLarge ? 6 : 3,
+            maxW: isLarge ? 6 : 3
+          };
+        })
+      ],
+      xs: [
+        { i: 'stats', x: 0, y: 0, w: 4, h: 1, minW: 4, maxW: 4 },
+        ...tiles.filter(t => t.id !== 'stats').map((tile) => {
+          // No modo mobile, todos os tiles ocupam a largura total
+          return {
+            i: tile.id,
+            x: 0,
+            y: 1 + (tiles.findIndex(t => t.id === tile.id)) * 2,
+            w: 4,
+            h: 2,
+            minW: 4,
+            maxW: 4
+          };
+        })
+      ]
+    };
+    
+    setLayouts(newLayouts);
+    localStorage.setItem('dashboardLayouts', JSON.stringify(newLayouts));
+  }, [tileSize]);
 
   // Salvar o layout quando ele for alterado
   const handleLayoutChange = (currentLayout: any, allLayouts: any) => {
@@ -180,7 +247,7 @@ const DashboardTiles: React.FC<DashboardTilesProps> = ({
 
   // Renderiza um tile específico baseado no tipo
   const renderTileContent = (tile: TileData) => {
-    const isExpanded = expandedTiles[tile.id];
+    const isLarge = tileSize[tile.id] === 'large';
 
     switch (tile.type) {
       case 'stats':
@@ -233,7 +300,7 @@ const DashboardTiles: React.FC<DashboardTilesProps> = ({
           <div className="h-full">
             <Chart
               type="bar"
-              height={isExpanded ? 300 : 180}
+              height={isLarge ? 300 : 180}
               data={weeklyVisits}
               xAxis={{
                 dataKey: "day",
@@ -256,7 +323,7 @@ const DashboardTiles: React.FC<DashboardTilesProps> = ({
         return (
           <div className="space-y-3">
             {visits.filter(v => v.status === 'scheduled' || v.status === 'in-progress')
-              .slice(0, isExpanded ? 5 : 3)
+              .slice(0, isLarge ? 5 : 3)
               .map((visit) => (
                 <Link key={visit.id} href={`/visitas/${visit.id}`}>
                   <div className="border border-slate-200 rounded-xl p-3 cursor-pointer hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 shadow-sm">
@@ -430,9 +497,9 @@ const DashboardTiles: React.FC<DashboardTilesProps> = ({
                     variant="ghost"
                     size="icon"
                     className="h-7 w-7 rounded-lg hover:bg-slate-100"
-                    onClick={() => toggleExpand(tile.id)}
+                    onClick={() => toggleTileSize(tile.id)}
                   >
-                    {expandedTiles[tile.id] ? (
+                    {tileSize[tile.id] === 'large' ? (
                       <Minimize2 className="h-4 w-4 text-slate-500" />
                     ) : (
                       <Maximize2 className="h-4 w-4 text-slate-500" />
