@@ -45,15 +45,15 @@ export default function MobileMenu() {
 
   return (
     <>
-      {/* Menu deslizante com botão de seta animada no canto direito */}
+      {/* Menu deslizante com botão hambúrguer no centro */}
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <button 
-            className="fixed bottom-20 right-4 w-10 h-10 bg-primary rounded-full shadow-md flex items-center justify-center z-40 transition-all duration-300 hover:bg-primary/90"
+            className="fixed bottom-16 left-1/2 -translate-x-1/2 w-12 h-8 bg-white rounded-t-lg shadow-md flex items-center justify-center z-40 border border-gray-200"
             aria-label="Abrir menu"
           >
-            <ChevronUp 
-              className={`h-5 w-5 text-white transition-transform duration-300 ${open ? 'rotate-180' : ''}`} 
+            <MenuIcon 
+              className="h-5 w-5 text-gray-600" 
             />
           </button>
         </SheetTrigger>
@@ -61,11 +61,14 @@ export default function MobileMenu() {
         {/* Menu deslizante que abre de baixo para cima em tamanho compacto */}
         <SheetContent side="bottom" className="p-0 pt-2 h-auto max-h-[70vh] rounded-t-xl">
           <div className="flex flex-col">
-            {/* Cabeçalho com botão de fechar */}
-            <div className="flex items-center justify-end px-4 pb-2">
-              <SheetClose className="p-1 rounded-full hover:bg-gray-100">
-                <X className="h-5 w-5 text-gray-500" />
-              </SheetClose>
+            {/* Cabeçalho com botão hambúrguer que se transforma em X */}
+            <div className="flex items-center justify-center px-4 pb-3 border-b">
+              <button 
+                onClick={() => setOpen(false)}
+                className="h-8 w-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-all duration-300"
+              >
+                <X className="h-5 w-5 text-gray-600" />
+              </button>
             </div>
             
             {/* Seção de perfil na parte superior */}
@@ -86,25 +89,23 @@ export default function MobileMenu() {
             <div className="grid grid-cols-4 gap-3 p-2 overflow-y-auto">
               {menuItems.map((item) => (
                 <SheetClose asChild key={item.path}>
-                  <Link href={item.path}>
-                    <a className={cn(
-                      "flex flex-col items-center p-3 rounded-lg hover:bg-gray-50 transition-colors",
-                      isActive(item.path) 
-                        ? "bg-primary/10 text-primary" 
-                        : item.highlight 
-                        ? "bg-blue-50 text-blue-600" 
-                        : "text-gray-700"
-                    )}>
-                      <div>
-                        {item.icon}
-                      </div>
-                      <span className="text-xs mt-1">{item.name}</span>
-                      
-                      {/* Indicador de item ativo */}
-                      {isActive(item.path) && (
-                        <div className="w-1.5 h-1.5 bg-primary rounded-full mt-1"></div>
-                      )}
-                    </a>
+                  <Link to={item.path} className={cn(
+                    "flex flex-col items-center p-3 rounded-lg hover:bg-gray-50 transition-colors",
+                    isActive(item.path) 
+                      ? "bg-primary/10 text-primary" 
+                      : item.highlight 
+                      ? "bg-blue-50 text-blue-600" 
+                      : "text-gray-700"
+                  )}>
+                    <div>
+                      {item.icon}
+                    </div>
+                    <span className="text-xs mt-1">{item.name}</span>
+                    
+                    {/* Indicador de item ativo */}
+                    {isActive(item.path) && (
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full mt-1"></div>
+                    )}
                   </Link>
                 </SheetClose>
               ))}
