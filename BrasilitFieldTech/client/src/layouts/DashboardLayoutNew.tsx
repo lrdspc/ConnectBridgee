@@ -52,9 +52,9 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className="flex flex-col bg-gray-50" style={{ height: '100%', position: 'relative' }}>
       {/* Top Header (com perfil de usuário) */}
-      <header className="h-16 bg-white border-b z-10 flex items-center justify-between px-4 shadow-sm">
+      <header className="h-16 bg-white border-b flex items-center justify-between px-4 shadow-sm">
         <div className="flex items-center">
           {/* Logo para ambos os modos (mobile e desktop) */}
           <div className="flex items-center mr-6">
