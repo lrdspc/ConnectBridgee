@@ -573,6 +573,16 @@ export const getSyncErrors = async (): Promise<SyncErrorInfo[]> => {
   }
 };
 
+// Interface para compatibilidade do Service Worker
+interface ExtendedServiceWorkerRegistration extends ServiceWorkerRegistration {
+  sync?: {
+    register(tag: string): Promise<void>;
+  };
+  periodicSync?: {
+    register(tag: string, options: { minInterval: number }): Promise<void>;
+  };
+}
+
 // Função para verificar a saúde da sincronização
 export const getSyncHealth = async (): Promise<{
   status: 'healthy' | 'warning' | 'error';
@@ -619,16 +629,6 @@ export const getSyncHealth = async (): Promise<{
     lastSuccessfulSync
   };
 };
-
-// Interface para compatibilidade do Service Worker
-interface ExtendedServiceWorkerRegistration extends ServiceWorkerRegistration {
-  sync?: {
-    register(tag: string): Promise<void>;
-  };
-  periodicSync?: {
-    register(tag: string, options: { minInterval: number }): Promise<void>;
-  };
-}
 
 // Setup enhanced background sync
 export const setupBackgroundSync = () => {

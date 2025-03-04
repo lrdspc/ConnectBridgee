@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { getSyncHealth, syncData, ConflictInfo, SyncErrorInfo, getConflictingVisits, getSyncErrors, resolveConflict } from "../../lib/sync";
+import { getSyncHealth, syncData, getConflictingVisits, getSyncErrors, resolveConflict } from "../../lib/sync";
+import type { ConflictInfo, SyncErrorInfo } from "../../lib/sync";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
