@@ -116,7 +116,7 @@ export default function DashboardPage() {
   const visitasHoje = getVisitasHoje();
 
   // Função para alternar configuração do dashboard
-  const toggleDashboardItem = (item) => {
+  const toggleDashboardItem = (item: keyof typeof dashboardConfig) => {
     setDashboardConfig(prev => ({
       ...prev,
       [item]: !prev[item]
@@ -143,7 +143,16 @@ export default function DashboardPage() {
               <span className="text-sm text-gray-500">
                 {formatDate(today, 'dd/MM/yyyy')}
               </span>
-              <Button variant="outline" size="sm">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  // Abre um diálogo de personalização (simples por enquanto)
+                  if (typeof window !== 'undefined') {
+                    alert('Função de personalização estará disponível em breve!');
+                  }
+                }}
+              >
                 <Settings className="h-4 w-4 mr-2" />
                 Personalizar
               </Button>
@@ -155,9 +164,9 @@ export default function DashboardPage() {
             <Card className="border-blue-200">
               <CardHeader className="bg-blue-50 pb-2">
                 <div className="flex justify-between items-center">
-                  <CardTitle className="flex items-center text-blue-800">
-                    <Calendar className="h-5 w-5 mr-2" />
-                    Visitas para Hoje
+                  <CardTitle className="flex items-center text-blue-800 whitespace-nowrap">
+                    <Calendar className="h-5 w-5 mr-2 flex-shrink-0" />
+                    Visitas de Hoje
                   </CardTitle>
                   <Link href="/visitas">
                     <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800">
@@ -302,9 +311,9 @@ export default function DashboardPage() {
             {dashboardConfig.showVisitasAgendadas && (
               <Card className="bg-blue-50 border-blue-200">
                 <CardHeader className="py-4">
-                  <CardTitle className="text-blue-800 text-lg flex items-center gap-2">
-                    <Clock className="h-5 w-5" />
-                    Agendadas
+                  <CardTitle className="text-blue-800 text-lg flex items-center gap-2 h-6">
+                    <Clock className="h-5 w-5 flex-shrink-0" />
+                    <span className="whitespace-nowrap">Agendadas</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -316,9 +325,9 @@ export default function DashboardPage() {
             {dashboardConfig.showEmAndamento && (
               <Card className="bg-amber-50 border-amber-200">
                 <CardHeader className="py-4">
-                  <CardTitle className="text-amber-800 text-lg flex items-center gap-2">
-                    <Clock3 className="h-5 w-5" />
-                    Em Andamento
+                  <CardTitle className="text-amber-800 text-lg flex items-center gap-2 h-6">
+                    <Clock3 className="h-5 w-5 flex-shrink-0" />
+                    <span className="whitespace-nowrap">Em Andamento</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -330,9 +339,9 @@ export default function DashboardPage() {
             {dashboardConfig.showPendentes && (
               <Card className="bg-purple-50 border-purple-200">
                 <CardHeader className="py-4">
-                  <CardTitle className="text-purple-800 text-lg flex items-center gap-2">
-                    <AlertCircle className="h-5 w-5" />
-                    Pendentes
+                  <CardTitle className="text-purple-800 text-lg flex items-center gap-2 h-6">
+                    <AlertCircle className="h-5 w-5 flex-shrink-0" />
+                    <span className="whitespace-nowrap">Pendentes</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -344,9 +353,9 @@ export default function DashboardPage() {
             {dashboardConfig.showConcluidas && (
               <Card className="bg-green-50 border-green-200">
                 <CardHeader className="py-4">
-                  <CardTitle className="text-green-800 text-lg flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5" />
-                    Concluídas
+                  <CardTitle className="text-green-800 text-lg flex items-center gap-2 h-6">
+                    <CheckCircle className="h-5 w-5 flex-shrink-0" />
+                    <span className="whitespace-nowrap">Concluídas</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
