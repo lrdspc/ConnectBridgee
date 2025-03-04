@@ -309,9 +309,9 @@ export default function DashboardPage() {
           {/* Cards de estatísticas */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {dashboardConfig.showVisitasAgendadas && (
-              <Card className="bg-blue-50 border-blue-200">
-                <CardHeader className="py-4">
-                  <CardTitle className="text-blue-800 text-lg flex items-center gap-2 h-6">
+              <Card className="bg-blue-50 border-blue-200 h-[130px]">
+                <CardHeader className="py-3">
+                  <CardTitle className="text-blue-800 text-sm flex items-center gap-2">
                     <Clock className="h-5 w-5 flex-shrink-0" />
                     <span className="whitespace-nowrap">Agendadas</span>
                   </CardTitle>
@@ -323,11 +323,11 @@ export default function DashboardPage() {
             )}
             
             {dashboardConfig.showEmAndamento && (
-              <Card className="bg-amber-50 border-amber-200">
-                <CardHeader className="py-4">
-                  <CardTitle className="text-amber-800 text-lg flex items-center gap-2 h-6">
+              <Card className="bg-amber-50 border-amber-200 h-[130px]">
+                <CardHeader className="py-3">
+                  <CardTitle className="text-amber-800 text-sm flex items-center gap-2">
                     <Clock3 className="h-5 w-5 flex-shrink-0" />
-                    <span className="whitespace-nowrap">Em Andamento</span>
+                    <span className="text-sm whitespace-nowrap">Em Andamento</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -337,9 +337,9 @@ export default function DashboardPage() {
             )}
             
             {dashboardConfig.showPendentes && (
-              <Card className="bg-purple-50 border-purple-200">
-                <CardHeader className="py-4">
-                  <CardTitle className="text-purple-800 text-lg flex items-center gap-2 h-6">
+              <Card className="bg-purple-50 border-purple-200 h-[130px]">
+                <CardHeader className="py-3">
+                  <CardTitle className="text-purple-800 text-sm flex items-center gap-2">
                     <AlertCircle className="h-5 w-5 flex-shrink-0" />
                     <span className="whitespace-nowrap">Pendentes</span>
                   </CardTitle>
@@ -351,9 +351,9 @@ export default function DashboardPage() {
             )}
             
             {dashboardConfig.showConcluidas && (
-              <Card className="bg-green-50 border-green-200">
-                <CardHeader className="py-4">
-                  <CardTitle className="text-green-800 text-lg flex items-center gap-2 h-6">
+              <Card className="bg-green-50 border-green-200 h-[130px]">
+                <CardHeader className="py-3">
+                  <CardTitle className="text-green-800 text-sm flex items-center gap-2">
                     <CheckCircle className="h-5 w-5 flex-shrink-0" />
                     <span className="whitespace-nowrap">Concluídas</span>
                   </CardTitle>
@@ -369,50 +369,13 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Coluna principal */}
             <div className="lg:col-span-2 space-y-6">
-              {/* Visitas Semanais */}
-              {dashboardConfig.showVisitasSemanais && (
-                <Card>
-                  <CardHeader>
-                    <div className="flex justify-between items-center">
-                      <CardTitle>Visitas Semanais</CardTitle>
-                      <Button variant="ghost" size="sm">
-                        <RefreshCw className="h-4 w-4 mr-2" /> Atualizar
-                      </Button>
-                    </div>
-                    <CardDescription>
-                      Visitas por dia nos últimos 7 dias
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Chart
-                      type="bar"
-                      height={280}
-                      data={weeklyVisits}
-                      xAxis={{
-                        dataKey: "day",
-                      }}
-                      series={[
-                        {
-                          dataKey: "count",
-                          name: "Visitas",
-                          color: "#2563eb",
-                        },
-                      ]}
-                      showTooltip={true}
-                      showLegend={false}
-                      valueFormatter={(value) => `${value} visitas`}
-                    />
-                  </CardContent>
-                </Card>
-              )}
-              
               {/* Tabs para diferentes visões */}
               <Tabs defaultValue="agendado" className="w-full">
                 <TabsList className="grid grid-cols-4 mb-4">
-                  <TabsTrigger value="agendado">Agendado</TabsTrigger>
-                  <TabsTrigger value="andamento">Em Andamento</TabsTrigger>
-                  <TabsTrigger value="pendente">Pendente</TabsTrigger>
-                  <TabsTrigger value="concluido">Concluído</TabsTrigger>
+                  <TabsTrigger value="agendado" className="px-1 text-xs sm:text-sm whitespace-nowrap">Agendado</TabsTrigger>
+                  <TabsTrigger value="andamento" className="px-1 text-xs sm:text-sm whitespace-nowrap">Em Andamento</TabsTrigger>
+                  <TabsTrigger value="pendente" className="px-1 text-xs sm:text-sm whitespace-nowrap">Pendente</TabsTrigger>
+                  <TabsTrigger value="concluido" className="px-1 text-xs sm:text-sm whitespace-nowrap">Concluído</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="agendado">
