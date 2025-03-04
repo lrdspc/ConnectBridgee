@@ -27,6 +27,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import MobileMenu from '@/components/layout/MobileMenu';
+import BottomNavigation from '@/components/layout/BottomNavigation';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -378,6 +379,9 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
 
       {/* Menu deslizante para mobile */}
       {isMobile && <MobileMenu open={open} setOpen={setOpen}/>} {/* Pass open and setOpen to MobileMenu */}
+      
+      {/* Navegação de rodapé no canto inferior direito */}
+      {isMobile && <BottomNavigation />}
     </div>
   );
 }
