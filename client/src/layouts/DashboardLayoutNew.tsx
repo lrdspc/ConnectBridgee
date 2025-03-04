@@ -269,8 +269,11 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
         )}
         
         {/* Conteúdo principal */}
-        <main className="flex-1 overflow-auto bg-gray-50 pb-16">
-          <div className="container mx-auto p-6">
+        <main className="flex-1 overflow-auto bg-gray-50 pb-20">
+          <div className={cn(
+            "container mx-auto",
+            isMobile ? "px-3 py-4" : "p-6"
+          )}>
             {children}
           </div>
         </main>

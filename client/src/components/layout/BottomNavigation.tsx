@@ -55,7 +55,7 @@ const BottomNavigation = () => {
           
           {/* Botão central de Adicionar */}
           <div className="flex justify-center">
-            <Link href="/vistoria-far">
+            <Link href="/relatorio-vistoria">
               <a className="bg-primary text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg border-4 border-white -mt-6">
                 <Plus className="h-6 w-6" />
               </a>
@@ -94,13 +94,13 @@ const BottomNavigation = () => {
               <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto my-2 opacity-80"></div>
               
               <div className="grid grid-cols-4 gap-3 p-4 max-h-[70vh] overflow-y-auto pb-8">
-                {/* Destaque especial para o botão de Nova Vistoria FAR */}
-                <Link href="/vistoria-far">
+                {/* Destaque especial para o botão de Relatório de Vistoria */}
+                <Link href="/relatorio-vistoria">
                   <a className="flex flex-col items-center p-3 rounded-xl bg-blue-50 hover:bg-blue-100 col-span-4 mb-3 border-2 border-blue-300" onClick={() => setShowMore(false)}>
                     <div className="p-3 rounded-full bg-blue-600 text-white mb-2 shadow-sm">
                       <FileText className="h-7 w-7" />
                     </div>
-                    <span className="text-sm font-semibold text-blue-800">Nova Vistoria FAR</span>
+                    <span className="text-sm font-semibold text-blue-800">Relatório de Vistoria</span>
                   </a>
                 </Link>
                 
