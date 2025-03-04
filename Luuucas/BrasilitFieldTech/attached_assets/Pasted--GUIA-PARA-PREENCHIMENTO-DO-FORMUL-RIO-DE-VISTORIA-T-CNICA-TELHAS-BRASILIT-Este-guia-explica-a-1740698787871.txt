@@ -1,0 +1,86 @@
+# GUIA PARA PREENCHIMENTO DO FORMULÁRIO DE VISTORIA TÉCNICA - TELHAS BRASILIT
+
+Este guia explica a sequência de preenchimento do formulário para criação de relatórios de vistoria técnica de telhas Brasilit.
+
+## Sequência de Preenchimento
+
+### 1. Dados Básicos
+O formulário segue a mesma sequência do relatório final:
+
+1. **Data de Vistoria** - Selecione a data em que a vistoria foi realizada
+2. **Cliente** - Nome completo do cliente
+3. **Empreendimento** - Tipo de empreendimento (Residencial, Comercial, Industrial, etc.)
+4. **Cidade** - Cidade onde está localizada a obra
+5. **UF** - Estado onde está localizada a obra
+6. **Endereço** - Endereço completo da obra
+7. **FAR/Protocolo** - Número do protocolo de atendimento
+8. **Assunto** - Categoria e breve descrição do problema (Ex: "AT - BRA - PERMEABILIDADE - Telhado com vazamento Geral")
+
+### 2. Dados do Responsável
+9. **Elaborado por** - Nome do técnico responsável pela vistoria
+10. **Departamento** - Pré-preenchido com "Assistência Técnica" (com opção para editar se necessário)
+11. **Regional** - Selecione a regional (Norte, Nordeste, Centro-Oeste, Sudeste, Sul)
+12. **Unidade** - Selecione o estado conforme a regional escolhida
+
+### 3. Informações sobre as Telhas
+Esta seção permite cadastrar um ou mais tipos de telhas identificadas na vistoria.
+
+Para cada tipo de telha:
+
+1. **Modelo de Telha** - Selecione "Ondulada" (ou insira outro modelo no campo "Outro")
+2. **Espessura** - Selecione 5mm, 6mm ou 8mm
+3. **Comprimento** - Selecione uma das opções disponíveis conforme a espessura:
+   - **5mm:** 1,22m, 1,53m, 1,83m, 2,13m, 2,44m
+   - **6mm:** 1,22m, 1,53m, 1,83m, 2,13m, 2,44m, 3,05m, 3,66m
+   - **8mm:** 1,22m, 1,53m, 1,83m, 2,13m, 2,44m, 3,05m, 3,66m
+4. **Largura** - Selecione 0,92m ou 1,10m
+5. **Quantidade** - Informe o número de telhas deste tipo/dimensão
+
+> **Nota:** A área coberta será calculada automaticamente multiplicando o comprimento × largura × quantidade de telhas.
+
+6. Clique em **"Adicionar outro tipo de telha"** se necessário (repita os passos 1-5 para cada tipo adicional)
+
+### 4. Problemas Identificados
+Nesta seção, selecione os problemas encontrados durante a vistoria:
+
+1. Para cada problema, selecione a caixa correspondente
+2. Ao selecionar um problema, será aberta uma descrição resumida
+3. Para cada problema selecionado, você poderá:
+   - **Adicionar Imagens** - Upload de fotos que evidenciam o problema
+   - **Incluir Observações** - Campo para adicionar informações específicas deste caso
+
+Os problemas disponíveis para seleção são:
+
+1. **Armazenagem Incorreta**
+2. **Carga Permanente sobre as Telhas**
+3. **Corte de Canto Incorreto ou Ausente**
+4. **Estrutura Desalinhada**
+5. **Fixação Irregular das Telhas**
+6. **Inclinação da Telha Inferior ao Recomendado**
+7. **Marcas de Caminhamento sobre o Telhado**
+8. **Balanço Livre do Beiral Incorreto**
+9. **Número de Apoios e Vão Livre Inadequados**
+10. **Recobrimento Incorreto**
+11. **Sentido de Montagem Incorreto**
+12. **Uso de Cumeeira Cerâmica**
+13. **Uso de Argamassa em Substituição a Peças Complementares**
+14. **Fixação de Acessórios Complementares Realizada de Forma Inadequada**
+
+### 5. Finalização
+
+Após preencher todos os campos necessários:
+
+1. **Revisar Informações** - Verifique se todos os dados estão corretos
+2. **Gerar Relatório** - Clique no botão para criar o relatório final
+3. **Salvar** - O relatório será gerado no formato padrão Brasilit
+
+## Particularidades do Formulário
+
+- O cálculo da área coberta é automático com base nas dimensões e quantidade de telhas
+- As opções de comprimento se ajustam de acordo com a espessura selecionada
+- Todos os relatórios serão gerados com conclusão de "IMPROCEDENTE"
+- O motivo padrão da conclusão será "incorreto manuseio e instalação das telhas e não a problemas relacionados à qualidade do material"
+- Imagens anexadas serão incluídas no relatório final como evidências
+- Observações específicas serão incorporadas à descrição do problema
+
+Este formulário otimiza o processo de criação de relatórios técnicos, garantindo consistência e qualidade nos documentos gerados pela equipe de Assistência Técnica.

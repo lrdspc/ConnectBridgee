@@ -1,0 +1,203 @@
+/* Estilos responsivos para desktop e mobile */
+
+/* Regras para mobile (até 767px) */
+@media (max-width: 767px) {
+  .desktop-only {
+    display: none !important;
+  }
+  
+  .route-map-container {
+    height: calc(100vh - 250px) !important; /* Altura ajustada para mobile */
+    max-height: 400px !important;
+  }
+  
+  /* Ajuste para botões em mobile */
+  .map-control-buttons {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  
+  /* Esconder algumas informações em mobile para economizar espaço */
+  .mobile-condensed {
+    font-size: 0.75rem !important;
+  }
+  
+  /* Otimizar cartões em telas pequenas */
+  .mobile-card {
+    padding: 8px !important;
+  }
+}
+
+/* Regras para desktop (768px ou mais) - LAYOUT TOTALMENTE REFORMULADO */
+@media (min-width: 768px) {
+  .mobile-only {
+    display: none !important;
+  }
+
+  /* Layout COMPLETAMENTE DIFERENTE para desktop - Split view */
+  .route-map-container {
+    height: calc(100vh - 120px) !important;
+    max-height: none !important;
+    position: fixed !important;
+    right: 0 !important;
+    top: 86px !important;
+    width: 60% !important;
+    z-index: 10 !important;
+    border-radius: 0 !important;
+    border-left: 2px solid #e2e8f0 !important;
+  }
+  
+  /* Mapa FULL HEIGHT em desktop */
+  .map-container {
+    height: 100% !important;
+    max-height: none !important;
+  }
+  
+  /* Página de rotas com layout totalmente novo */
+  .route-page-desktop {
+    display: grid !important;
+    grid-template-columns: 40% 60% !important;
+    height: calc(100vh - 86px) !important;
+    overflow: hidden !important;
+  }
+  
+  /* Painel lateral para controles */
+  .route-controls-panel {
+    padding: 24px !important;
+    overflow-y: auto !important;
+    height: 100% !important;
+    background-color: #f9fafb !important;
+  }
+  
+  /* Tornar cartões maiores e mais elegantes */
+  .desktop-card {
+    border-radius: 12px !important;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.1) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  }
+  
+  .desktop-card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 10px 15px rgba(0,0,0,0.05), 0 4px 6px rgba(0,0,0,0.05) !important;
+  }
+  
+  /* Tabs estilizadas para desktop */
+  .desktop-tabs {
+    background: white !important;
+    border-radius: 8px !important;
+    padding: 8px !important;
+    margin-bottom: 16px !important;
+  }
+
+  /* Esconder tabs no layout desktop, mostrar ambos simultaneamente */
+  .route-tabs-desktop-hide {
+    display: none !important;
+  }
+  
+  /* Container para a lista no layout desktop */
+  .route-list-container {
+    height: calc(100vh - 220px) !important;
+    overflow-y: auto !important;
+    padding-right: 8px !important;
+  }
+  
+  /* Visitas em formato de cartões mais luxuosos */
+  .visit-desktop-card {
+    margin-bottom: 16px !important;
+    border-radius: 12px !important;
+    border: 1px solid #e2e8f0 !important;
+    transition: all 0.3s ease !important;
+  }
+  
+  .visit-desktop-card:hover {
+    border-color: #60a5fa !important;
+    box-shadow: 0 8px 16px rgba(59, 130, 246, 0.1) !important;
+  }
+  
+  /* Botões mais grandes e impactantes em desktop */
+  .desktop-button {
+    min-width: 120px;
+    padding: 8px 16px !important;
+    font-weight: 500 !important;
+  }
+  
+  /* Estilo para título em desktop */
+  .desktop-title {
+    font-size: 24px !important;
+    margin-bottom: 16px !important;
+    font-weight: 600 !important;
+    color: #1e3a8a !important;
+  }
+  
+  /* Estatísticas em desktop */
+  .desktop-stats {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 12px !important;
+    margin-bottom: 24px !important;
+  }
+  
+  .stat-card {
+    background: white !important;
+    border-radius: 8px !important;
+    padding: 12px !important;
+    text-align: center !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+  }
+  
+  .stat-value {
+    font-size: 24px !important;
+    font-weight: 600 !important;
+    color: #3b82f6 !important;
+  }
+  
+  .stat-label {
+    font-size: 14px !important;
+    color: #64748b !important;
+  }
+  
+  /* Ferramentas e controles em desktop */
+  .desktop-tools {
+    display: flex !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+    margin-bottom: 16px !important;
+  }
+
+  /* Estilo para o header em desktop */
+  .desktop-header {
+    padding: 16px 24px !important;
+    background: linear-gradient(135deg, #3b82f6, #1e40af) !important;
+    color: white !important;
+  }
+}
+
+/* Layout responsivo para lista de visitas */
+@media (min-width: 768px) {
+  .visits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+}
+
+/* Modo de impressão */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-only {
+    display: block !important;
+  }
+  
+  body {
+    font-size: 12pt;
+    color: #000;
+    background: #fff;
+  }
+  
+  .page-break {
+    page-break-before: always;
+  }
+}
