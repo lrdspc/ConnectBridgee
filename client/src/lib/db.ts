@@ -45,6 +45,12 @@ export interface Visit {
   updatedAt: string;
   completedAt?: string;
   synced: boolean;
+  
+  // Campos adicionais para sincronização e resolução de conflitos
+  _conflictDetected?: boolean;
+  _serverVersion?: Omit<Visit, '_serverVersion' | '_conflictDetected'>;
+  _syncAttempts?: number;
+  _lastSyncError?: string;
 }
 
 export interface User {

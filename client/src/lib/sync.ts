@@ -2,53 +2,305 @@ import { Visit } from "./db";
 import { apiRequest } from "./queryClient";
 import { db } from "./db";
 
-// Function to sync visits to server
+// Interface para armazenar métricas de sincronização
+interface SyncStats {
+  lastSuccessfulSync: string;
+  syncAttempts: number;
+  successfulSyncs: number;
+  failedSyncs: number;
+  lastError: string | null;
+}
+
+// Inicialização das estatísticas de sincronização
+const initSyncStats = (): SyncStats => {
+  const savedStats = localStorage.getItem("syncStats");
+  
+  if (savedStats) {
+    try {
+      return JSON.parse(savedStats);
+    } catch (e) {
+      console.error("Erro ao carregar estatísticas de sincronização:", e);
+    }
+  }
+  
+  // Valores padrão
+  return {
+    lastSuccessfulSync: "0",
+    syncAttempts: 0,
+    successfulSyncs: 0,
+    failedSyncs: 0,
+    lastError: null
+  };
+};
+
+// Estatísticas de sincronização
+let syncStats = initSyncStats();
+
+// Função para salvar as estatísticas de sincronização
+const saveSyncStats = () => {
+  localStorage.setItem("syncStats", JSON.stringify(syncStats));
+};
+
+// Função auxiliar para compressão de dados de imagem em dataURLs
+const compressDataUrl = async (dataUrl: string, maxSizeKB: number = 500): Promise<string> => {
+  // Se não for uma dataURL de imagem, retorna sem alteração
+  if (!dataUrl.startsWith('data:image')) {
+    return dataUrl;
+  }
+  
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let width = img.width;
+      let height = img.height;
+      
+      // Redimensionar se a imagem for muito grande
+      const MAX_WIDTH = 1200;
+      const MAX_HEIGHT = 1200;
+      
+      if (width > MAX_WIDTH) {
+        height = Math.floor(height * (MAX_WIDTH / width));
+        width = MAX_WIDTH;
+      }
+      
+      if (height > MAX_HEIGHT) {
+        width = Math.floor(width * (MAX_HEIGHT / height));
+        height = MAX_HEIGHT;
+      }
+      
+      canvas.width = width;
+      canvas.height = height;
+      
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        resolve(dataUrl); // Fallback para o original se não conseguir o contexto
+        return;
+      }
+      
+      ctx.drawImage(img, 0, 0, width, height);
+      
+      // Começar com alta qualidade e reduzi-la se necessário
+      let quality = 0.9;
+      let compressed = canvas.toDataURL('image/jpeg', quality);
+      let iterations = 0;
+      const MAX_ITERATIONS = 5;
+      
+      // Tentar reduzir a qualidade até atingir o tamanho desejado
+      while (compressed.length > maxSizeKB * 1024 && iterations < MAX_ITERATIONS) {
+        quality -= 0.1;
+        if (quality < 0.3) quality = 0.3; // Limite mínimo de qualidade
+        compressed = canvas.toDataURL('image/jpeg', quality);
+        iterations++;
+      }
+      
+      resolve(compressed);
+    };
+    
+    img.onerror = () => resolve(dataUrl); // Fallback para o original em caso de erro
+    img.src = dataUrl;
+  });
+};
+
+// Função para otimizar o tamanho de uma visita (comprime fotos grandes)
+const optimizeVisitSize = async (visit: Visit): Promise<Visit> => {
+  if (!visit.photos || visit.photos.length === 0) {
+    return visit;
+  }
+  
+  try {
+    // Criar uma cópia profunda da visita para não modificar o original
+    const optimizedVisit = JSON.parse(JSON.stringify(visit)) as Visit;
+    
+    // Garantir que photos existe
+    if (optimizedVisit.photos && optimizedVisit.photos.length > 0) {
+      // Processar cada foto para comprimir
+      for (let i = 0; i < optimizedVisit.photos.length; i++) {
+        const photo = optimizedVisit.photos[i];
+        if (photo && photo.dataUrl) {
+          // Verifica tamanho aproximado em KB
+          const sizeKB = Math.round(photo.dataUrl.length / 1024);
+          
+          // Se a foto for grande, comprimir
+          if (sizeKB > 500) {
+            if (optimizedVisit.photos[i]) {
+              optimizedVisit.photos[i].dataUrl = await compressDataUrl(photo.dataUrl);
+            }
+          }
+        }
+      }
+    }
+    
+    return optimizedVisit;
+  } catch (error) {
+    console.error("Erro ao otimizar visita:", error);
+    return visit; // Retornar a original em caso de erro
+  }
+};
+
+// Função para dividir objetos grandes em partes menores para sincronização
+const chunkObject = (obj: any, maxChunkSizeMB: number = 5): any[] => {
+  const jsonString = JSON.stringify(obj);
+  const totalSizeMB = jsonString.length / (1024 * 1024);
+  
+  // Se o objeto já for pequeno o suficiente, retorná-lo diretamente
+  if (totalSizeMB <= maxChunkSizeMB) {
+    return [obj];
+  }
+  
+  // Para objetos muito grandes, dividir (principalmente para fotos e documentos)
+  const result = [];
+  
+  // Criar uma cópia básica sem os arrays grandes
+  const baseObject = { ...obj };
+  
+  // Remover arrays grandes que podem ser divididos
+  const photos = baseObject.photos || [];
+  const documents = baseObject.documents || [];
+  delete baseObject.photos;
+  delete baseObject.documents;
+  
+  // Adicionar objeto base sem os arrays grandes
+  result.push({
+    ...baseObject,
+    photos: [],
+    documents: []
+  });
+  
+  // Adicionar fotos em chunks separados
+  const CHUNK_SIZE = 2; // Número de itens por chunk
+  for (let i = 0; i < photos.length; i += CHUNK_SIZE) {
+    const photoChunk = photos.slice(i, i + CHUNK_SIZE);
+    result.push({
+      id: baseObject.id,
+      _chunkType: 'photos',
+      _chunkIndex: Math.floor(i / CHUNK_SIZE),
+      _totalChunks: Math.ceil(photos.length / CHUNK_SIZE),
+      photos: photoChunk
+    });
+  }
+  
+  // Adicionar documentos em chunks separados
+  for (let i = 0; i < documents.length; i += CHUNK_SIZE) {
+    const docChunk = documents.slice(i, i + CHUNK_SIZE);
+    result.push({
+      id: baseObject.id,
+      _chunkType: 'documents',
+      _chunkIndex: Math.floor(i / CHUNK_SIZE),
+      _totalChunks: Math.ceil(documents.length / CHUNK_SIZE),
+      documents: docChunk
+    });
+  }
+  
+  return result;
+};
+
+// Função para adicionar solicitação de sincronização à fila de sincronização
+const addToSyncQueue = async (visitId: string): Promise<void> => {
+  const syncQueue = JSON.parse(localStorage.getItem("syncQueue") || "[]");
+  
+  if (!syncQueue.includes(visitId)) {
+    syncQueue.push(visitId);
+    localStorage.setItem("syncQueue", JSON.stringify(syncQueue));
+  }
+};
+
+// Função para remover uma visita da fila de sincronização
+const removeFromSyncQueue = async (visitId: string): Promise<void> => {
+  const syncQueue = JSON.parse(localStorage.getItem("syncQueue") || "[]");
+  const newQueue = syncQueue.filter((id: string) => id !== visitId);
+  localStorage.setItem("syncQueue", JSON.stringify(newQueue));
+};
+
+// Função para obter a fila de sincronização
+const getSyncQueue = (): string[] => {
+  return JSON.parse(localStorage.getItem("syncQueue") || "[]");
+};
+
+// Function to sync visits to server with improved error handling and retry logic
 export const syncVisitsToServer = async (visits: Visit[]): Promise<void> => {
+  // Atualizar estatísticas
+  syncStats.syncAttempts++;
+  
   try {
     // Filter out visits that are already synced
     const unsynced = visits.filter(visit => !visit.synced);
     
     if (unsynced.length === 0) {
+      saveSyncStats();
       return;
     }
 
     console.log(`Tentando sincronizar ${unsynced.length} visitas com o servidor...`);
+    let syncedCount = 0;
 
-    // Verificar tamanho de cada visita antes de enviar
+    // Processar cada visita não sincronizada
     for (const visit of unsynced) {
       try {
-        // Verificar se o objeto é serializável e seu tamanho
-        const jsonString = JSON.stringify(visit);
+        // Primeiro otimizar o tamanho da visita
+        const optimizedVisit = await optimizeVisitSize(visit);
+        
+        // Verificar o tamanho da visita otimizada
+        const jsonString = JSON.stringify(optimizedVisit);
         const sizeMB = jsonString.length / (1024 * 1024);
         
-        console.log(`Tamanho da visita ${visit.id}: ${sizeMB.toFixed(2)}MB`);
-        
-        // Se for muito grande, pular esta visita
-        if (sizeMB > 15) {
-          console.warn(`Visita ${visit.id} é muito grande (${sizeMB.toFixed(2)}MB). Pulando sincronização.`);
-          continue;
+        if (sizeMB > 10) {
+          console.warn(`Visita ${visit.id} ainda é muito grande (${sizeMB.toFixed(2)}MB) mesmo após otimização.`);
+          
+          // Para objetos muito grandes, usar a estratégia de divisão em chunks
+          const chunks = chunkObject(optimizedVisit);
+          console.log(`Dividindo visita em ${chunks.length} partes para sincronização`);
+          
+          // Sincronizar cada chunk sequencialmente
+          for (let i = 0; i < chunks.length; i++) {
+            await apiRequest("POST", "/api/visits/sync", chunks[i]);
+            console.log(`Chunk ${i+1}/${chunks.length} da visita ${visit.id} sincronizado com sucesso`);
+          }
+        } else {
+          // Para objetos de tamanho normal, sincronizar normalmente
+          await apiRequest("POST", "/api/visits/sync", optimizedVisit);
         }
         
-        // Tentar sincronizar com o servidor
-        await apiRequest("POST", "/api/visits/sync", visit);
-        
-        // Mark visit as synced in local database
+        // Marcar como sincronizada no banco de dados local
         await db.visits.update(visit.id, { ...visit, synced: true });
+        
+        // Remover da fila de sincronização pendente
+        await removeFromSyncQueue(visit.id);
+        
+        syncedCount++;
         console.log(`Visita ${visit.id} sincronizada com sucesso`);
       } catch (visitError) {
         console.error(`Erro ao sincronizar visita ${visit.id}:`, visitError);
-        // Continuar com as próximas visitas mesmo se uma falhar
+        
+        // Adicionar à fila de sincronização para tentar novamente mais tarde
+        await addToSyncQueue(visit.id);
+        
+        // Atualizar estatísticas de falha
+        syncStats.failedSyncs++;
+        syncStats.lastError = `Erro ao sincronizar visita ${visit.id}: ${(visitError as Error).message}`;
       }
     }
 
-    console.log(`Processo de sincronização concluído`);
+    // Atualizar estatísticas de sucesso
+    if (syncedCount > 0) {
+      syncStats.successfulSyncs += syncedCount;
+      syncStats.lastSuccessfulSync = new Date().toISOString();
+    }
+    
+    saveSyncStats();
+    console.log(`Processo de sincronização concluído. ${syncedCount} visitas sincronizadas com sucesso.`);
   } catch (error) {
+    // Atualizar estatísticas de erro
+    syncStats.failedSyncs++;
+    syncStats.lastError = `Erro geral: ${(error as Error).message}`;
+    saveSyncStats();
+    
     console.error("Erro geral na sincronização de visitas:", error);
     throw error;
   }
 };
 
-// Function to sync visits from server
+// Function to sync visits from server with conflict resolution
 export const syncVisitsFromServer = async (): Promise<void> => {
   try {
     // Get last sync timestamp
@@ -62,6 +314,9 @@ export const syncVisitsFromServer = async (): Promise<void> => {
       return;
     }
 
+    // Manter registro de conflitos detectados
+    const conflicts: Visit[] = [];
+
     // Update local database with server data
     for (const serverVisit of serverVisits) {
       const localVisit = await db.visits.get(serverVisit.id);
@@ -69,57 +324,220 @@ export const syncVisitsFromServer = async (): Promise<void> => {
       if (!localVisit) {
         // Add new visit
         await db.visits.add({ ...serverVisit, synced: true });
-      } else if (new Date(serverVisit.updatedAt) > new Date(localVisit.updatedAt)) {
-        // Update visit if server version is newer
-        await db.visits.update(serverVisit.id, { ...serverVisit, synced: true });
+      } else {
+        // Verificar se há um conflito (ambas as versões foram modificadas)
+        const serverDate = new Date(serverVisit.updatedAt);
+        const localDate = new Date(localVisit.updatedAt);
+        
+        if (serverDate > localDate) {
+          // Update visit if server version is newer
+          await db.visits.update(serverVisit.id, { ...serverVisit, synced: true });
+        } else if (!localVisit.synced) {
+          // Temos um conflito: a versão local foi modificada mas não está sincronizada,
+          // e a versão do servidor também foi modificada
+          conflicts.push(localVisit);
+          
+          // Armazenar a versão do servidor como _serverVersion
+          // Criando uma versão sem os campos extras para evitar erros de tipo
+          const serverVersion = { 
+            ...serverVisit,
+            _conflictDetected: undefined,
+            _serverVersion: undefined,
+            _syncAttempts: undefined,
+            _lastSyncError: undefined
+          };
+          
+          // Atualizar o objeto local com as flags de conflito
+          await db.visits.update(serverVisit.id, { 
+            ...localVisit, 
+            _conflictDetected: true,
+            _syncAttempts: (localVisit._syncAttempts || 0) + 1,
+            _lastSyncError: "Conflito de sincronização detectado",
+            // Usando any para contornar problema de tipagem circular
+            _serverVersion: serverVersion as any
+          });
+        }
       }
     }
 
+    // Atualizar estatísticas
+    syncStats.successfulSyncs++;
+    syncStats.lastSuccessfulSync = new Date().toISOString();
+    saveSyncStats();
+
     // Update last sync timestamp
     localStorage.setItem("lastSyncTimestamp", new Date().toISOString());
-    console.log(`Successfully synced ${serverVisits.length} visits from server`);
+    
+    // Logs
+    console.log(`Sincronização com o servidor concluída: ${serverVisits.length} visitas recebidas`);
+    if (conflicts.length > 0) {
+      console.warn(`Detectados ${conflicts.length} conflitos de sincronização que precisam ser resolvidos manualmente`);
+    }
   } catch (error) {
-    console.error("Error syncing visits from server:", error);
+    // Atualizar estatísticas de erro
+    syncStats.failedSyncs++;
+    syncStats.lastError = `Erro ao sincronizar do servidor: ${(error as Error).message}`;
+    saveSyncStats();
+    
+    console.error("Erro ao sincronizar do servidor:", error);
     throw error;
   }
 };
 
-// Main function to perform two-way sync
+// Função para resolver conflitos de sincronização
+export const resolveConflict = async (visitId: string, useLocalVersion: boolean): Promise<void> => {
+  try {
+    const visit = await db.visits.get(visitId);
+    
+    if (!visit || !visit._conflictDetected) {
+      throw new Error("Visita não encontrada ou não há conflito para resolver");
+    }
+    
+    if (useLocalVersion) {
+      // Usar a versão local e marcá-la para sincronizar
+      await db.visits.update(visitId, {
+        ...visit,
+        _conflictDetected: false,
+        _serverVersion: undefined,
+        synced: false
+      });
+    } else {
+      // Usar a versão do servidor
+      if (!visit._serverVersion) {
+        throw new Error("Versão do servidor não disponível");
+      }
+      
+      await db.visits.update(visitId, {
+        ...visit._serverVersion,
+        _conflictDetected: false,
+        _serverVersion: undefined,
+        synced: true
+      });
+    }
+    
+    console.log(`Conflito resolvido para a visita ${visitId}`);
+  } catch (error) {
+    console.error(`Erro ao resolver conflito para visita ${visitId}:`, error);
+    throw error;
+  }
+};
+
+// Main function to perform two-way sync with improved reliability
 export const syncData = async (): Promise<void> => {
   if (!navigator.onLine) {
-    console.log("Cannot sync: device is offline");
+    console.log("Dispositivo offline. Sincronização adiada.");
     return;
   }
 
+  // Evitar múltiplas sincronizações simultâneas
+  if (localStorage.getItem("isSyncing") === "true") {
+    console.log("Sincronização já em andamento");
+    return;
+  }
+  
   try {
-    // First, sync local changes to server
-    const unsyncedVisits = await db.visits.where({ synced: false }).toArray();
-    await syncVisitsToServer(unsyncedVisits);
+    // Marcar início da sincronização
+    localStorage.setItem("isSyncing", "true");
     
-    // Then, get changes from server
+    // Processar a fila de sincronização pendente primeiro
+    const syncQueue = getSyncQueue();
+    if (syncQueue.length > 0) {
+      console.log(`Processando fila de sincronização com ${syncQueue.length} itens pendentes`);
+      
+      const pendingVisits = await Promise.all(
+        syncQueue.map(id => db.visits.get(id))
+      );
+      
+      // Filtrar resultados nulos (caso alguma visita tenha sido excluída)
+      const validPendingVisits = pendingVisits.filter(visit => visit !== undefined) as Visit[];
+      
+      if (validPendingVisits.length > 0) {
+        await syncVisitsToServer(validPendingVisits);
+      }
+    }
+    
+    // Buscar todas as visitas não sincronizadas
+    const unsyncedVisits = await db.visits.where({ synced: false }).toArray();
+    if (unsyncedVisits.length > 0) {
+      console.log(`Sincronizando ${unsyncedVisits.length} visitas não sincronizadas`);
+      await syncVisitsToServer(unsyncedVisits);
+    }
+    
+    // Obter atualizações do servidor
     await syncVisitsFromServer();
     
-    console.log("Data synchronization completed successfully");
+    console.log("Sincronização de dados concluída com sucesso");
   } catch (error) {
-    console.error("Error during data synchronization:", error);
-    throw error;
+    console.error("Erro durante a sincronização de dados:", error);
+  } finally {
+    // Marcar fim da sincronização independente do resultado
+    localStorage.setItem("isSyncing", "false");
   }
 };
 
-// Setup background sync if supported
+// Função para verificar a saúde da sincronização
+export const getSyncHealth = (): {
+  status: 'healthy' | 'warning' | 'error';
+  stats: SyncStats;
+  pendingItems: number;
+} => {
+  const pendingItems = getSyncQueue().length;
+  const stats = syncStats;
+  
+  // Decidir o status com base nas estatísticas
+  let status: 'healthy' | 'warning' | 'error' = 'healthy';
+  
+  if (stats.failedSyncs > stats.successfulSyncs * 0.5) {
+    status = 'error'; // Mais de 50% das sincronizações falham
+  } else if (pendingItems > 10 || stats.failedSyncs > stats.successfulSyncs * 0.2) {
+    status = 'warning'; // Muitos itens pendentes ou mais de 20% de falhas
+  }
+  
+  return { status, stats, pendingItems };
+};
+
+// Setup enhanced background sync
 export const setupBackgroundSync = () => {
+  // Registrar para sincronização periódica (a cada 15 minutos quando o app estiver aberto)
+  const SYNC_INTERVAL = 15 * 60 * 1000; // 15 minutos
+  
+  // Configurar intervalo de sincronização
+  const intervalId = setInterval(() => {
+    if (navigator.onLine) {
+      console.log('Executando sincronização periódica');
+      syncData().catch(console.error);
+    }
+  }, SYNC_INTERVAL);
+  
+  // Verificar se o Service Worker está disponível
   if ('serviceWorker' in navigator && 'SyncManager' in window) {
     navigator.serviceWorker.ready.then(registration => {
-      // Register a sync event that will be triggered when online
-      registration.sync.register('sync-visits');
-    }).catch(err => {
-      console.error('Background sync could not be registered:', err);
+      // Registrar um evento de sincronização que será acionado quando online
+      registration.sync.register('sync-visits')
+        .then(() => console.log('Background sync registrado com sucesso'))
+        .catch(err => console.error('Erro ao registrar background sync:', err));
+      
+      // Registrar para sincronização periódica via Service Worker
+      registration.periodicSync?.register('periodic-sync-visits', {
+        minInterval: 2 * 60 * 60 * 1000 // 2 horas (mínimo permitido)
+      }).catch(err => {
+        console.warn('Periodic sync não suportado ou falhou:', err);
+      });
     });
   }
+  
+  // Limpar o intervalo quando a página for descarregada
+  window.addEventListener('unload', () => {
+    clearInterval(intervalId);
+  });
 };
 
-// Try to sync when app comes online
+// Monitorar mudanças no estado da rede
 window.addEventListener('online', () => {
-  console.log('App is online. Attempting to sync data...');
+  console.log('Dispositivo online. Iniciando sincronização...');
   syncData().catch(console.error);
+});
+
+window.addEventListener('offline', () => {
+  console.log('Dispositivo offline. Operações de sincronização pausadas.');
 });
