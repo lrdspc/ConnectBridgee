@@ -109,94 +109,7 @@ const DashboardTiles: React.FC<DashboardTilesProps> = ({
       [id]: prev[id] === 'large' ? 'small' : 'large'
     }));
   };
-
-  // Atualizar layouts quando o tamanho dos tiles mudar
-  useEffect(() => {
-    // Atualizamos os layouts quando o tamanho dos tiles muda
-    const newLayouts = {
-      lg: [
-        { i: 'stats', x: 0, y: 0, w: 12, h: 1, minW: 6, maxW: 12 },
-        ...tiles.filter(t => t.id !== 'stats').map((tile) => {
-          const isLarge = tileSize[tile.id] === 'large';
-          return {
-            i: tile.id,
-            x: isLarge ? 0 : (layouts.lg.find(l => l.i === tile.id)?.x || 0) % 6,
-            y: 1 + Math.floor((layouts.lg.find(l => l.i === tile.id)?.y || 1) / 2) * 2,
-            w: isLarge ? 12 : 6,
-            h: 2,
-            minW: isLarge ? 10 : 5,
-            maxW: isLarge ? 12 : 6
-          };
-        })
-      ],
-      md: [
-        { i: 'stats', x: 0, y: 0, w: 10, h: 1, minW: 6, maxW: 10 },
-        ...tiles.filter(t => t.id !== 'stats').map((tile) => {
-          const isLarge = tileSize[tile.id] === 'large';
-          return {
-            i: tile.id,
-            x: isLarge ? 0 : (layouts.md.find(l => l.i === tile.id)?.x || 0) % 5,
-            y: 1 + Math.floor((layouts.md.find(l => l.i === tile.id)?.y || 1) / 2) * 2,
-            w: isLarge ? 10 : 5,
-            h: 2,
-            minW: isLarge ? 8 : 4,
-            maxW: isLarge ? 10 : 5
-          };
-        })
-      ],
-      sm: [
-        { i: 'stats', x: 0, y: 0, w: 6, h: 1, minW: 6, maxW: 6 },
-        ...tiles.filter(t => t.id !== 'stats').map((tile) => {
-          const isLarge = tileSize[tile.id] === 'large';
-          return {
-            i: tile.id,
-            x: isLarge ? 0 : (layouts.sm.find(l => l.i === tile.id)?.x || 0) % 3,
-            y: 1 + Math.floor((layouts.sm.find(l => l.i === tile.id)?.y || 1) / 2) * 2,
-            w: isLarge ? 6 : 3,
-            h: 2,
-            minW: isLarge ? 6 : 3,
-            maxW: isLarge ? 6 : 3
-          };
-        })
-      ],
-      xs: [
-        { i: 'stats', x: 0, y: 0, w: 4, h: 1, minW: 4, maxW: 4 },
-        ...tiles.filter(t => t.id !== 'stats').map((tile) => {
-          // No modo mobile, todos os tiles ocupam a largura total
-          return {
-            i: tile.id,
-            x: 0,
-            y: 1 + (tiles.findIndex(t => t.id === tile.id)) * 2,
-            w: 4,
-            h: 2,
-            minW: 4,
-            maxW: 4
-          };
-        })
-      ]
-    };
-    
-    setLayouts(newLayouts);
-    localStorage.setItem('dashboardLayouts', JSON.stringify(newLayouts));
-  }, [tileSize]);
-
-  // Salvar o layout quando ele for alterado
-  const handleLayoutChange = (currentLayout: any, allLayouts: any) => {
-    localStorage.setItem('dashboardLayouts', JSON.stringify(allLayouts));
-  };
-
-  // Carregar layouts salvos, se existirem
-  useEffect(() => {
-    const savedLayouts = localStorage.getItem('dashboardLayouts');
-    if (savedLayouts) {
-      try {
-        setLayouts(JSON.parse(savedLayouts));
-      } catch (e) {
-        console.error("Erro ao carregar layouts salvos:", e);
-      }
-    }
-  }, []);
-
+  
   // Dados dos tiles
   const tiles: TileData[] = [
     {
@@ -244,6 +157,109 @@ const DashboardTiles: React.FC<DashboardTilesProps> = ({
       color: 'bg-green-500',
     },
   ];
+  
+  // Atualizar layouts quando o tamanho dos tiles mudar
+  useEffect(() => {
+    // Gerar um layout de dashboard simples com duas opções: quadrado ou retangular
+    // Organizamos o layout para que os tiles estejam bem distribuídos em linhas e colunas
+    
+    // Primeiro, calculamos a posição de cada tile com base no tamanho
+    let currentRow = 1; // Começamos após o stats que ocupa a primeira linha
+    let leftColY = currentRow; // Coluna esquerda Y position
+    let rightColY = currentRow; // Coluna direita Y position
+    
+    const positionMap: Record<string, {x: number, y: number, w: number, h: number}> = { 
+      'stats': {x: 0, y: 0, w: 12, h: 1} // Stats sempre ocupa a primeira linha completa
+    };
+    
+    // Ordenamos os tiles (exceto stats) por tamanho para melhor organização
+    const otherTiles = tiles.filter(t => t.id !== 'stats');
+    const largeTiles = otherTiles.filter(t => tileSize[t.id] === 'large');
+    const smallTiles = otherTiles.filter(t => tileSize[t.id] === 'small');
+    
+    // Posicionar tiles grandes (cada um ocupa uma linha inteira)
+    largeTiles.forEach(tile => {
+      positionMap[tile.id] = {x: 0, y: currentRow, w: 12, h: 2};
+      currentRow += 2; // Avançamos 2 linhas (altura do tile)
+      leftColY = rightColY = currentRow;
+    });
+    
+    // Posicionar tiles pequenos (2 por linha)
+    smallTiles.forEach((tile, index) => {
+      if (index % 2 === 0) { // Coluna da esquerda
+        positionMap[tile.id] = {x: 0, y: leftColY, w: 6, h: 2};
+        leftColY += 2;
+      } else { // Coluna da direita
+        positionMap[tile.id] = {x: 6, y: rightColY, w: 6, h: 2};
+        rightColY += 2;
+      }
+    });
+    
+    // Definir layouts responsivos
+    const newLayouts = {
+      lg: tiles.map(tile => ({
+        i: tile.id,
+        x: positionMap[tile.id].x,
+        y: positionMap[tile.id].y,
+        w: positionMap[tile.id].w,
+        h: positionMap[tile.id].h,
+        minW: tileSize[tile.id] === 'large' ? 12 : 6,
+        maxW: tileSize[tile.id] === 'large' ? 12 : 6
+      })),
+      md: tiles.map(tile => ({
+        i: tile.id,
+        x: positionMap[tile.id].x * 10/12, // Proporção para tela média
+        y: positionMap[tile.id].y,
+        w: tile.id === 'stats' ? 10 : (tileSize[tile.id] === 'large' ? 10 : 5),
+        h: positionMap[tile.id].h,
+        minW: tileSize[tile.id] === 'large' ? 10 : 5,
+        maxW: tileSize[tile.id] === 'large' ? 10 : 5
+      })),
+      sm: tiles.map(tile => {
+        // Em telas pequenas, temos 6 colunas e os tiles são mais estreitos
+        const isLarge = tileSize[tile.id] === 'large';
+        return {
+          i: tile.id,
+          x: isLarge ? 0 : (positionMap[tile.id].x === 0 ? 0 : 3),
+          y: isLarge ? positionMap[tile.id].y : (positionMap[tile.id].x === 0 ? positionMap[tile.id].y : positionMap[tile.id].y),
+          w: isLarge ? 6 : 3,
+          h: positionMap[tile.id].h,
+          minW: isLarge ? 6 : 3,
+          maxW: isLarge ? 6 : 3
+        };
+      }),
+      xs: tiles.map(tile => ({
+        // No mobile, tudo fica em uma coluna
+        i: tile.id,
+        x: 0,
+        y: tile.id === 'stats' ? 0 : positionMap[tile.id].y + tiles.findIndex(t => t.id === tile.id),
+        w: 4,
+        h: positionMap[tile.id].h,
+        minW: 4,
+        maxW: 4
+      }))
+    };
+    
+    setLayouts(newLayouts);
+    localStorage.setItem('dashboardLayouts', JSON.stringify(newLayouts));
+  }, [tileSize]);
+
+  // Salvar o layout quando ele for alterado
+  const handleLayoutChange = (currentLayout: any, allLayouts: any) => {
+    localStorage.setItem('dashboardLayouts', JSON.stringify(allLayouts));
+  };
+
+  // Carregar layouts salvos, se existirem
+  useEffect(() => {
+    const savedLayouts = localStorage.getItem('dashboardLayouts');
+    if (savedLayouts) {
+      try {
+        setLayouts(JSON.parse(savedLayouts));
+      } catch (e) {
+        console.error("Erro ao carregar layouts salvos:", e);
+      }
+    }
+  }, []);
 
   // Renderiza um tile específico baseado no tipo
   const renderTileContent = (tile: TileData) => {
@@ -456,10 +472,63 @@ const DashboardTiles: React.FC<DashboardTilesProps> = ({
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-
+      </div>
+      
+      {/* Seleção do formato para os blocos */}
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+        <div className="flex items-center gap-2">
+          <Badge variant="outline" className="bg-white text-slate-600 px-3 py-2 text-sm border-slate-200">
+            Formatos disponíveis:
+          </Badge>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className={cn(
+              "flex items-center gap-2 rounded-lg border-slate-200",
+              !editMode && "opacity-50 cursor-not-allowed"
+            )}
+            disabled={!editMode}
+            onClick={() => {
+              // Trocar todos os blocos para formato retangular
+              const newSizes = { ...tileSize };
+              tiles.forEach(tile => {
+                if (tile.id !== 'stats') { // Stats sempre ocupa a linha inteira
+                  newSizes[tile.id] = 'large';
+                }
+              });
+              setTileSize(newSizes);
+            }}
+          >
+            <div className="w-6 h-3 bg-primary/20 rounded-sm" />
+            Retangular
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className={cn(
+              "flex items-center gap-2 rounded-lg border-slate-200",
+              !editMode && "opacity-50 cursor-not-allowed"
+            )}
+            disabled={!editMode}
+            onClick={() => {
+              // Trocar todos os blocos para formato quadrado
+              const newSizes = { ...tileSize };
+              tiles.forEach(tile => {
+                if (tile.id !== 'stats') { // Stats sempre ocupa a linha inteira
+                  newSizes[tile.id] = 'small';
+                }
+              });
+              setTileSize(newSizes);
+            }}
+          >
+            <div className="w-4 h-4 bg-primary/20 rounded-sm" />
+            Quadrado
+          </Button>
+        </div>
+        
         {editMode && (
           <Badge className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20">
-            Arrastar e redimensionar ativado
+            Modo de edição ativado
           </Badge>
         )}
       </div>
@@ -473,14 +542,16 @@ const DashboardTiles: React.FC<DashboardTilesProps> = ({
         rowHeight={150}
         onLayoutChange={handleLayoutChange}
         isDraggable={editMode}
-        isResizable={editMode}
+        isResizable={false} // Desligamos o redimensionamento, só permitimos os dois tamanhos pré-definidos
         margin={[16, 16]}
+        preventCollision={false}
       >
         {tiles.map((tile) => (
           <div key={tile.id} className="tile-container">
             <Card className={cn(
-              "h-full overflow-hidden border border-slate-200 shadow-sm rounded-xl", 
-              editMode && "ring-2 ring-primary/30 ring-offset-1"
+              "h-full overflow-hidden border border-slate-200 shadow-sm rounded-xl transition-all duration-200", 
+              editMode && "ring-2 ring-primary/30 ring-offset-1",
+              tileSize[tile.id] === 'large' ? "w-full" : "max-w-[600px]"
             )}>
               <CardHeader className="p-3 flex-row items-center justify-between space-y-0 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
                 <CardTitle className="text-base flex items-center font-medium text-slate-700">
@@ -488,26 +559,29 @@ const DashboardTiles: React.FC<DashboardTilesProps> = ({
                   {tile.title}
                 </CardTitle>
                 <div className="flex gap-1">
-                  {editMode && (
-                    <div className="flex items-center justify-center h-5 w-5 text-[10px] font-bold bg-primary/10 text-primary rounded-md">
-                      <Move className="h-3 w-3" />
-                    </div>
+                  {editMode && tile.id !== 'stats' && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 rounded-lg hover:bg-slate-100"
+                      onClick={() => toggleTileSize(tile.id)}
+                    >
+                      {tileSize[tile.id] === 'large' ? (
+                        <div className="flex flex-col items-center">
+                          <div className="w-4 h-4 bg-primary/20 rounded-sm" />
+                          <span className="text-[8px] mt-0.5 font-medium">Quad.</span>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center">
+                          <div className="w-5 h-3 bg-primary/20 rounded-sm" />
+                          <span className="text-[8px] mt-0.5 font-medium">Retan.</span>
+                        </div>
+                      )}
+                    </Button>
                   )}
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-7 w-7 rounded-lg hover:bg-slate-100"
-                    onClick={() => toggleTileSize(tile.id)}
-                  >
-                    {tileSize[tile.id] === 'large' ? (
-                      <Minimize2 className="h-4 w-4 text-slate-500" />
-                    ) : (
-                      <Maximize2 className="h-4 w-4 text-slate-500" />
-                    )}
-                  </Button>
                 </div>
               </CardHeader>
-              <CardContent className="p-4 overflow-auto bg-white">
+              <CardContent className="p-4 overflow-auto bg-white h-[calc(100%-56px)]">
                 {renderTileContent(tile)}
               </CardContent>
             </Card>
