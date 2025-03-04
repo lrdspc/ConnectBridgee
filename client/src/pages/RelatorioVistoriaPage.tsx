@@ -408,26 +408,29 @@ export default function RelatorioVistoriaPage() {
     <PageTransition>
       <DashboardLayoutNew>
         <div className="container mx-auto py-6">
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold tracking-tight">Relatório de Vistoria Técnica</h1>
-            <div className="flex space-x-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+            <h1 className="text-2xl font-bold tracking-tight">Relatório de Vistoria</h1>
+            <div className="flex flex-wrap gap-2">
               <Button
                 variant="outline"
                 onClick={() => window.history.back()}
+                className="flex-1 sm:flex-none"
               >
                 Voltar
               </Button>
               <Button
                 variant="outline"
                 onClick={() => form.reset(novoRelatorioVistoria())}
+                className="flex-1 sm:flex-none"
               >
                 Limpar
               </Button>
               <Button 
                 variant="default" 
                 onClick={form.handleSubmit(onSubmit)}
+                className="flex-1 sm:flex-none"
               >
-                <Save className="mr-2 h-4 w-4" /> Salvar Relatório
+                <Save className="mr-2 h-4 w-4" /> Salvar
               </Button>
             </div>
           </div>
@@ -437,27 +440,27 @@ export default function RelatorioVistoriaPage() {
             onValueChange={setActiveTab}
             className="w-full"
           >
-            <TabsList className="grid grid-cols-4 w-full">
-              <TabsTrigger value="informacoes-basicas">
-                <Building className="mr-2 h-4 w-4" /> Informações Básicas
+            <TabsList className="grid grid-cols-2 sm:grid-cols-4 w-full gap-2 p-1">
+              <TabsTrigger value="informacoes-basicas" className="py-2 text-xs sm:text-sm">
+                <Building className="mr-1 h-4 w-4" /> <span className="sm:inline">Informações</span>
               </TabsTrigger>
-              <TabsTrigger value="analise-tecnica">
-                <HardHat className="mr-2 h-4 w-4" /> Análise Técnica
+              <TabsTrigger value="analise-tecnica" className="py-2 text-xs sm:text-sm">
+                <HardHat className="mr-1 h-4 w-4" /> <span className="sm:inline">Análise</span>
               </TabsTrigger>
-              <TabsTrigger value="fotos">
-                <Camera className="mr-2 h-4 w-4" /> Fotos
+              <TabsTrigger value="fotos" className="py-2 text-xs sm:text-sm">
+                <Camera className="mr-1 h-4 w-4" /> <span className="sm:inline">Fotos</span>
               </TabsTrigger>
-              <TabsTrigger value="preview">
-                <FileText className="mr-2 h-4 w-4" /> Visualização
+              <TabsTrigger value="preview" className="py-2 text-xs sm:text-sm">
+                <FileText className="mr-1 h-4 w-4" /> <span className="sm:inline">Visualizar</span>
               </TabsTrigger>
             </TabsList>
             
             {/* Botão para gerar dados aleatórios */}
-            <div className="mb-4 flex justify-end">
+            <div className="my-4 flex justify-end">
               <Button 
                 type="button" 
                 variant="outline" 
-                className="gap-2" 
+                className="gap-2 w-full sm:w-auto py-2 px-4" 
                 onClick={() => {
                   const dadosAleatorios = gerarRelatorioAleatorio();
                   form.reset(dadosAleatorios);
@@ -476,8 +479,8 @@ export default function RelatorioVistoriaPage() {
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 {/* Tab de Informações Básicas */}
                 <TabsContent value="informacoes-basicas">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <Card>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <Card className="overflow-hidden">
                       <CardHeader>
                         <CardTitle>Identificação do Projeto</CardTitle>
                         <CardDescription>
