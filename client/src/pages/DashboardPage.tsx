@@ -609,7 +609,7 @@ export default function DashboardPage() {
                       ></div>
                     </div>
                     <div className="flex justify-between text-xs text-gray-500">
-                      <span>Meta: 20 visitas</span>
+                      <span>Meta: 21 visitas mensais</span>
                       <span>85% concluído</span>
                     </div>
                     
