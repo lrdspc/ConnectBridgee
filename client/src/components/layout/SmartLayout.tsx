@@ -2,16 +2,16 @@ import React, { ReactNode } from 'react';
 import { Link, useLocation } from 'wouter';
 import {
   Home,
-  Grid,
-  Bell,
-  Shield,
+  ClipboardList,
+  FileText,
+  Building2,
   MapPin,
   User,
   BarChart2,
   LogOut,
   Settings,
+  Bell,
   Search,
-  ChevronRight,
   Menu
 } from 'lucide-react';
 
@@ -40,17 +40,17 @@ const SmartLayout: React.FC<SmartLayoutProps> = ({ children, title }) => {
           </Link>
           <Link href="/visitas">
             <div className={`sidebar-icon ${isActive('/visitas') ? 'active' : ''}`}>
-              <Grid size={24} />
+              <ClipboardList size={24} />
             </div>
           </Link>
           <Link href="/relatorios">
             <div className={`sidebar-icon ${isActive('/relatorios') ? 'active' : ''}`}>
-              <Bell size={24} />
+              <FileText size={24} />
             </div>
           </Link>
           <Link href="/clientes">
             <div className={`sidebar-icon ${isActive('/clientes') ? 'active' : ''}`}>
-              <Shield size={24} />
+              <Building2 size={24} />
             </div>
           </Link>
           <Link href="/rotas">
@@ -82,13 +82,15 @@ const SmartLayout: React.FC<SmartLayoutProps> = ({ children, title }) => {
       <div className="main-content">
         {/* Header */}
         <div className="dashboard-header">
-          <div className="mobile-menu-button" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            <Menu size={24} />
-          </div>
-          
-          <div className="search-container">
-            <Search size={20} />
-            <input type="text" placeholder="Pesquisar" />
+          <div className="header-left">
+            <div className="mobile-menu-button" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+              <Menu size={24} />
+            </div>
+            
+            <div className="search-container">
+              <Search size={20} />
+              <input type="text" placeholder="Pesquisar" />
+            </div>
           </div>
           
           <div className="user-controls">
@@ -106,9 +108,15 @@ const SmartLayout: React.FC<SmartLayoutProps> = ({ children, title }) => {
           </div>
         </div>
         
+        {/* Page Title */}
+        {title && (
+          <div className="page-title-container">
+            <h1 className="page-title">{title}</h1>
+          </div>
+        )}
+        
         {/* Main Content */}
         <div className="dashboard-content">
-          {title && <h1 className="page-title">{title}</h1>}
           {children}
         </div>
       </div>
