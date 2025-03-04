@@ -1,6 +1,7 @@
 import { Switch, Route } from 'wouter';
 import DashboardPage from './pages/DashboardPage';
 import ModernDashboard from './pages/ModernDashboard';
+import ExactReferenceDashboard from './pages/ExactReferenceDashboard';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
 import RouteMapPage from './pages/RouteMapPage';
@@ -24,8 +25,9 @@ function App() {
       <div className="app-container">
         <Switch>
           <Route path="/login" component={LoginPage} />
-          <Route path="/" component={ModernDashboard} />
+          <Route path="/" component={ExactReferenceDashboard} />
           <Route path="/dashboard-antigo" component={DashboardPage} />
+          <Route path="/dashboard-moderno" component={ModernDashboard} />
           <Route path="/perfil" component={ProfilePage} />
           <Route path="/rotas" component={RouteMapPage} />
           
