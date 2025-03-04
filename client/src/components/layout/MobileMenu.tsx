@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { 
   Home, 
@@ -24,9 +23,13 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
-export default function MobileMenu() {
+interface MobileMenuProps {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}
+
+export default function MobileMenu({ open, setOpen }: MobileMenuProps) {
   const [location] = useLocation();
-  const [open, setOpen] = useState(false);
   const { user, logout } = useAuth();
 
   const isActive = (path: string) => {
