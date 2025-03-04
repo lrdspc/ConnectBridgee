@@ -3,8 +3,14 @@ import { Responsive, WidthProvider } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Check, Clock, FileText, BarChart, Users, MapPin, AlertCircle, ChevronDown, ChevronUp, Maximize2, Minimize2 } from 'lucide-react';
+import { 
+  Check, Clock, FileText, BarChart, Users, MapPin, AlertCircle, 
+  ChevronDown, ChevronUp, Maximize2, Minimize2, Move, Lock 
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Visit } from '@/lib/db';
 import { Chart } from '@/components/ui/chart';
@@ -90,6 +96,9 @@ const DashboardTiles: React.FC<DashboardTilesProps> = ({
     weather: false,
     route: false,
   });
+  
+  // Estado para controlar se o modo de edição está ativado
+  const [editMode, setEditMode] = useState<boolean>(false);
 
   // Função para alternar o estado expandido/colapsado de um tile
   const toggleExpand = (id: string) => {
@@ -350,6 +359,45 @@ const DashboardTiles: React.FC<DashboardTilesProps> = ({
 
   return (
     <div className={cn("pb-10", className)}>
+      {/* Botão para ativar/desativar modo de edição */}
+      <div className="flex items-center justify-end mb-4 gap-2">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex items-center bg-white p-2 rounded-xl shadow-sm border border-slate-200">
+                <span className="text-sm font-medium text-slate-600 mr-2">
+                  {editMode ? "Modo de edição" : "Modo de navegação"}
+                </span>
+                <Switch
+                  checked={editMode}
+                  onCheckedChange={setEditMode}
+                  className="data-[state=checked]:bg-primary"
+                />
+                <div className="ml-2 p-1 rounded-lg bg-slate-100">
+                  {editMode ? (
+                    <Move className="h-4 w-4 text-primary" />
+                  ) : (
+                    <Lock className="h-4 w-4 text-slate-400" />
+                  )}
+                </div>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="left">
+              {editMode 
+                ? "Arraste e redimensione os blocos para personalizar seu dashboard" 
+                : "Ative o modo de edição para reorganizar o dashboard"}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        {editMode && (
+          <Badge className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20">
+            Arrastar e redimensionar ativado
+          </Badge>
+        )}
+      </div>
+      
+      {/* Layout de blocos responsivo */}
       <ResponsiveGridLayout
         className="layout"
         layouts={layouts}
@@ -357,19 +405,27 @@ const DashboardTiles: React.FC<DashboardTilesProps> = ({
         cols={{ lg: 12, md: 10, sm: 6, xs: 4 }}
         rowHeight={150}
         onLayoutChange={handleLayoutChange}
-        isDraggable={true}
-        isResizable={true}
+        isDraggable={editMode}
+        isResizable={editMode}
         margin={[16, 16]}
       >
         {tiles.map((tile) => (
           <div key={tile.id} className="tile-container">
-            <Card className="h-full overflow-hidden border border-slate-200 shadow-sm rounded-xl">
+            <Card className={cn(
+              "h-full overflow-hidden border border-slate-200 shadow-sm rounded-xl", 
+              editMode && "ring-2 ring-primary/30 ring-offset-1"
+            )}>
               <CardHeader className="p-3 flex-row items-center justify-between space-y-0 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
                 <CardTitle className="text-base flex items-center font-medium text-slate-700">
                   {tile.icon && <span className="mr-2 text-primary">{tile.icon}</span>}
                   {tile.title}
                 </CardTitle>
                 <div className="flex gap-1">
+                  {editMode && (
+                    <div className="flex items-center justify-center h-5 w-5 text-[10px] font-bold bg-primary/10 text-primary rounded-md">
+                      <Move className="h-3 w-3" />
+                    </div>
+                  )}
                   <Button
                     variant="ghost"
                     size="icon"
