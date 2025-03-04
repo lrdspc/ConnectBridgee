@@ -59,7 +59,7 @@ app.use((req, res, next) => {
 
   // Try to serve the app on port 5000 first, then fallback to alternative ports
   const tryListen = (port: number, maxRetries = 3, attempt = 0) => {
-    server.listen({
+    const serverInstance = server.listen({
       port,
       host: "0.0.0.0", // Ensures binding for external access
       reusePort: true,
@@ -68,6 +68,8 @@ app.use((req, res, next) => {
     }).on('error', (err: any) => {
       if (err.code === 'EADDRINUSE' && attempt < maxRetries) {
         log(`Port ${port} is in use, trying port ${port + 1}...`);
+        // Close the current server instance before trying a new port
+        serverInstance.close();
         tryListen(port + 1, maxRetries, attempt + 1);
       } else {
         log(`Failed to start server: ${err.message}`);
