@@ -16,7 +16,8 @@ import {
   Search,
   HelpCircle,
   ClipboardList,
-  FileText
+  FileText,
+  Menu as MenuIcon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -39,25 +40,25 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
   const isMobile = useIsMobile();
   const lastScrollY = useRef(0);
   const mainRef = useRef<HTMLDivElement>(null);
-  
+
   // Função para detectar a direção da rolagem na página
   useEffect(() => {
     // Só aplica em dispositivos móveis
     if (!isMobile) return;
-    
+
     const handleScroll = () => {
       const mainElement = mainRef.current;
       if (!mainElement) return;
-      
+
       const currentScrollY = mainElement.scrollTop;
-      
+
       // Sempre mostra o cabeçalho no topo da página
       if (currentScrollY <= 10) {
         setHeaderVisible(true);
         lastScrollY.current = currentScrollY;
         return;
       }
-      
+
       // Determina a direção da rolagem com um limiar menor para mais responsividade
       if (currentScrollY > lastScrollY.current + 5) {
         // Rolando para baixo - esconde o cabeçalho
@@ -66,19 +67,19 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
         // Rolando para cima - mostra o cabeçalho
         setHeaderVisible(true);
       }
-      
+
       // Atualiza a última posição de rolagem
       lastScrollY.current = currentScrollY;
     };
-    
+
     // Garantir que o cabeçalho esteja visível inicialmente
     setHeaderVisible(true);
-    
+
     // Definir evento de rolagem no elemento main
     const mainElement = mainRef.current;
     if (mainElement) {
       mainElement.addEventListener('scroll', handleScroll, { passive: true });
-      
+
       return () => {
         mainElement.removeEventListener('scroll', handleScroll);
       };
@@ -100,6 +101,8 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
       setSidebarCollapsed(!sidebarCollapsed);
     }
   };
+
+  const [open, setOpen] = useState(false); // Added state for mobile menu
 
   return (
     <div className="h-screen flex flex-col bg-gray-50">
@@ -129,7 +132,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
               </h1>
             )}
           </div>
-          
+
           {/* Barra de pesquisa - só aparece em telas maiores */}
           <div className="hidden md:flex items-center h-9 w-64 rounded-md border border-input bg-white px-3 py-1 text-sm shadow-sm transition-colors">
             <Search className="h-4 w-4 mr-2 text-muted-foreground" />
@@ -140,7 +143,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
             />
           </div>
         </div>
-        
+
         {/* Ações e perfil do usuário - versão simplificada para mobile */}
         <div className="flex items-center gap-2">
           {/* Em mobile mostramos o menu hambúrguer, perfil e notificações */}
@@ -182,7 +185,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
                   </TooltipTrigger>
                   <TooltipContent>Notificações</TooltipContent>
                 </Tooltip>
-                
+
                 {/* Botão de ajuda */}
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -192,7 +195,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
                   </TooltipTrigger>
                   <TooltipContent>Ajuda</TooltipContent>
                 </Tooltip>
-                
+
                 {/* Botão de configurações */}
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -203,9 +206,9 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
                   <TooltipContent>Configurações</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-              
+
               <Separator orientation="vertical" className="h-8 mx-2" />
-              
+
               {/* Perfil do usuário */}
               <div className="flex items-center gap-3">
                 <div className="text-right mr-2 hidden sm:block">
@@ -223,7 +226,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
           )}
         </div>
       </header>
-      
+
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar - apenas visível em desktop */}
         {!isMobile && (
@@ -248,7 +251,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
                 )}
               </Button>
             </div>
-            
+
             {/* Menu de navegação */}
             <nav className="flex-1 overflow-y-auto py-4">
               <ul className="space-y-1 px-2">
@@ -299,11 +302,11 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
                   </li>
                 ))}
               </ul>
-              
+
               {/* Seção de ferramentas no final da sidebar */}
               <div className="mt-6 px-2">
                 <Separator className="my-2" />
-                
+
                 {/* Configurações */}
                 <TooltipProvider>
                   <Tooltip>
@@ -329,7 +332,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
                     )}
                   </Tooltip>
                 </TooltipProvider>
-                
+
                 {/* Botão de logout */}
                 <TooltipProvider>
                   <Tooltip>
@@ -358,7 +361,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
             </nav>
           </aside>
         )}
-        
+
         {/* Conteúdo principal */}
         <main 
           ref={mainRef}
@@ -366,15 +369,15 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
         >
           {/* Espaçador para compensar o cabeçalho fixo em mobile */}
           {isMobile && <div className="h-16" />}
-          
+
           <div className="container mx-auto p-6">
             {children}
           </div>
         </main>
       </div>
-      
+
       {/* Menu deslizante para mobile */}
-      {isMobile && <MobileMenu />}
+      {isMobile && <MobileMenu open={open} setOpen={setOpen}/>} {/* Pass open and setOpen to MobileMenu */}
     </div>
   );
 }
