@@ -15,6 +15,8 @@ import { Toaster } from '@/components/ui/toaster';
 import ClientesPage from './pages/ClientesPage';
 import ClienteDetalhesPage from './pages/ClienteDetalhesPage';
 import RelatorioVistoriaPage from './pages/RelatorioVistoriaPage';
+import RelatoriosPage from './pages/RelatoriosPage';
+import VistoriaFARPage from './pages/VistoriaFARPage';
 
 function App() {
   return (
@@ -35,8 +37,10 @@ function App() {
           <Route path="/clientes" component={ClientesPage} />
           <Route path="/clientes/:id" component={ClienteDetalhesPage} />
           
-          {/* Página do relatório de vistoria técnica */}
+          {/* Páginas de relatórios */}
+          <Route path="/relatorios" component={RelatoriosPage} />
           <Route path="/relatorio-vistoria" component={RelatorioVistoriaPage} />
+          <Route path="/vistoria-far" component={VistoriaFARPage} />
           
           <Route component={NotFound} />
         </Switch>
