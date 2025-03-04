@@ -313,10 +313,11 @@ const DashboardTiles: React.FC<DashboardTilesProps> = ({
         
       case 'chart':
         return (
-          <div className="h-full">
+          <div className="h-full w-full flex items-center justify-center">
             <Chart
               type="bar"
-              height={isLarge ? 300 : 180}
+              // Altura dinâmica baseada no tamanho do tile
+              height={isLarge ? "90%" : 180}
               data={weeklyVisits}
               xAxis={{
                 dataKey: "day",
@@ -337,36 +338,39 @@ const DashboardTiles: React.FC<DashboardTilesProps> = ({
         
       case 'visits':
         return (
-          <div className="space-y-3">
-            {visits.filter(v => v.status === 'scheduled' || v.status === 'in-progress')
-              .slice(0, isLarge ? 5 : 3)
-              .map((visit) => (
-                <Link key={visit.id} href={`/visitas/${visit.id}`}>
-                  <div className="border border-slate-200 rounded-xl p-3 cursor-pointer hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 shadow-sm">
-                    <div className="flex justify-between items-start">
-                      <h3 className="font-semibold text-sm text-slate-700">{visit.clientName}</h3>
-                      <span className={`text-xs px-2 py-1 rounded-full ${
-                        visit.status === 'in-progress' 
-                          ? 'bg-yellow-100 text-yellow-800 ring-1 ring-yellow-400/30' 
-                          : 'bg-blue-100 text-blue-800 ring-1 ring-blue-400/30'
-                      }`}>
-                        {visit.status === 'in-progress' ? 'Em Andamento' : 'Agendada'}
-                      </span>
+          <div className={`${isLarge ? "h-full flex flex-col" : "h-full"}`}>
+            <div className={`space-y-3 ${isLarge ? "flex-1 overflow-auto pr-1" : ""}`}>
+              {visits.filter(v => v.status === 'scheduled' || v.status === 'in-progress')
+                // Ajuste automático da quantidade de itens baseado no espaço disponível
+                .slice(0, isLarge ? 5 : 2)
+                .map((visit) => (
+                  <Link key={visit.id} href={`/visitas/${visit.id}`}>
+                    <div className="border border-slate-200 rounded-xl p-3 cursor-pointer hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 shadow-sm">
+                      <div className={`flex justify-between items-start ${!isLarge ? "flex-col" : ""}`}>
+                        <h3 className="font-semibold text-sm text-slate-700 truncate max-w-[180px]">{visit.clientName}</h3>
+                        <span className={`text-xs px-2 py-1 rounded-full ${
+                          visit.status === 'in-progress' 
+                            ? 'bg-yellow-100 text-yellow-800 ring-1 ring-yellow-400/30' 
+                            : 'bg-blue-100 text-blue-800 ring-1 ring-blue-400/30'
+                        } ${!isLarge ? "self-start mt-1" : ""}`}>
+                          {visit.status === 'in-progress' ? 'Em Andamento' : 'Agendada'}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1 mt-2 text-xs text-slate-500">
+                        <MapPin className="h-3 w-3 flex-shrink-0" />
+                        <span className="truncate">{visit.address}</span>
+                      </div>
+                      <div className="mt-2 flex justify-between items-center text-xs">
+                        <span className="text-slate-500">
+                          {new Date(visit.date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
+                          {visit.time ? ` · ${visit.time.substring(0, 5)}` : ''}
+                        </span>
+                        <span className="text-primary font-medium flex-shrink-0">Ver →</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1 mt-2 text-xs text-slate-500">
-                      <MapPin className="h-3 w-3" />
-                      <span className="truncate">{visit.address}</span>
-                    </div>
-                    <div className="mt-2 flex justify-between items-center text-xs">
-                      <span className="text-slate-500">
-                        {new Date(visit.date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
-                        {visit.time ? ` · ${visit.time.substring(0, 5)}` : ''}
-                      </span>
-                      <span className="text-primary font-medium">Ver detalhes →</span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                ))}
+            </div>
             <Link href="/visitas">
               <Button variant="outline" size="sm" className="w-full mt-2 rounded-xl border-slate-300 hover:border-primary/50 hover:bg-primary/5">
                 Ver Todas
@@ -384,13 +388,24 @@ const DashboardTiles: React.FC<DashboardTilesProps> = ({
               </div>
               <div className="text-3xl font-bold text-slate-800">{tile.content.count}</div>
               <div className="text-sm text-slate-500 mt-1">Relatórios Recentes</div>
-              <div className="mt-3 text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full ring-1 ring-amber-200">
-                {tile.content.pending} pendentes
-              </div>
+              
+              {/* Mostrar ou esconder informações adicionais baseado no espaço disponível */}
+              {isLarge && (
+                <div className="mt-3 text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full ring-1 ring-amber-200">
+                  {tile.content.pending} pendentes para revisão
+                </div>
+              )}
+              
+              {!isLarge && (
+                <div className="mt-2 flex items-center justify-center">
+                  <span className="text-xs font-medium text-amber-700 mr-1">{tile.content.pending}</span>
+                  <span className="text-xs text-slate-500">pendentes</span>
+                </div>
+              )}
             </div>
             <Link href="/relatorio-vistoria">
               <Button className="w-full mt-3 bg-primary hover:bg-primary/90 rounded-xl">
-                Novo Relatório
+                {isLarge ? "Novo Relatório" : "Criar"}
               </Button>
             </Link>
           </div>
@@ -405,16 +420,35 @@ const DashboardTiles: React.FC<DashboardTilesProps> = ({
             <div className="text-3xl font-bold text-slate-800">{tile.content.temp}°C</div>
             <div className="text-sm text-slate-600">{tile.content.condition}</div>
             <div className="mt-1 text-xs text-slate-500">{tile.content.location}</div>
-            <div className="mt-4 grid grid-cols-2 gap-3 w-full">
-              <div className="bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-200 p-2 rounded-xl shadow-sm">
-                <p className="text-xs font-medium text-amber-800">Manhã</p>
-                <p className="text-xs text-amber-600 font-bold">25°C</p>
+            
+            {/* Layout adaptativo: mostra informações extras apenas se houver espaço */}
+            {isLarge ? (
+              <div className="mt-4 grid grid-cols-3 gap-2 w-full">
+                <div className="bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-200 p-2 rounded-xl shadow-sm">
+                  <p className="text-xs font-medium text-amber-800">Manhã</p>
+                  <p className="text-xs text-amber-600 font-bold">25°C</p>
+                </div>
+                <div className="bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-200 p-2 rounded-xl shadow-sm">
+                  <p className="text-xs font-medium text-amber-800">Tarde</p>
+                  <p className="text-xs text-amber-600 font-bold">29°C</p>
+                </div>
+                <div className="bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-200 p-2 rounded-xl shadow-sm">
+                  <p className="text-xs font-medium text-amber-800">Noite</p>
+                  <p className="text-xs text-amber-600 font-bold">22°C</p>
+                </div>
               </div>
-              <div className="bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-200 p-2 rounded-xl shadow-sm">
-                <p className="text-xs font-medium text-amber-800">Tarde</p>
-                <p className="text-xs text-amber-600 font-bold">29°C</p>
+            ) : (
+              <div className="mt-3 grid grid-cols-2 gap-2 w-full">
+                <div className="bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-200 p-1.5 rounded-xl shadow-sm">
+                  <p className="text-[10px] font-medium text-amber-800">Manhã</p>
+                  <p className="text-[10px] text-amber-600 font-bold">25°C</p>
+                </div>
+                <div className="bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-200 p-1.5 rounded-xl shadow-sm">
+                  <p className="text-[10px] font-medium text-amber-800">Tarde</p>
+                  <p className="text-[10px] text-amber-600 font-bold">29°C</p>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         );
         
@@ -426,12 +460,32 @@ const DashboardTiles: React.FC<DashboardTilesProps> = ({
             </div>
             <div className="text-3xl font-bold text-slate-800">{tile.content.distance}</div>
             <div className="text-sm text-slate-600">Distância Total</div>
-            <div className="mt-1 text-xs text-slate-500">{tile.content.visits} visitas</div>
+            <div className="mt-1 text-xs text-slate-500">{tile.content.visits} visitas programadas</div>
+            
+            {/* Botão adaptativo - texto completo apenas para tiles grandes */}
             <Link href="/rotas">
-              <Button variant="outline" size="sm" className="mt-4 w-full rounded-xl border-slate-300 hover:border-green-300 hover:bg-green-50">
-                Ver Rota
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="mt-3 w-full rounded-xl border-slate-300 hover:border-green-300 hover:bg-green-50"
+              >
+                {isLarge ? "Ver Rota Completa" : "Ver Rota"}
               </Button>
             </Link>
+            
+            {/* Informações extras apenas para tiles grandes */}
+            {isLarge && (
+              <div className="mt-3 w-full grid grid-cols-2 gap-2">
+                <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 p-2 rounded-lg text-left">
+                  <p className="text-xs text-green-800 font-medium">Próxima visita</p>
+                  <p className="text-xs text-green-600">Em 45 minutos</p>
+                </div>
+                <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 p-2 rounded-lg text-left">
+                  <p className="text-xs text-green-800 font-medium">Tempo estimado</p>
+                  <p className="text-xs text-green-600">3h 20min</p>
+                </div>
+              </div>
+            )}
           </div>
         );
         
