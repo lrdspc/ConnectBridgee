@@ -79,9 +79,10 @@ export default function RelatorioVistoriaPage() {
   const [isGeneratingPreview, setIsGeneratingPreview] = useState(false);
   
   // Obter o ID do cliente a partir dos parâmetros de consulta
-  const [, params] = useLocation();
-  const clientId = new URLSearchParams(params).get('clientId');
-  const { data: visits } = useVisits();
+  const [location] = useLocation();
+  const searchParams = new URLSearchParams(location.split('?')[1] || '');
+  const clientId = searchParams.get('clientId');
+  const { visits } = useVisits();
   
   // Inicializar o formulário com valores padrão
   const form = useForm<RelatorioVistoria>({
@@ -92,7 +93,7 @@ export default function RelatorioVistoriaPage() {
   // Carregar dados do cliente quando o clientId estiver disponível
   useEffect(() => {
     if (clientId && visits) {
-      const clientVisit = visits.find(visit => visit.id === clientId);
+      const clientVisit = visits.find((visit: { id: string }) => visit.id === clientId);
       if (clientVisit) {
         // Pré-preencher o formulário com os dados do cliente
         form.setValue('cliente', clientVisit.clientName);
