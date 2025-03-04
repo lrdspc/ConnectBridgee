@@ -147,7 +147,7 @@ const DashboardPage: React.FC = () => {
           />
           <StatCard
             title="Clientes"
-            value={visits.length > 0 ? [...new Set(visits.map(v => v.clientName))].length : 0}
+            value={visits.length > 0 ? new Set(visits.map(v => v.clientName)).size : 0}
             icon={<Users size={24} />}
             color="yellow"
           />
