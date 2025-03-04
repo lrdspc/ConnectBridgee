@@ -9,7 +9,11 @@ import {
   CheckSquare,
   Clock,
   Users,
-  BarChart2
+  BarChart2,
+  Lightbulb,
+  Wifi,
+  Music,
+  Lamp
 } from 'lucide-react';
 
 // Componentes
@@ -20,23 +24,51 @@ import { useVisits } from '../hooks/useVisits';
 import { Visit } from '../lib/db';
 import VisitCard from '../components/visits/VisitCard';
 
-interface StatCardProps {
+// Componente de Card de Estatísticas
+const StatCard: React.FC<{
   title: string;
   value: string | number;
   icon: React.ReactNode;
   color: 'purple' | 'yellow' | 'orange' | 'teal';
-}
-
-const StatCard: React.FC<StatCardProps> = ({ title, value, icon, color }) => {
+}> = ({ title, value, icon, color }) => {
   return (
     <div className={`device-small-card ${color}`}>
-      <div className="device-small-card-icon">{icon}</div>
-      <span className="device-small-card-value">{value}</span>
-      <span className="device-small-card-title">{title}</span>
+      {icon}
+      <span>{title}</span>
+      <div className="toggle-mini on"></div>
     </div>
   );
 };
 
+// Componente de Card de Dispositivo
+const DeviceCard: React.FC<{
+  title: string;
+  icon: React.ReactNode;
+  isOn?: boolean;
+  color?: 'white' | 'purple' | 'yellow' | 'orange' | 'teal';
+  onClick?: () => void;
+}> = ({ title, icon, isOn = false, color = 'white', onClick }) => {
+  return (
+    <div className={`device-card ${color}`} onClick={onClick}>
+      <div className="device-card-content">
+        <div className="device-icon">
+          {icon}
+        </div>
+        <div className="device-info">
+          <span className="device-title">{title}</span>
+          <div className="toggle-container">
+            <span className="toggle-label">{isOn ? 'ON' : 'OFF'}</span>
+            <div className={`toggle-switch ${isOn ? 'on' : ''}`}>
+              <div className="toggle-knob"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Componente de Seção de Visitas Pendentes
 const PendingVisitSection: React.FC<{ visits: Visit[] }> = ({ visits }) => {
   const [, setLocation] = useLocation();
   
@@ -70,17 +102,32 @@ const PendingVisitSection: React.FC<{ visits: Visit[] }> = ({ visits }) => {
   );
 };
 
+// Página do Dashboard
 const DashboardPage: React.FC = () => {
   const { visits, isLoading } = useVisits();
   const [, setLocation] = useLocation();
   const [weatherTemperature, setWeatherTemperature] = useState('23°C');
   const [weatherCondition, setWeatherCondition] = useState('Parcialmente nublado');
+  const [devices, setDevices] = useState({
+    lights: true,
+    wifi: true,
+    music: false,
+    lamp: true
+  });
   
   // Filtrar visitas por status
   const pendingVisits = visits.filter(v => v.status === 'pending');
   const scheduledVisits = visits.filter(v => v.status === 'scheduled');
   const urgentVisits = visits.filter(v => v.status === 'urgent');
   const completedVisits = visits.filter(v => v.status === 'completed');
+  
+  // Toggle de dispositivos
+  const toggleDevice = (device: keyof typeof devices) => {
+    setDevices({
+      ...devices,
+      [device]: !devices[device]
+    });
+  };
   
   // Simular obtenção de dados meteorológicos
   useEffect(() => {
@@ -115,9 +162,6 @@ const DashboardPage: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="welcome-image">
-          <img src="/technician-illustration.svg" alt="Técnico trabalhando" />
-        </div>
       </div>
       
       {/* Status Cards */}
@@ -126,30 +170,78 @@ const DashboardPage: React.FC = () => {
           <h3>Resumo de Atividades</h3>
         </div>
         
-        <div className="device-cards">
-          <StatCard
-            title="Visitas Agendadas"
-            value={scheduledVisits.length}
+        <div className="devices-grid">
+          <DeviceCard 
+            title="Visitas Agendadas" 
             icon={<Calendar size={24} />}
-            color="purple"
+            isOn={true}
+            color="white"
+            onClick={() => setLocation('/visitas')}
           />
-          <StatCard
-            title="Visitas Concluídas"
-            value={completedVisits.length}
-            icon={<CheckSquare size={24} />}
-            color="teal"
-          />
-          <StatCard
-            title="Urgências"
-            value={urgentVisits.length}
+          <DeviceCard 
+            title="Visitas Pendentes" 
             icon={<Clock size={24} />}
-            color="orange"
+            isOn={true}
+            color="purple"
+            onClick={() => setLocation('/visitas')}
           />
-          <StatCard
-            title="Clientes"
-            value={visits.length > 0 ? new Set(visits.map(v => v.clientName)).size : 0}
+          <DeviceCard 
+            title="Relatórios" 
+            icon={<CheckSquare size={24} />}
+            isOn={true}
+            color="white"
+            onClick={() => setLocation('/relatorios')}
+          />
+          <DeviceCard 
+            title="Clientes" 
             icon={<Users size={24} />}
-            color="yellow"
+            isOn={true}
+            color="white"
+            onClick={() => setLocation('/clientes')}
+          />
+        </div>
+      </div>
+      
+      {/* Dispositivos de Exemplo */}
+      <div className="dashboard-section">
+        <div className="section-header">
+          <h3>Dispositivos de Exemplo</h3>
+          <div className="section-controls">
+            <div className="room-selector">
+              <span>Todos os dispositivos</span>
+              <span className="dropdown-arrow">▼</span>
+            </div>
+          </div>
+        </div>
+        
+        <div className="devices-grid">
+          <DeviceCard 
+            title="Luzes" 
+            icon={<Lightbulb size={24} />}
+            isOn={devices.lights}
+            color="white"
+            onClick={() => toggleDevice('lights')}
+          />
+          <DeviceCard 
+            title="Wi-Fi" 
+            icon={<Wifi size={24} />}
+            isOn={devices.wifi}
+            color="purple"
+            onClick={() => toggleDevice('wifi')}
+          />
+          <DeviceCard 
+            title="Sistema de Música" 
+            icon={<Music size={24} />}
+            isOn={devices.music}
+            color="white"
+            onClick={() => toggleDevice('music')}
+          />
+          <DeviceCard 
+            title="Lâmpadas" 
+            icon={<Lamp size={24} />}
+            isOn={devices.lamp}
+            color="white"
+            onClick={() => toggleDevice('lamp')}
           />
         </div>
       </div>
@@ -196,16 +288,14 @@ const DashboardPage: React.FC = () => {
           </div>
         </div>
         
-        <SmartCard>
-          <SmartCardContent>
-            <div className="chart-container">
-              <div className="chart-placeholder">
-                <BarChart2 size={48} />
-                <p>Gráfico de desempenho semanal</p>
-              </div>
+        <div className="temperature-control">
+          <div className="chart-container">
+            <div className="chart-placeholder text-center">
+              <BarChart2 size={48} />
+              <p>Gráfico de desempenho semanal</p>
             </div>
-          </SmartCardContent>
-        </SmartCard>
+          </div>
+        </div>
       </div>
     </SmartLayout>
   );

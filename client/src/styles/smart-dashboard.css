@@ -236,6 +236,73 @@ html {
   padding-right: 8px; /* Add space for scrollbar */
 }
 
+/* PROFILE CARD */
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: #f0f0f5;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.profile-avatar {
+  color: var(--primary-color);
+}
+
+.profile-info h4 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+}
+
+.profile-info p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+/* WEATHER CARD */
+.weather-card {
+  background-color: #f0f0f5;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+/* VISIT CARD STYLES */
+.visits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.empty-state, .loading-state {
+  background-color: #f0f0f5;
+  border-radius: 10px;
+  padding: 24px;
+  text-align: center;
+  color: var(--text-light);
+}
+
+.view-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+/* BUTTONS STYLES */
+.section-control-button.add-new {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
 /* WELCOME BANNER */
 .welcome-banner {
   display: flex;

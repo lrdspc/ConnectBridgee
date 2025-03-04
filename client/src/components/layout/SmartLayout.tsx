@@ -12,7 +12,13 @@ import {
   Settings,
   Bell,
   Search,
-  Menu
+  Menu,
+  UserCircle,
+  ChevronRight,
+  Users,
+  BarChart,
+  Thermometer,
+  CloudRain
 } from 'lucide-react';
 
 interface SmartLayoutProps {
@@ -118,6 +124,114 @@ const SmartLayout: React.FC<SmartLayoutProps> = ({ children, title }) => {
         {/* Main Content */}
         <div className="dashboard-content">
           {children}
+        </div>
+      </div>
+      
+      {/* Right Sidebar - Status e Informações */}
+      <div className="right-sidebar">
+        {/* Usuário */}
+        <div className="sidebar-section">
+          <div className="section-header with-controls">
+            <h3>Meu Perfil</h3>
+            <button className="section-control-button">
+              <ChevronRight size={18} />
+            </button>
+          </div>
+          
+          <div className="profile-card">
+            <div className="profile-avatar">
+              <UserCircle size={48} />
+            </div>
+            <div className="profile-info">
+              <h4>Técnico de Campo</h4>
+              <p>Brasília, DF</p>
+            </div>
+          </div>
+        </div>
+        
+        {/* Condições Climáticas */}
+        <div className="sidebar-section">
+          <div className="section-header with-controls">
+            <h3>Condições Climáticas</h3>
+            <button className="section-control-button">
+              <ChevronRight size={18} />
+            </button>
+          </div>
+          
+          <div className="weather-card">
+            <div className="weather-info">
+              <div className="weather-item">
+                <Thermometer size={16} />
+                <span>21°C Temperatura externa</span>
+              </div>
+              <div className="weather-item">
+                <CloudRain size={16} />
+                <span>Chuvoso</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Equipe */}
+        <div className="sidebar-section">
+          <div className="section-header with-controls">
+            <h3>Equipe</h3>
+            <button className="section-control-button">
+              <ChevronRight size={18} />
+            </button>
+          </div>
+          
+          <div className="members-container">
+            <div className="member-badge">
+              <div className="member-avatar">
+                <img src="https://i.pravatar.cc/150?img=32" alt="Profile" />
+              </div>
+              <div className="member-name">João</div>
+              <div className="member-status">Online</div>
+            </div>
+            <div className="member-badge">
+              <div className="member-avatar">
+                <img src="https://i.pravatar.cc/150?img=23" alt="Profile" />
+              </div>
+              <div className="member-name">Maria</div>
+              <div className="member-status">Offline</div>
+            </div>
+            <div className="member-badge">
+              <div className="member-avatar">
+                <img src="https://i.pravatar.cc/150?img=25" alt="Profile" />
+              </div>
+              <div className="member-name">Carlos</div>
+              <div className="member-status">Online</div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Status de Desempenho */}
+        <div className="sidebar-section">
+          <div className="section-header with-controls">
+            <h3>Desempenho</h3>
+            <button className="section-control-button">
+              <ChevronRight size={18} />
+            </button>
+          </div>
+          
+          <div className="power-stat">
+            <div className="power-header">
+              <div className="power-icon">
+                <BarChart size={16} />
+                <span>Produtividade</span>
+              </div>
+              <div className="power-value">
+                <span>85%</span>
+              </div>
+            </div>
+            
+            <div className="power-chart">
+              <div className="chart-placeholder">
+                Gráfico de desempenho semanal
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
