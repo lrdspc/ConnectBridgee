@@ -1,89 +1,214 @@
 import React, { useState, useEffect } from 'react';
-import { DashboardLayoutNew } from '../layouts/DashboardLayoutNew';
+import { useLocation } from 'wouter';
+import {
+  Thermometer,
+  CloudRain,
+  ChevronRight,
+  PlusCircle,
+  Calendar,
+  CheckSquare,
+  Clock,
+  Users,
+  BarChart2
+} from 'lucide-react';
+
+// Componentes
+import SmartLayout from '../components/layout/SmartLayout';
+import { SmartCard, SmartCardContent, SmartCardHeader } from '../components/ui/SmartCard';
+import SmartButton from '../components/ui/SmartButton';
 import { useVisits } from '../hooks/useVisits';
-import { PageTransition, LoadingAnimation } from '@/components/ui/loading-animation';
-import { Clock } from 'lucide-react';
-import { formatDate } from '@/lib/utils';
-import DashboardTiles from '@/components/dashboard/DashboardTiles';
+import { Visit } from '../lib/db';
+import VisitCard from '../components/visits/VisitCard';
 
-export default function DashboardPage() {
-  const { visits, isLoading } = useVisits();
-  const [stats, setStats] = useState({
-    completed: 0,
-    scheduled: 0,
-    pending: 0,
-    inProgress: 0
-  });
-  const [weeklyVisits, setWeeklyVisits] = useState<{day: string, count: number}[]>([]);
-  const [today] = useState(new Date());
+interface StatCardProps {
+  title: string;
+  value: string | number;
+  icon: React.ReactNode;
+  color: 'purple' | 'yellow' | 'orange' | 'teal';
+}
 
-  // Processar estatísticas quando os dados de visitas mudarem
-  useEffect(() => {
-    if (!isLoading && visits) {
-      const statusCounts = {
-        completed: visits.filter(v => v.status === 'completed').length,
-        scheduled: visits.filter(v => v.status === 'scheduled').length,
-        pending: visits.filter(v => v.status === 'pending').length,
-        inProgress: visits.filter(v => v.status === 'in-progress').length
-      };
-      setStats(statusCounts);
-
-      // Criar dados para o gráfico semanal
-      const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-      const currentDay = today.getDay();
-      
-      // Preparar dados dos últimos 7 dias
-      const weekData = [];
-      for (let i = 6; i >= 0; i--) {
-        const dayIndex = (currentDay - i + 7) % 7;
-        const dayName = daysOfWeek[dayIndex];
-        
-        // Data para comparação (últimos 7 dias)
-        const compareDate = new Date(today);
-        compareDate.setDate(today.getDate() - i);
-        const compareString = formatDate(compareDate, 'yyyy-MM-dd');
-        
-        // Contar visitas deste dia
-        const dayVisits = visits.filter(v => {
-          const visitDate = v.date.split('T')[0];
-          return visitDate === compareString;
-        }).length;
-        
-        weekData.push({ day: dayName, count: dayVisits });
-      }
-      setWeeklyVisits(weekData);
-    }
-  }, [visits, isLoading, today]);
-
-  // Renderização do componente
+const StatCard: React.FC<StatCardProps> = ({ title, value, icon, color }) => {
   return (
-    <PageTransition>
-      <DashboardLayoutNew>
-        <div className="space-y-6">
-          <div className="flex items-center justify-between mb-2">
-            <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-            <div className="flex items-center bg-slate-100 px-3 py-1.5 rounded-full">
-              <Clock className="h-4 w-4 mr-2 text-slate-500" />
-              <span className="text-sm text-slate-600 font-medium">
-                {formatDate(today, 'dd/MM/yyyy')}
-              </span>
+    <div className={`device-small-card ${color}`}>
+      <div className="device-small-card-icon">{icon}</div>
+      <span className="device-small-card-value">{value}</span>
+      <span className="device-small-card-title">{title}</span>
+    </div>
+  );
+};
+
+const PendingVisitSection: React.FC<{ visits: Visit[] }> = ({ visits }) => {
+  const [, setLocation] = useLocation();
+  
+  if (visits.length === 0) {
+    return (
+      <div className="empty-state">
+        <p>Não há visitas pendentes.</p>
+      </div>
+    );
+  }
+  
+  return (
+    <>
+      <div className="visits-list">
+        {visits.slice(0, 2).map((visit) => (
+          <VisitCard key={visit.id} visit={visit} showActions={false} />
+        ))}
+      </div>
+      {visits.length > 2 && (
+        <div className="view-more">
+          <SmartButton
+            variant="ghost"
+            color="primary"
+            onClick={() => setLocation('/visitas')}
+          >
+            Ver todas as visitas
+          </SmartButton>
+        </div>
+      )}
+    </>
+  );
+};
+
+const DashboardPage: React.FC = () => {
+  const { visits, isLoading } = useVisits();
+  const [, setLocation] = useLocation();
+  const [weatherTemperature, setWeatherTemperature] = useState('23°C');
+  const [weatherCondition, setWeatherCondition] = useState('Parcialmente nublado');
+  
+  // Filtrar visitas por status
+  const pendingVisits = visits.filter(v => v.status === 'pending');
+  const scheduledVisits = visits.filter(v => v.status === 'scheduled');
+  const urgentVisits = visits.filter(v => v.status === 'urgent');
+  const completedVisits = visits.filter(v => v.status === 'completed');
+  
+  // Simular obtenção de dados meteorológicos
+  useEffect(() => {
+    const getWeatherData = () => {
+      // Simular API de clima
+      const temperatures = ['19°C', '21°C', '23°C', '25°C', '27°C'];
+      const conditions = ['Ensolarado', 'Parcialmente nublado', 'Nublado', 'Chuvoso', 'Tempestuoso'];
+      
+      setWeatherTemperature(temperatures[Math.floor(Math.random() * temperatures.length)]);
+      setWeatherCondition(conditions[Math.floor(Math.random() * conditions.length)]);
+    };
+    
+    getWeatherData();
+  }, []);
+  
+  return (
+    <SmartLayout>
+      {/* Welcome Banner */}
+      <div className="welcome-banner">
+        <div className="welcome-text">
+          <h2>Olá, Técnico!</h2>
+          <p>Bem-vindo ao seu painel de controle. Aqui está o resumo das suas atividades de hoje.</p>
+          
+          <div className="weather-info">
+            <div className="weather-item">
+              <Thermometer size={16} />
+              <span>{weatherTemperature} Temperatura externa</span>
+            </div>
+            <div className="weather-item">
+              <CloudRain size={16} />
+              <span>{weatherCondition}</span>
             </div>
           </div>
-
-          {isLoading ? (
-            <div className="flex items-center justify-center h-64">
-              <LoadingAnimation text="Carregando dashboard..." />
-            </div>
-          ) : (
-            <DashboardTiles 
-              stats={stats} 
-              visits={visits} 
-              weeklyVisits={weeklyVisits}
-              className="mt-4" 
-            />
-          )}
         </div>
-      </DashboardLayoutNew>
-    </PageTransition>
+        <div className="welcome-image">
+          <img src="/technician-illustration.svg" alt="Técnico trabalhando" />
+        </div>
+      </div>
+      
+      {/* Status Cards */}
+      <div className="dashboard-section">
+        <div className="section-header">
+          <h3>Resumo de Atividades</h3>
+        </div>
+        
+        <div className="device-cards">
+          <StatCard
+            title="Visitas Agendadas"
+            value={scheduledVisits.length}
+            icon={<Calendar size={24} />}
+            color="purple"
+          />
+          <StatCard
+            title="Visitas Concluídas"
+            value={completedVisits.length}
+            icon={<CheckSquare size={24} />}
+            color="teal"
+          />
+          <StatCard
+            title="Urgências"
+            value={urgentVisits.length}
+            icon={<Clock size={24} />}
+            color="orange"
+          />
+          <StatCard
+            title="Clientes"
+            value={visits.length > 0 ? [...new Set(visits.map(v => v.clientName))].length : 0}
+            icon={<Users size={24} />}
+            color="yellow"
+          />
+        </div>
+      </div>
+      
+      {/* Pending Visits */}
+      <div className="dashboard-section">
+        <div className="section-header with-controls">
+          <h3>Visitas Pendentes</h3>
+          <div className="section-controls">
+            <button 
+              className="section-control-button add-new"
+              onClick={() => setLocation('/visitas/nova')}
+            >
+              <PlusCircle size={18} />
+              <span>Nova Visita</span>
+            </button>
+            <button 
+              className="section-control-button"
+              onClick={() => setLocation('/visitas')}
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
+        </div>
+        
+        {isLoading ? (
+          <div className="loading-state">Carregando visitas...</div>
+        ) : (
+          <PendingVisitSection visits={pendingVisits} />
+        )}
+      </div>
+      
+      {/* Performance Chart */}
+      <div className="dashboard-section">
+        <div className="section-header with-controls">
+          <h3>Desempenho da Semana</h3>
+          <div className="section-controls">
+            <button 
+              className="section-control-button"
+              onClick={() => setLocation('/estatisticas')}
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
+        </div>
+        
+        <SmartCard>
+          <SmartCardContent>
+            <div className="chart-container">
+              <div className="chart-placeholder">
+                <BarChart2 size={48} />
+                <p>Gráfico de desempenho semanal</p>
+              </div>
+            </div>
+          </SmartCardContent>
+        </SmartCard>
+      </div>
+    </SmartLayout>
   );
-}
+};
+
+export default DashboardPage;
