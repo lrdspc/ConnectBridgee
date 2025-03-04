@@ -45,22 +45,26 @@ export default function MobileMenu() {
 
   return (
     <>
-      {/* Menu deslizante com uma pequena barra na parte inferior como indicador */}
+      {/* Menu deslizante com botão de seta animada no canto direito */}
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
-          <div className="fixed bottom-16 inset-x-0 flex items-center justify-center z-40">
-            <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
-          </div>
+          <button 
+            className="fixed bottom-20 right-4 w-10 h-10 bg-primary rounded-full shadow-md flex items-center justify-center z-40 transition-all duration-300 hover:bg-primary/90"
+            aria-label="Abrir menu"
+          >
+            <ChevronUp 
+              className={`h-5 w-5 text-white transition-transform duration-300 ${open ? 'rotate-180' : ''}`} 
+            />
+          </button>
         </SheetTrigger>
 
         {/* Menu deslizante que abre de baixo para cima em tamanho compacto */}
-        <SheetContent side="bottom" className="p-0 pt-2 h-auto max-h-[80vh] rounded-t-xl">
+        <SheetContent side="bottom" className="p-0 pt-2 h-auto max-h-[70vh] rounded-t-xl">
           <div className="flex flex-col">
-            {/* Cabeçalho com aba de arraste e botão de fechar */}
-            <div className="flex items-center justify-between px-4 pb-2">
-              <div className="w-8 h-1 bg-gray-300 rounded-full mx-auto"></div>
-              <SheetClose className="absolute right-4 top-4 p-1 rounded-full hover:bg-gray-100">
-                <X className="h-4 w-4 text-gray-500" />
+            {/* Cabeçalho com botão de fechar */}
+            <div className="flex items-center justify-end px-4 pb-2">
+              <SheetClose className="p-1 rounded-full hover:bg-gray-100">
+                <X className="h-5 w-5 text-gray-500" />
               </SheetClose>
             </div>
             
