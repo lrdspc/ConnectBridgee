@@ -1,4 +1,4 @@
-import React, { useState, ReactNode } from 'react';
+import React, { useState, ReactNode, useEffect, useRef } from 'react';
 import { useLocation, Link } from 'wouter';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { 
@@ -34,8 +34,43 @@ interface DashboardLayoutProps {
 export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
   const [location] = useLocation();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [headerVisible, setHeaderVisible] = useState(true);
   const { user, logout } = useAuth();
   const isMobile = useIsMobile();
+  const lastScrollY = useRef(0);
+  const mainRef = useRef<HTMLDivElement>(null);
+  
+  // Função para detectar a direção da rolagem na página
+  useEffect(() => {
+    // Só aplica em dispositivos móveis
+    if (!isMobile || !mainRef.current) return;
+    
+    const handleScroll = () => {
+      const mainElement = mainRef.current;
+      if (!mainElement) return;
+      
+      const currentScrollY = mainElement.scrollTop;
+      
+      // Determina a direção da rolagem
+      if (currentScrollY > lastScrollY.current + 10) {
+        // Rolando para baixo - esconde o cabeçalho
+        setHeaderVisible(false);
+      } else if (currentScrollY < lastScrollY.current - 10) {
+        // Rolando para cima - mostra o cabeçalho
+        setHeaderVisible(true);
+      }
+      
+      // Atualiza a última posição de rolagem
+      lastScrollY.current = currentScrollY;
+    };
+    
+    const mainElement = mainRef.current;
+    mainElement.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      mainElement.removeEventListener('scroll', handleScroll);
+    };
+  }, [isMobile]);
 
   const menuItems = [
     { name: 'Dashboard', path: '/', icon: <Home className="w-5 h-5" />, badge: null },
@@ -55,8 +90,13 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
 
   return (
     <div className="h-screen flex flex-col bg-gray-50">
-      {/* Top Header (com perfil de usuário) - não fixo */}
-      <header className="h-16 bg-white border-b flex items-center justify-between px-4 shadow-sm">
+      {/* Top Header - ocultável na rolagem em dispositivos móveis */}
+      <header 
+        className={cn(
+          "h-16 bg-white border-b flex items-center justify-between px-4 shadow-sm transform transition-transform duration-300",
+          isMobile && !headerVisible && "-translate-y-full"
+        )}
+      >
         <div className="flex items-center">
           {/* Logo para ambos os modos (mobile e desktop) */}
           <div className="flex items-center mr-6">
@@ -290,7 +330,10 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
         )}
         
         {/* Conteúdo principal */}
-        <main className="flex-1 overflow-auto bg-gray-50 pb-16">
+        <main 
+          ref={mainRef}
+          className="flex-1 overflow-auto bg-gray-50 pb-16"
+        >
           <div className="container mx-auto p-6">
             {children}
           </div>
