@@ -106,8 +106,9 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
       {/* Top Header - ocultável na rolagem em dispositivos móveis */}
       <header 
         className={cn(
-          "h-16 bg-white border-b flex items-center justify-between px-4 shadow-sm transform transition-transform duration-300",
-          isMobile && !headerVisible && "-translate-y-full"
+          "bg-white border-b flex items-center justify-between px-4 shadow-sm transform transition-all duration-300",
+          isMobile ? "fixed top-0 left-0 right-0 z-40" : "h-16", 
+          isMobile && !headerVisible && "-translate-y-full opacity-0"
         )}
       >
         <div className="flex items-center">
@@ -347,6 +348,9 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
           ref={mainRef}
           className="flex-1 overflow-auto bg-gray-50 pb-16"
         >
+          {/* Espaçador para compensar o cabeçalho fixo em mobile */}
+          {isMobile && <div className="h-16" />}
+          
           <div className="container mx-auto p-6">
             {children}
           </div>
