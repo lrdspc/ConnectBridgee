@@ -44,88 +44,85 @@ export default function MobileMenu() {
 
   return (
     <>
-      {/* Trigger button com ícone de hambúrguer - agora no lado esquerdo */}
+      {/* Trigger button com ícone de hambúrguer no canto direito inferior */}
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <button
-            className="fixed left-4 bottom-4 w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-lg z-40"
+            className="fixed right-4 bottom-20 w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-lg z-40"
           >
             <MenuIcon className="h-6 w-6 text-white" />
           </button>
         </SheetTrigger>
 
-        {/* Menu deslizante lateral - agora abre da esquerda */}
-        <SheetContent side="left" className="p-0 w-[260px] sm:w-[300px]">
-          <div className="flex flex-col h-full">
-            {/* Cabeçalho do menu com perfil do usuário */}
-            <div className="bg-primary text-white p-4">
-              <div className="flex items-center">
-                <Avatar className="h-10 w-10 border-2 border-white">
-                  <AvatarImage src={user?.photoUrl} />
-                  <AvatarFallback className="bg-primary-foreground text-primary">
-                    {user?.name?.charAt(0) || 'U'}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="ml-3">
-                  <p className="font-medium">{user?.name || 'Usuário'}</p>
-                  <p className="text-xs opacity-90">{user?.role || 'Técnico'}</p>
-                </div>
+        {/* Menu deslizante que abre de baixo para cima em tamanho compacto */}
+        <SheetContent side="bottom" className="p-3 h-auto max-h-[80vh] rounded-t-xl">
+          <div className="flex flex-col">
+            {/* Indicador de arraste */}
+            <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-4"></div>
+            
+            {/* Seção de perfil na parte superior */}
+            <div className="flex items-center mb-4 px-2">
+              <Avatar className="h-10 w-10 border border-gray-200">
+                <AvatarImage src={user?.photoUrl} />
+                <AvatarFallback className="bg-primary-foreground text-primary">
+                  {user?.name?.charAt(0) || 'U'}
+                </AvatarFallback>
+              </Avatar>
+              <div className="ml-3">
+                <p className="font-medium text-sm">{user?.name || 'Usuário'}</p>
+                <p className="text-xs text-gray-500">{user?.role || 'Técnico'}</p>
               </div>
+              <Button 
+                onClick={() => setOpen(false)}
+                variant="ghost" 
+                size="icon" 
+                className="ml-auto"
+              >
+                <X className="h-5 w-5" />
+              </Button>
             </div>
 
-            {/* Lista de itens do menu */}
-            <div className="flex-1 overflow-auto p-1">
-              <div className="space-y-1 mt-2">
-                {menuItems.map((item) => (
-                  <SheetClose asChild key={item.path}>
-                    <Link href={item.path}>
-                      <a 
-                        className={cn(
-                          "flex items-center rounded-md h-10 px-3 py-6 text-base transition-colors",
-                          isActive(item.path)
-                            ? "bg-primary/10 text-primary font-medium"
-                            : item.highlight
-                            ? "bg-blue-50 text-blue-600"
-                            : "text-gray-800 hover:bg-gray-100"
-                        )}
-                      >
-                        <div className={cn(
-                          "mr-3",
-                          isActive(item.path) 
-                            ? "text-primary"
-                            : item.highlight
-                            ? "text-blue-600"
-                            : "text-gray-600"
-                        )}>
-                          {item.icon}
-                        </div>
-                        <span>{item.name}</span>
-                        
-                        {/* Destaque especial para Nova Vistoria */}
-                        {item.highlight && (
-                          <span className="ml-auto bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full">
-                            Novo
-                          </span>
-                        )}
-                      </a>
-                    </Link>
-                  </SheetClose>
-                ))}
-              </div>
+            {/* Grade de ícones para navegação compacta */}
+            <div className="grid grid-cols-4 gap-3 p-2 overflow-y-auto">
+              {menuItems.map((item) => (
+                <SheetClose asChild key={item.path}>
+                  <Link href={item.path}>
+                    <a className={cn(
+                      "flex flex-col items-center p-3 rounded-lg hover:bg-gray-50 transition-colors",
+                      isActive(item.path) 
+                        ? "bg-primary/10 text-primary" 
+                        : item.highlight 
+                        ? "bg-blue-50 text-blue-600" 
+                        : "text-gray-700"
+                    )}>
+                      <div>
+                        {item.icon}
+                      </div>
+                      <span className="text-xs mt-1">{item.name}</span>
+                      
+                      {/* Indicador de item ativo */}
+                      {isActive(item.path) && (
+                        <div className="w-1.5 h-1.5 bg-primary rounded-full mt-1"></div>
+                      )}
+                    </a>
+                  </Link>
+                </SheetClose>
+              ))}
             </div>
 
-            {/* Rodapé do menu com botão de logout */}
-            <div className="p-4 border-t">
+            {/* Botão de logout separado */}
+            <div className="px-2 pt-2 mt-2 border-t">
               <Button 
                 onClick={() => {
                   logout.mutate();
                   setOpen(false);
                 }}
                 variant="outline"
-                className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50 border-red-100"
+                size="sm"
+                className="w-full justify-center text-red-500 hover:text-red-600 hover:bg-red-50 border-red-100"
               >
-                <LogOut className="h-5 w-5 mr-2" />
-                Sair
+                <LogOut className="h-4 w-4 mr-2" />
+                <span className="text-xs">Sair da Conta</span>
               </Button>
             </div>
           </div>
