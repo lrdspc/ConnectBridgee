@@ -297,8 +297,8 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
         </main>
       </div>
       
-      {/* Barra de navegação inferior para mobile */}
-      {isMobile && <BottomNavigation />}
+      {/* Botão de ação flutuante para mobile */}
+      {isMobile && <FloatingActionButton />}
     </div>
   );
 }
