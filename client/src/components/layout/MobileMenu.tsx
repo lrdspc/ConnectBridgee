@@ -45,26 +45,27 @@ export default function MobileMenu() {
 
   return (
     <>
-      {/* Indicador de arraste no estilo flecha para cima */}
+      {/* Menu deslizante com uma pequena barra na parte inferior como indicador */}
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
-          <div
-            className="fixed bottom-16 left-0 right-0 flex justify-center z-40"
-          >
-            <div className="w-24 h-3 bg-white border-t border-l border-r border-gray-200 rounded-t-md flex items-start justify-center shadow-sm">
-              <ChevronUp className="h-2.5 w-2.5 text-gray-400 mt-0.5" />
-            </div>
+          <div className="fixed bottom-16 inset-x-0 flex items-center justify-center z-40">
+            <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
           </div>
         </SheetTrigger>
 
         {/* Menu deslizante que abre de baixo para cima em tamanho compacto */}
-        <SheetContent side="bottom" className="p-3 h-auto max-h-[80vh] rounded-t-xl">
+        <SheetContent side="bottom" className="p-0 pt-2 h-auto max-h-[80vh] rounded-t-xl">
           <div className="flex flex-col">
-            {/* Indicador de arraste */}
-            <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-4"></div>
+            {/* Cabeçalho com aba de arraste e botão de fechar */}
+            <div className="flex items-center justify-between px-4 pb-2">
+              <div className="w-8 h-1 bg-gray-300 rounded-full mx-auto"></div>
+              <SheetClose className="absolute right-4 top-4 p-1 rounded-full hover:bg-gray-100">
+                <X className="h-4 w-4 text-gray-500" />
+              </SheetClose>
+            </div>
             
             {/* Seção de perfil na parte superior */}
-            <div className="flex items-center mb-4 px-2">
+            <div className="flex items-center mb-4 px-5">
               <Avatar className="h-10 w-10 border border-gray-200">
                 <AvatarImage src={user?.photoUrl} />
                 <AvatarFallback className="bg-primary-foreground text-primary">
@@ -75,14 +76,6 @@ export default function MobileMenu() {
                 <p className="font-medium text-sm">{user?.name || 'Usuário'}</p>
                 <p className="text-xs text-gray-500">{user?.role || 'Técnico'}</p>
               </div>
-              <Button 
-                onClick={() => setOpen(false)}
-                variant="ghost" 
-                size="icon" 
-                className="ml-auto"
-              >
-                <X className="h-5 w-5" />
-              </Button>
             </div>
 
             {/* Grade de ícones para navegação compacta */}
