@@ -53,7 +53,7 @@ const hideScrollbarStyles = `
 
 
 
-const VisitListPage = () => {
+export default function VisitListPage() {
   const [activeFilter, setActiveFilter] = useState("all");
   const { visits, isLoading } = useVisits(activeFilter);
   const [searchTerm, setSearchTerm] = useState("");
@@ -231,4 +231,4 @@ const VisitListPage = () => {
   );
 };
 
-export default VisitListPage;
+

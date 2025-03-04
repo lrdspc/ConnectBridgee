@@ -9,7 +9,7 @@ import { User, LogOut, RefreshCw, Database, Mail, Phone, MapPin, Briefcase, Help
 import { DashboardLayoutNew } from "../layouts/DashboardLayoutNew";
 import { PageTransition } from "@/components/ui/loading-animation";
 
-const ProfilePage = () => {
+export default function ProfilePage() {
   const { user, logout } = useAuth();
   const { isOffline } = useOfflineStatus();
   const { toast } = useToast();
@@ -94,7 +94,6 @@ const ProfilePage = () => {
           <h1 className="text-2xl font-bold tracking-tight">Meu Perfil</h1>
         </div>
         
-        <div>
         <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-4">
           <div className="bg-primary h-24 relative">
             <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2">
@@ -226,10 +225,7 @@ const ProfilePage = () => {
           <p>Brasilit Técnico v1.0.0</p>
           <p className="mt-1">© {new Date().getFullYear()} Brasilit | Todos os direitos reservados</p>
         </div>
-      </div>
       </DashboardLayoutNew>
     </PageTransition>
   );
-};
-
-export default ProfilePage;
+}
