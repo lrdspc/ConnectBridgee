@@ -93,41 +93,43 @@ const BottomNavigation = () => {
         {showMore && (
           <>
             <div 
-              className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm" 
+              className="fixed inset-0 bottom-16 bg-black/30 z-40" 
               onClick={() => setShowMore(false)}
             />
             
-            <div className="fixed bottom-16 inset-x-0 bg-white rounded-t-xl shadow-xl z-50 transition-all duration-200 animate-in slide-in-from-bottom">
-              <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto my-2 opacity-80"></div>
+            <div className="fixed bottom-16 left-4 right-4 bg-white rounded-lg shadow-xl z-50 transition-all duration-200 animate-in slide-in-from-bottom">
+              <div className="flex justify-end p-2">
+                <button 
+                  onClick={() => setShowMore(false)}
+                  className="p-1 rounded-full hover:bg-gray-100"
+                >
+                  <X className="h-4 w-4 text-gray-500" />
+                </button>
+              </div>
               
-              <div className="grid grid-cols-3 gap-3 p-4 max-h-[70vh] overflow-y-auto pb-8">
-                {/* Apenas opções que NÃO estão no menu principal */}
-                <div className="col-span-3 mb-2 px-2">
-                  <h3 className="text-sm font-medium text-neutral-500">Configurações Rápidas</h3>
-                </div>
-                
+              <div className="grid grid-cols-3 gap-2 p-2 pb-4">
                 <Link href="/relatorios">
-                  <a className="flex flex-col items-center p-3 rounded-xl bg-gray-50 hover:bg-gray-100" onClick={() => setShowMore(false)}>
-                    <div className={`p-3 rounded-full ${isActive('/relatorios') ? 'bg-primary/10 text-primary' : 'bg-white text-neutral-700'} mb-2 shadow-sm`}>
-                      <FileText className="h-6 w-6" />
+                  <a className="flex flex-col items-center p-2 rounded-lg bg-gray-50 hover:bg-gray-100" onClick={() => setShowMore(false)}>
+                    <div className={`p-2 rounded-full ${isActive('/relatorios') ? 'bg-primary/10 text-primary' : 'bg-white text-neutral-700'} mb-1 shadow-sm`}>
+                      <FileText className="h-5 w-5" />
                     </div>
                     <span className="text-xs font-medium">Relatórios</span>
                   </a>
                 </Link>
                 
                 <Link href="/perfil">
-                  <a className="flex flex-col items-center p-3 rounded-xl bg-gray-50 hover:bg-gray-100" onClick={() => setShowMore(false)}>
-                    <div className={`p-3 rounded-full ${isActive('/perfil') ? 'bg-primary/10 text-primary' : 'bg-white text-neutral-700'} mb-2 shadow-sm`}>
-                      <User className="h-6 w-6" />
+                  <a className="flex flex-col items-center p-2 rounded-lg bg-gray-50 hover:bg-gray-100" onClick={() => setShowMore(false)}>
+                    <div className={`p-2 rounded-full ${isActive('/perfil') ? 'bg-primary/10 text-primary' : 'bg-white text-neutral-700'} mb-1 shadow-sm`}>
+                      <User className="h-5 w-5" />
                     </div>
                     <span className="text-xs font-medium">Perfil</span>
                   </a>
                 </Link>
                 
                 <Link href="/configuracoes">
-                  <a className="flex flex-col items-center p-3 rounded-xl bg-gray-50 hover:bg-gray-100" onClick={() => setShowMore(false)}>
-                    <div className={`p-3 rounded-full ${isActive('/configuracoes') ? 'bg-primary/10 text-primary' : 'bg-white text-neutral-700'} mb-2 shadow-sm`}>
-                      <Settings className="h-6 w-6" />
+                  <a className="flex flex-col items-center p-2 rounded-lg bg-gray-50 hover:bg-gray-100" onClick={() => setShowMore(false)}>
+                    <div className={`p-2 rounded-full ${isActive('/configuracoes') ? 'bg-primary/10 text-primary' : 'bg-white text-neutral-700'} mb-1 shadow-sm`}>
+                      <Settings className="h-5 w-5" />
                     </div>
                     <span className="text-xs font-medium">Config.</span>
                   </a>
@@ -135,10 +137,10 @@ const BottomNavigation = () => {
                 
                 <button 
                   onClick={() => { logout?.mutate?.(); setShowMore(false); }}
-                  className="flex flex-col items-center p-3 rounded-xl bg-red-50 hover:bg-red-100 col-span-3 mt-4"
+                  className="flex flex-col items-center p-2 rounded-lg bg-red-50 hover:bg-red-100 col-span-3 mt-2"
                 >
-                  <div className="p-3 rounded-full bg-white text-red-500 mb-2 shadow-sm">
-                    <LogOut className="h-6 w-6" />
+                  <div className="p-2 rounded-full bg-white text-red-500 mb-1 shadow-sm">
+                    <LogOut className="h-5 w-5" />
                   </div>
                   <span className="text-xs font-medium text-red-600">Sair</span>
                 </button>
