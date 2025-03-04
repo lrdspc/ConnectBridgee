@@ -44,18 +44,18 @@ export default function MobileMenu() {
 
   return (
     <>
-      {/* Trigger button com ícone de hambúrguer */}
+      {/* Trigger button com ícone de hambúrguer - agora no lado esquerdo */}
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <button
-            className="fixed right-4 bottom-4 w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-lg z-40"
+            className="fixed left-4 bottom-4 w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-lg z-40"
           >
             <MenuIcon className="h-6 w-6 text-white" />
           </button>
         </SheetTrigger>
 
-        {/* Menu deslizante lateral */}
-        <SheetContent side="right" className="p-0 w-[260px] sm:w-[300px]">
+        {/* Menu deslizante lateral - agora abre da esquerda */}
+        <SheetContent side="left" className="p-0 w-[260px] sm:w-[300px]">
           <div className="flex flex-col h-full">
             {/* Cabeçalho do menu com perfil do usuário */}
             <div className="bg-primary text-white p-4">
