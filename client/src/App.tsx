@@ -38,6 +38,9 @@ function App() {
           {/* Página do relatório de vistoria técnica */}
           <Route path="/relatorio-vistoria" component={RelatorioVistoriaPage} />
           
+          {/* Rota alternativa para o relatório de vistoria */}
+          <Route path="/vistoria-far" component={RelatorioVistoriaPage} />
+          
           <Route component={NotFound} />
         </Switch>
         <Toaster />
