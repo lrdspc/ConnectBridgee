@@ -48,11 +48,13 @@ export default function MobileMenu() {
       {/* Indicador de arraste no estilo flecha para cima */}
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
-          <button
-            className="fixed bottom-16 left-1/2 transform -translate-x-1/2 h-7 w-20 bg-white border border-gray-200 rounded-t-lg flex items-center justify-center shadow-md z-40 hover:bg-gray-50"
+          <div
+            className="fixed bottom-16 left-0 right-0 flex justify-center z-40"
           >
-            <ChevronUp className="h-4 w-4 text-gray-400" />
-          </button>
+            <div className="w-24 h-3 bg-white border-t border-l border-r border-gray-200 rounded-t-md flex items-start justify-center shadow-sm">
+              <ChevronUp className="h-2.5 w-2.5 text-gray-400 mt-0.5" />
+            </div>
+          </div>
         </SheetTrigger>
 
         {/* Menu deslizante que abre de baixo para cima em tamanho compacto */}
