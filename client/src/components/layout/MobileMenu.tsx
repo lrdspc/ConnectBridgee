@@ -10,7 +10,8 @@ import {
   User,
   X,
   LogOut,
-  PlusCircle
+  PlusCircle,
+  ChevronUp
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
@@ -44,13 +45,13 @@ export default function MobileMenu() {
 
   return (
     <>
-      {/* Trigger button com ícone de hambúrguer no canto direito inferior */}
+      {/* Indicador de arraste no estilo flecha para cima */}
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <button
-            className="fixed right-4 bottom-20 w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-lg z-40"
+            className="fixed bottom-16 left-1/2 transform -translate-x-1/2 h-7 w-20 bg-white border border-gray-200 rounded-t-lg flex items-center justify-center shadow-md z-40 hover:bg-gray-50"
           >
-            <MenuIcon className="h-6 w-6 text-white" />
+            <ChevronUp className="h-4 w-4 text-gray-400" />
           </button>
         </SheetTrigger>
 
