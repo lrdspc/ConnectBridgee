@@ -25,7 +25,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import BottomNavigation from '@/components/layout/BottomNavigation';
+import FloatingActionButton from '@/components/layout/FloatingActionButton';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -55,8 +55,8 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
 
   return (
     <div className="h-screen flex flex-col bg-gray-50">
-      {/* Top Header (com perfil de usuário) */}
-      <header className="h-16 bg-white border-b z-10 flex items-center justify-between px-4 shadow-sm">
+      {/* Top Header (com perfil de usuário) - não fixo */}
+      <header className="h-16 bg-white border-b flex items-center justify-between px-4 shadow-sm">
         <div className="flex items-center">
           {/* Logo para ambos os modos (mobile e desktop) */}
           <div className="flex items-center mr-6">
@@ -79,58 +79,78 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
           </div>
         </div>
         
-        {/* Ações e perfil do usuário */}
+        {/* Ações e perfil do usuário - versão simplificada para mobile */}
         <div className="flex items-center gap-2">
-          <TooltipProvider>
-            {/* Botão de notificações */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative">
-                  <Bell className="h-5 w-5" />
-                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-white">
-                    2
-                  </span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Notificações</TooltipContent>
-            </Tooltip>
-            
-            {/* Botão de ajuda */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <HelpCircle className="h-5 w-5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Ajuda</TooltipContent>
-            </Tooltip>
-            
-            {/* Botão de configurações */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Settings className="h-5 w-5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Configurações</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          
-          <Separator orientation="vertical" className="h-8 mx-2" />
-          
-          {/* Perfil do usuário */}
-          <div className="flex items-center gap-3">
-            <div className="text-right mr-2 hidden sm:block">
-              <p className="text-sm font-medium">{user?.name || 'Usuário'}</p>
-              <p className="text-xs text-muted-foreground">{user?.email || 'usuário@email.com'}</p>
-            </div>
-            <Avatar>
-              <AvatarImage src={user?.photoUrl} />
-              <AvatarFallback className="bg-primary text-primary-foreground">
-                {user?.name?.charAt(0) || 'U'}
-              </AvatarFallback>
-            </Avatar>
-          </div>
+          {/* Em mobile mostramos apenas o perfil e notificações */}
+          {isMobile ? (
+            <>
+              <Button variant="ghost" size="icon" className="relative">
+                <Bell className="h-5 w-5" />
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-white">
+                  2
+                </span>
+              </Button>
+              <Avatar>
+                <AvatarImage src={user?.photoUrl} />
+                <AvatarFallback className="bg-primary text-primary-foreground">
+                  {user?.name?.charAt(0) || 'U'}
+                </AvatarFallback>
+              </Avatar>
+            </>
+          ) : (
+            <>
+              <TooltipProvider>
+                {/* Botão de notificações */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost" size="icon" className="relative">
+                      <Bell className="h-5 w-5" />
+                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-white">
+                        2
+                      </span>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Notificações</TooltipContent>
+                </Tooltip>
+                
+                {/* Botão de ajuda */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <HelpCircle className="h-5 w-5" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Ajuda</TooltipContent>
+                </Tooltip>
+                
+                {/* Botão de configurações */}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <Settings className="h-5 w-5" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Configurações</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              
+              <Separator orientation="vertical" className="h-8 mx-2" />
+              
+              {/* Perfil do usuário */}
+              <div className="flex items-center gap-3">
+                <div className="text-right mr-2 hidden sm:block">
+                  <p className="text-sm font-medium">{user?.name || 'Usuário'}</p>
+                  <p className="text-xs text-muted-foreground">{user?.email || 'usuário@email.com'}</p>
+                </div>
+                <Avatar>
+                  <AvatarImage src={user?.photoUrl} />
+                  <AvatarFallback className="bg-primary text-primary-foreground">
+                    {user?.name?.charAt(0) || 'U'}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+            </>
+          )}
         </div>
       </header>
       

@@ -38,10 +38,8 @@ const BottomNavigation = () => {
         />
       )}
       
-      {/* Não precisamos mais deste menu, pois agora temos o menu flutuante completo */}
-      
-      {/* Navegação inferior unificada com menu principal */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-lg z-40">
+      {/* Navegação inferior não fixada que acompanha a rolagem */}
+      <nav className="relative bg-white border-t border-slate-200 shadow mt-auto">
         <div className="grid grid-cols-5 items-center justify-between px-2 mx-auto h-16">
           {/* Atalhos principais */}
           <Link href="/">
@@ -65,7 +63,7 @@ const BottomNavigation = () => {
           {/* Botão central de Adicionar */}
           <div className="flex justify-center">
             <Link href="/nova-vistoria">
-              <a className="bg-primary text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg border-4 border-white -mt-6">
+              <a className="bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center shadow-md border-2 border-white -mt-4">
                 <Plus className="h-6 w-6" />
               </a>
             </Link>
