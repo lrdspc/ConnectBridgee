@@ -1,118 +1,154 @@
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ChevronLeft, ChevronRight, Search, ArrowRight, Book } from 'lucide-react';
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  Search, 
+  ArrowRight, 
+  Home, 
+  FileText, 
+  Calendar, 
+  ClipboardCheck, 
+  User,
+  BarChart,
+  Map,
+  CheckSquare
+} from 'lucide-react';
 import '../styles/modern-layout.css';
 import { Link } from 'wouter';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 // Logo component
 const Logo = () => (
   <div className="logo">
-    <span>C.</span>
+    <span>B.</span>
   </div>
 );
 
 // Sidebar Icon component
 const SidebarIcon = ({ 
   children, 
-  active = false 
+  active = false,
+  href
 }: { 
   children: React.ReactNode, 
-  active?: boolean 
+  active?: boolean,
+  href: string
 }) => (
-  <div className={`sidebar-icon ${active ? 'active' : ''}`}>
-    {children}
-  </div>
+  <Link href={href}>
+    <a className={`sidebar-icon ${active ? 'active' : ''}`}>
+      {children}
+    </a>
+  </Link>
 );
 
-// Cartão de curso
-const CourseCard = ({ 
+// Cartão de Visita/Inspeção
+const InspectionCard = ({ 
   title, 
   rating, 
-  color 
+  color,
+  status,
+  address,
+  href
 }: { 
   title: string, 
   rating: number, 
-  color: "green" | "pink" 
+  color: "green" | "pink", 
+  status: string,
+  address?: string,
+  href: string
 }) => (
-  <div className={`card-base course-card ${color}`}>
-    <div className="flex justify-between">
-      <div className="flex -space-x-2">
-        {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="w-6 h-6 rounded-full border-2 border-white bg-gray-300 bg-cover bg-center" 
-            style={{backgroundImage: `url(https://i.pravatar.cc/100?img=${i+10})`}}>
+  <Link href={href}>
+    <a className={`card-base course-card ${color}`}>
+      <div className="flex justify-between">
+        <div className="flex -space-x-2">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="w-6 h-6 rounded-full border-2 border-white bg-gray-300 bg-cover bg-center" 
+              style={{backgroundImage: `url(https://i.pravatar.cc/100?img=${i+10})`}}>
+            </div>
+          ))}
+          <div className="w-6 h-6 rounded-full flex items-center justify-center bg-white/30 border-2 border-white text-xs">
+            +2
           </div>
-        ))}
-        <div className="w-6 h-6 rounded-full flex items-center justify-center bg-white/30 border-2 border-white text-xs">
-          +6
+        </div>
+        
+        <div className="course-rating">
+          <span className="course-rating-star">★</span>
+          <span className="text-xs font-semibold">{rating}</span>
         </div>
       </div>
       
-      <div className="course-rating">
-        <span className="course-rating-star">★</span>
-        <span className="text-xs font-semibold">{rating}</span>
-      </div>
-    </div>
-    
-    <h3 className="course-title">{title}</h3>
-    
-    <button className="course-action">
-      <ArrowRight size={16} />
-    </button>
-  </div>
+      <h3 className="course-title">{title}</h3>
+      {address && <p className="text-xs opacity-70 mt-1">{address}</p>}
+      
+      <button className="course-action">
+        <ArrowRight size={16} />
+      </button>
+    </a>
+  </Link>
 );
 
 // Cartão de estatística
 const StatCard = ({ 
   label, 
   value, 
-  color 
+  color,
+  href
 }: { 
   label: string, 
-  value: number, 
-  color: "green" | "yellow" | "purple" 
+  value: number | string, 
+  color: "green" | "yellow" | "purple",
+  href: string
 }) => (
-  <div className={`card-base stat-card ${color}`}>
-    <h3 className="stat-value">{value}</h3>
-    <p className="stat-label">{label}</p>
-    
-    <button className="course-action">
-      <ArrowRight size={16} />
-    </button>
-  </div>
+  <Link href={href}>
+    <a className={`card-base stat-card ${color}`}>
+      <h3 className="stat-value">{value}</h3>
+      <p className="stat-label">{label}</p>
+      
+      <button className="course-action">
+        <ArrowRight size={16} />
+      </button>
+    </a>
+  </Link>
 );
 
-// Cartão de progresso do curso
-const ProgressCard = ({ 
+// Cartão de progresso de relatório
+const ReportProgressCard = ({ 
   title, 
   category, 
   progress, 
-  lessons, 
-  color 
+  details, 
+  color,
+  href
 }: { 
   title: string, 
   category: string, 
   progress: number, 
-  lessons: string, 
-  color: "yellow" | "pink" 
+  details: string, 
+  color: "yellow" | "pink",
+  href: string
 }) => (
-  <div className={`card-base progress-card ${color}`}>
-    <div className="flex justify-between items-center">
-      <div className="category-badge">
-        {category}
+  <Link href={href}>
+    <a className={`card-base progress-card ${color}`}>
+      <div className="flex justify-between items-center">
+        <div className="category-badge">
+          {category}
+        </div>
+        <ArrowRight size={16} />
       </div>
-      <ArrowRight size={16} />
-    </div>
-    
-    <div className="progress-lessons">
-      {lessons}
-    </div>
-    
-    <h3 className="progress-title">{title}</h3>
-    
-    <div className="progress-bar">
-      <div className="progress-fill" style={{ width: `${progress}%` }}></div>
-    </div>
-  </div>
+      
+      <div className="progress-lessons">
+        {details}
+      </div>
+      
+      <h3 className="progress-title">{title}</h3>
+      
+      <div className="progress-bar">
+        <div className="progress-fill" style={{ width: `${progress}%` }}></div>
+      </div>
+    </a>
+  </Link>
 );
 
 // Dia do calendário
@@ -135,98 +171,168 @@ const CalendarDay = ({
   </div>
 );
 
-// Cartão de evento
-const EventCard = ({ 
+// Cartão de visita agendada
+const ScheduledVisitCard = ({ 
   title,
-  icon
+  icon,
+  time,
+  address,
+  color = "default",
+  href
 }: { 
   title: string,
-  icon: React.ReactNode
+  icon: React.ReactNode,
+  time: string,
+  address?: string,
+  color?: "default" | "urgent" | "pending",
+  href: string
 }) => (
-  <div className="event-card">
-    <div className="event-icon">
-      {icon}
-    </div>
-    <span className="event-title">{title}</span>
-  </div>
+  <Link href={href}>
+    <a className={`event-card ${color === "urgent" ? "bg-red-50" : color === "pending" ? "bg-yellow-50" : ""}`}>
+      <div className="event-icon">
+        {icon}
+      </div>
+      <div className="flex-1">
+        <span className="event-title">{title}</span>
+        {address && <div className="text-xs opacity-60 mt-1">{address}</div>}
+      </div>
+      <div className="text-xs font-medium opacity-70">{time}</div>
+    </a>
+  </Link>
 );
 
 const ModernDashboard = () => {
-  // Dados de atividades
-  const activitiesData = {
-    courses: [
-      { id: 'c1', title: 'UX/UI Design', rating: 4.9, color: 'green' as const },
-      { id: 'c2', title: 'Analytics Tools', rating: 4.8, color: 'pink' as const },
-    ],
-    stats: {
-      completed: 18,
-      score: 72,
-      active: 11
-    },
-    progress: [
+  // Configurar data atual
+  const currentDate = new Date();
+  const currentMonth = format(currentDate, 'MMMM yyyy', { locale: ptBR });
+  const currentDay = format(currentDate, 'd');
+  
+  // Dados de visitas e inspeções
+  const fieldActivitiesData = {
+    inspections: [
       { 
-        id: 'p1', 
-        title: 'Interface motion', 
-        category: 'IT & Software', 
-        progress: 45, 
-        lessons: '11/24 lessons',
-        color: 'yellow' as const
+        id: 'i1', 
+        title: 'Inspeção de Telhado', 
+        rating: 4.9, 
+        color: 'green' as const,
+        status: 'Em Progresso',
+        address: 'Brasilit São Paulo - Zona Industrial',
+        href: '/visitas/1'
       },
       { 
-        id: 'p2', 
-        title: '', 
-        category: 'IT & Software', 
-        progress: 0, 
-        lessons: '',
-        color: 'pink' as const
+        id: 'i2', 
+        title: 'Vistoria Técnica FAR', 
+        rating: 4.8, 
+        color: 'pink' as const,
+        status: 'Agendada',
+        address: 'Condomínio Villa Nova - Bloco A',
+        href: '/visitas/2'
+      },
+    ],
+    stats: {
+      concluidas: 18,
+      desempenho: 92,
+      pendentes: 7
+    },
+    reports: [
+      { 
+        id: 'r1', 
+        title: 'Relatório FAR - Telhas', 
+        category: 'Vistoria Técnica', 
+        progress: 65, 
+        details: '13/20 itens concluídos',
+        color: 'yellow' as const,
+        href: '/relatorio-vistoria'
+      },
+      { 
+        id: 'r2', 
+        title: 'Inspeção Preventiva', 
+        category: 'Manutenção', 
+        progress: 30, 
+        details: '6/20 itens concluídos',
+        color: 'pink' as const,
+        href: '/relatorio-vistoria'
       },
     ]
   };
   
+  // Gerar dias do mês atual para o calendário
+  const getDaysInMonth = (year: number, month: number) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+  
+  const getFirstDayOfMonth = (year: number, month: number) => {
+    return new Date(year, month, 1).getDay();
+  };
+  
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  const daysInMonth = getDaysInMonth(year, month);
+  const firstDay = getFirstDayOfMonth(year, month);
+  const daysInPrevMonth = getDaysInMonth(year, month - 1);
+  
+  // Ajustar o primeiro dia para começar na segunda-feira (0 = Segunda no nosso caso)
+  const adjustedFirstDay = firstDay === 0 ? 6 : firstDay - 1;
+  
+  // Gerar dias do mês anterior
+  const prevMonthDays = [];
+  for (let i = daysInPrevMonth - adjustedFirstDay + 1; i <= daysInPrevMonth; i++) {
+    prevMonthDays.push({ date: i, inactive: true });
+  }
+  
+  // Gerar dias do mês atual
+  const currentMonthDays = [];
+  for (let i = 1; i <= daysInMonth; i++) {
+    const isToday = i === parseInt(currentDay);
+    currentMonthDays.push({ 
+      date: i, 
+      current: isToday,
+      active: [9, 12, 17, 22].includes(i) // Dias com visitas marcadas
+    });
+  }
+  
+  // Gerar dias do próximo mês
+  const nextMonthDays = [];
+  const remainingCells = 42 - (prevMonthDays.length + currentMonthDays.length);
+  for (let i = 1; i <= remainingCells; i++) {
+    nextMonthDays.push({ date: i, inactive: true });
+  }
+  
+  // Combinar todos os dias
+  const allDays = [...prevMonthDays, ...currentMonthDays, ...nextMonthDays];
+  
+  // Adicionar dias da semana no começo
+  const weekDays = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB', 'DOM'];
+  allDays.splice(0, 0, ...weekDays.map(day => ({ day, date: 0 })));
+  
   // Dados do calendário
   const calendarData = {
-    month: 'July 2024',
-    days: [
-      { day: 'MON', date: 30, inactive: true },
-      { day: 'TUE', date: 1 },
-      { day: 'WED', date: 2 },
-      { day: 'THU', date: 3 },
-      { day: 'FRI', date: 4 },
-      { day: 'SAT', date: 5 },
-      { day: 'SUN', date: 6 },
-      { day: '', date: 7 },
-      { day: '', date: 8 },
-      { day: '', date: 9, active: true },
-      { day: '', date: 10 },
-      { day: '', date: 11 },
-      { day: '', date: 12, active: true },
-      { day: '', date: 13 },
-      { day: '', date: 14 },
-      { day: '', date: 15 },
-      { day: '', date: 16 },
-      { day: '', date: 17, current: true },
-      { day: '', date: 18 },
-      { day: '', date: 19 },
-      { day: '', date: 20 },
-      { day: '', date: 21 },
-      { day: '', date: 22 },
-      { day: '', date: 23 },
-      { day: '', date: 24 },
-      { day: '', date: 25 },
-      { day: '', date: 26 },
-      { day: '', date: 27 },
-      { day: '', date: 28 },
-      { day: '', date: 29 },
-      { day: '', date: 30 },
-      { day: '', date: 31 },
-      { day: '', date: 1, inactive: true },
-      { day: '', date: 2, inactive: true },
-      { day: '', date: 3, inactive: true },
-    ],
-    events: [
-      { id: 1, title: 'Webinar "How to create a web hierarchy?"' },
-      { id: 2, title: 'Lesson "Client psychology and communication strategy?"' },
-      { id: 3, title: 'Lesson "Colour gradients"' },
+    month: currentMonth,
+    days: allDays.slice(7), // Remover os dias da semana
+    weekDays,
+    visits: [
+      { 
+        id: 1, 
+        title: 'Vistoria de Telhado - Condomínio Villa Verde', 
+        time: '09:30',
+        address: 'Av. Paulo Faccini, 200',
+        href: '/visitas/1'
+      },
+      { 
+        id: 2, 
+        title: 'Inspeção FAR - Construtora Cury', 
+        time: '14:00',
+        address: 'Rua das Palmeiras, 1500 - Torre 3',
+        urgent: true,
+        href: '/visitas/2'
+      },
+      { 
+        id: 3, 
+        title: 'Elaboração de Laudo Técnico - Coberturas', 
+        time: '16:30',
+        pending: true,
+        href: '/visitas/3'
+      },
     ]
   };
 
@@ -235,36 +341,22 @@ const ModernDashboard = () => {
       <div className="dashboard-layout">
         {/* Sidebar */}
         <div className="sidebar">
-          <Logo />
+          <Link href="/">
+            <a><Logo /></a>
+          </Link>
           
           <div className="sidebar-icons">
-            <SidebarIcon active={true}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect width="6" height="6" x="3" y="3" rx="1" />
-                <rect width="6" height="6" x="15" y="3" rx="1" />
-                <rect width="6" height="6" x="3" y="15" rx="1" />
-                <rect width="6" height="6" x="15" y="15" rx="1" />
-              </svg>
+            <SidebarIcon active={true} href="/">
+              <Home size={20} />
             </SidebarIcon>
-            <SidebarIcon>
-              <Book size={20} />
+            <SidebarIcon href="/visitas">
+              <ClipboardCheck size={20} />
             </SidebarIcon>
-            <SidebarIcon>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-              </svg>
+            <SidebarIcon href="/relatorios">
+              <FileText size={20} />
             </SidebarIcon>
-            <SidebarIcon>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <circle cx="12" cy="12" r="4" />
-                <line x1="21.17" x2="12" y1="8" y2="8" />
-                <line x1="3.95" x2="8.54" y1="6.06" y2="14" />
-                <line x1="10.88" x2="15.46" y1="21.94" y2="14" />
-              </svg>
+            <SidebarIcon href="/perfil">
+              <User size={20} />
             </SidebarIcon>
           </div>
         </div>
@@ -273,16 +365,16 @@ const ModernDashboard = () => {
         <div className="main-content">
           <div className="dashboard-content">
             {/* Header */}
-            <div className="flex justify-between items-center mb-12">
+            <div className="header flex justify-between items-center mb-12">
               <div>
-                <h1 className="text-3xl font-bold">Welcome back <span className="inline-block">👋</span></h1>
+                <h1 className="text-3xl font-bold">Bem-vindo de volta <span className="inline-block">👋</span></h1>
               </div>
               
-              <div className="flex items-center gap-5">
+              <div className="header-profile flex items-center gap-5">
                 <div className="search-box relative">
                   <input 
                     type="text" 
-                    placeholder="Search something" 
+                    placeholder="Buscar visitas, relatórios..." 
                     className="pl-10 pr-4 py-2 rounded-full border border-gray-200 w-64 text-sm" 
                   />
                   <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -291,8 +383,8 @@ const ModernDashboard = () => {
                 <Link href="/perfil">
                   <a>
                     <Avatar className="w-10 h-10">
-                      <AvatarImage src="https://ui-avatars.com/api/?name=User&background=FFB6C1&color=FFF" alt="User" />
-                      <AvatarFallback>U</AvatarFallback>
+                      <AvatarImage src="https://ui-avatars.com/api/?name=Técnico&background=4ADE80&color=FFF" alt="Técnico" />
+                      <AvatarFallback>T</AvatarFallback>
                     </Avatar>
                   </a>
                 </Link>
@@ -301,65 +393,67 @@ const ModernDashboard = () => {
             
             {/* Content Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Activities Section */}
-              <div>
-                <h2 className="text-2xl font-bold mb-5">Your activities today <span className="text-gray-400">(5)</span></h2>
+              {/* Field Activities Section */}
+              <div className="mobile-slide-in">
+                <h2 className="text-2xl font-bold mb-5">Atividades de hoje <span className="text-gray-400">(5)</span></h2>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                  {activitiesData.courses.map(course => (
-                    <CourseCard 
-                      key={course.id}
-                      title={course.title}
-                      rating={course.rating}
-                      color={course.color}
+                  {fieldActivitiesData.inspections.map(inspection => (
+                    <InspectionCard 
+                      key={inspection.id}
+                      title={inspection.title}
+                      rating={inspection.rating}
+                      color={inspection.color}
+                      status={inspection.status}
+                      address={inspection.address}
+                      href={inspection.href}
                     />
                   ))}
                 </div>
                 
-                <h2 className="text-2xl font-bold mb-5">Learning progress</h2>
+                <h2 className="text-2xl font-bold mb-5">Desempenho</h2>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                   <StatCard 
-                    label="Completed"
-                    value={activitiesData.stats.completed}
+                    label="Concluídas"
+                    value={fieldActivitiesData.stats.concluidas}
                     color="green"
+                    href="/visitas?status=completed"
                   />
                   
                   <StatCard 
-                    label="Your score"
-                    value={activitiesData.stats.score}
+                    label="Taxa de Sucesso"
+                    value={`${fieldActivitiesData.stats.desempenho}%`}
                     color="yellow"
+                    href="/perfil"
                   />
                   
                   <StatCard 
-                    label="Active"
-                    value={activitiesData.stats.active}
+                    label="Pendentes"
+                    value={fieldActivitiesData.stats.pendentes}
                     color="purple"
+                    href="/visitas?status=pending"
                   />
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <ProgressCard 
-                    title={activitiesData.progress[0].title}
-                    category={activitiesData.progress[0].category}
-                    progress={activitiesData.progress[0].progress}
-                    lessons={activitiesData.progress[0].lessons}
-                    color={activitiesData.progress[0].color}
-                  />
-                  
-                  <ProgressCard 
-                    title={activitiesData.progress[1].title}
-                    category={activitiesData.progress[1].category}
-                    progress={activitiesData.progress[1].progress}
-                    lessons={activitiesData.progress[1].lessons}
-                    color={activitiesData.progress[1].color}
-                  />
+                  {fieldActivitiesData.reports.map(report => (
+                    <ReportProgressCard 
+                      key={report.id}
+                      title={report.title}
+                      category={report.category}
+                      progress={report.progress}
+                      details={report.details}
+                      color={report.color}
+                      href={report.href}
+                    />
+                  ))}
                 </div>
               </div>
               
               {/* Calendar Section */}
-              <div>
-                <h2 className="text-2xl font-bold mb-5">Lesson schedule</h2>
+              <div className="mobile-slide-in" style={{animationDelay: '0.1s'}}>
+                <h2 className="text-2xl font-bold mb-5">Agenda de Visitas</h2>
                 
                 <div className="bg-white rounded-xl p-6">
                   <div className="calendar-header">
@@ -376,13 +470,9 @@ const ModernDashboard = () => {
                   
                   {/* Dias da semana */}
                   <div className="grid grid-cols-7 gap-2 mb-2">
-                    <div className="calendar-day-header">MON</div>
-                    <div className="calendar-day-header">TUE</div>
-                    <div className="calendar-day-header">WED</div>
-                    <div className="calendar-day-header">THU</div>
-                    <div className="calendar-day-header">FRI</div>
-                    <div className="calendar-day-header">SAT</div>
-                    <div className="calendar-day-header">SUN</div>
+                    {calendarData.weekDays.map((day, index) => (
+                      <div key={index} className="calendar-day-header">{day}</div>
+                    ))}
                   </div>
                   
                   {/* Dias do calendário */}
@@ -399,13 +489,17 @@ const ModernDashboard = () => {
                     ))}
                   </div>
                   
-                  {/* Lista de eventos */}
+                  {/* Lista de visitas agendadas */}
                   <div className="space-y-3 mt-4">
-                    {calendarData.events.map(event => (
-                      <EventCard 
-                        key={event.id}
-                        title={event.title}
-                        icon={<Book size={14} />}
+                    {calendarData.visits.map(visit => (
+                      <ScheduledVisitCard 
+                        key={visit.id}
+                        title={visit.title}
+                        icon={visit.urgent ? <CheckSquare size={14} className="text-red-600" /> : visit.pending ? <CheckSquare size={14} className="text-amber-600" /> : <CheckSquare size={14} />}
+                        time={visit.time}
+                        address={visit.address}
+                        color={visit.urgent ? "urgent" : visit.pending ? "pending" : "default"}
+                        href={visit.href}
                       />
                     ))}
                   </div>
