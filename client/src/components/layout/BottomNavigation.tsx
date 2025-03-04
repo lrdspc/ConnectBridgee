@@ -85,9 +85,9 @@ const BottomNavigation = () => {
             className={`flex flex-col items-center justify-center ${showMore ? 'text-primary' : 'text-neutral-500'}`}
           >
             <div className={`p-1.5 rounded-lg ${showMore ? 'bg-primary/10' : ''}`}>
-              <MoreHorizontal className="h-5 w-5" />
+              <Settings className="h-5 w-5" />
             </div>
-            <span className="text-[10px] mt-1">Menu</span>
+            <span className="text-[10px] mt-1">Config</span>
           </button>
         </div>
         
@@ -102,34 +102,11 @@ const BottomNavigation = () => {
             <div className="fixed bottom-16 inset-x-0 bg-white rounded-t-xl shadow-xl z-50 transition-all duration-200 animate-in slide-in-from-bottom">
               <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto my-2 opacity-80"></div>
               
-              <div className="grid grid-cols-4 gap-3 p-4 max-h-[70vh] overflow-y-auto pb-8">
-                {/* Destaque especial para o botão de Nova Vistoria */}
-                <Link href="/nova-vistoria">
-                  <a className="flex flex-col items-center p-3 rounded-xl bg-blue-50 hover:bg-blue-100 col-span-4 mb-3 border-2 border-blue-300" onClick={() => setShowMore(false)}>
-                    <div className="p-3 rounded-full bg-blue-600 text-white mb-2 shadow-sm">
-                      <FileText className="h-7 w-7" />
-                    </div>
-                    <span className="text-sm font-semibold text-blue-800">Nova Vistoria</span>
-                  </a>
-                </Link>
-                
-                <Link href="/clientes">
-                  <a className="flex flex-col items-center p-3 rounded-xl bg-gray-50 hover:bg-gray-100" onClick={() => setShowMore(false)}>
-                    <div className={`p-3 rounded-full ${isActive('/clientes') ? 'bg-primary/10 text-primary' : 'bg-white text-neutral-700'} mb-2 shadow-sm`}>
-                      <Users className="h-6 w-6" />
-                    </div>
-                    <span className="text-xs font-medium">Clientes</span>
-                  </a>
-                </Link>
-                
-                <Link href="/visitas">
-                  <a className="flex flex-col items-center p-3 rounded-xl bg-gray-50 hover:bg-gray-100" onClick={() => setShowMore(false)}>
-                    <div className={`p-3 rounded-full ${isActive('/visitas') ? 'bg-primary/10 text-primary' : 'bg-white text-neutral-700'} mb-2 shadow-sm`}>
-                      <ClipboardCheck className="h-6 w-6" />
-                    </div>
-                    <span className="text-xs font-medium">Visitas</span>
-                  </a>
-                </Link>
+              <div className="grid grid-cols-3 gap-3 p-4 max-h-[70vh] overflow-y-auto pb-8">
+                {/* Apenas opções que NÃO estão no menu principal */}
+                <div className="col-span-3 mb-2 px-2">
+                  <h3 className="text-sm font-medium text-neutral-500">Configurações Rápidas</h3>
+                </div>
                 
                 <Link href="/relatorios">
                   <a className="flex flex-col items-center p-3 rounded-xl bg-gray-50 hover:bg-gray-100" onClick={() => setShowMore(false)}>
@@ -160,7 +137,7 @@ const BottomNavigation = () => {
                 
                 <button 
                   onClick={() => { logout?.mutate?.(); setShowMore(false); }}
-                  className="flex flex-col items-center p-3 rounded-xl bg-red-50 hover:bg-red-100 col-span-4 mt-4"
+                  className="flex flex-col items-center p-3 rounded-xl bg-red-50 hover:bg-red-100 col-span-3 mt-4"
                 >
                   <div className="p-3 rounded-full bg-white text-red-500 mb-2 shadow-sm">
                     <LogOut className="h-6 w-6" />
