@@ -2,6 +2,8 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import "./styles/map.css";
+import "./main.css"; // Dashboard moderno
+import "./styles/dashboard-widgets.css"; // Estilos específicos para widgets
 
 import "./css/responsive.css"; // CSS responsivo global
 import { QueryClientProvider } from "@tanstack/react-query";
