@@ -1,5 +1,6 @@
 import { Switch, Route } from 'wouter';
 import DashboardPage from './pages/DashboardPage';
+import ModernDashboard from './pages/ModernDashboard';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
 import RouteMapPage from './pages/RouteMapPage';
@@ -20,10 +21,11 @@ import DashboardWidgetsPage from './pages/DashboardWidgetsPage';
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div>
+      <div className="app-container">
         <Switch>
           <Route path="/login" component={LoginPage} />
-          <Route path="/" component={DashboardPage} />
+          <Route path="/" component={ModernDashboard} />
+          <Route path="/dashboard-antigo" component={DashboardPage} />
           <Route path="/perfil" component={ProfilePage} />
           <Route path="/rotas" component={RouteMapPage} />
           

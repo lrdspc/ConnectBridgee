@@ -2,6 +2,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import "./styles/map.css";
+import "./styles/modern-layout.css"; // Novo design moderno como na imagem de referência
 import "./main.css"; // Dashboard moderno
 import "./styles/dashboard-widgets.css"; // Estilos específicos para widgets
 
