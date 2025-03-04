@@ -8,6 +8,7 @@ import { useVisits } from '../hooks/useVisits';
 import { PageTransition } from '@/components/ui/loading-animation';
 import { Chart } from '@/components/ui/chart';
 import { Calendar, Clock, User, MapPin, CheckCircle, AlertCircle, Clock3, CloudSun, FileText } from 'lucide-react';
+import { Users, ClipboardList } from "lucide-react";
 import { formatDate } from '@/lib/utils';
 import { Link } from 'wouter';
 
@@ -256,22 +257,29 @@ export default function DashboardPage() {
 
             {/* Cards laterais */}
             <div className="space-y-6">
-              {/* Card de Relatório Técnico */}
-              <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white">
+              {/* Card de Ações Rápidas */}
+              <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="flex items-center text-white">
+                  <CardTitle className="flex items-center">
                     <FileText className="mr-2 h-5 w-5" />
-                    Relatórios Técnicos
+                    Ações Rápidas
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    <p className="text-blue-100">
-                      Crie relatórios técnicos de vistoria para telhas e fibrocimento Brasilit.
-                    </p>
+                  <div className="space-y-3">
                     <Link href="/nova-vistoria">
-                      <Button className="w-full bg-white text-blue-700 hover:bg-blue-50">
+                      <Button className="w-full bg-primary hover:bg-primary/90">
                         <FileText className="mr-2 h-4 w-4" /> Nova Vistoria
+                      </Button>
+                    </Link>
+                    <Link href="/clientes">
+                      <Button className="w-full" variant="outline">
+                        <Users className="mr-2 h-4 w-4" /> Gerenciar Clientes
+                      </Button>
+                    </Link>
+                    <Link href="/relatorios">
+                      <Button className="w-full" variant="outline">
+                        <ClipboardList className="mr-2 h-4 w-4" /> Ver Relatórios
                       </Button>
                     </Link>
                   </div>

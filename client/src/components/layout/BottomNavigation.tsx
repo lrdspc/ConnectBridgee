@@ -53,21 +53,30 @@ const BottomNavigation = () => {
             </a>
           </Link>
           
+          <Link href="/clientes">
+            <a className={`flex flex-col items-center justify-center ${isActive('/clientes') ? 'text-primary' : 'text-neutral-500'}`}>
+              <div className={`p-1.5 rounded-lg ${isActive('/clientes') ? 'bg-primary/10' : ''}`}>
+                <Users className="h-5 w-5" />
+              </div>
+              <span className="text-[10px] mt-1">Clientes</span>
+            </a>
+          </Link>
+          
           {/* Botão central de Adicionar */}
           <div className="flex justify-center">
-            <Link href="/vistoria-far">
+            <Link href="/nova-vistoria">
               <a className="bg-primary text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg border-4 border-white -mt-6">
                 <Plus className="h-6 w-6" />
               </a>
             </Link>
           </div>
           
-          <Link href="/rotas">
-            <a className={`flex flex-col items-center justify-center ${isActive('/rotas') ? 'text-primary' : 'text-neutral-500'}`}>
-              <div className={`p-1.5 rounded-lg ${isActive('/rotas') ? 'bg-primary/10' : ''}`}>
-                <MapPin className="h-5 w-5" />
+          <Link href="/visitas">
+            <a className={`flex flex-col items-center justify-center ${isActive('/visitas') ? 'text-primary' : 'text-neutral-500'}`}>
+              <div className={`p-1.5 rounded-lg ${isActive('/visitas') ? 'bg-primary/10' : ''}`}>
+                <ClipboardCheck className="h-5 w-5" />
               </div>
-              <span className="text-[10px] mt-1">Rotas</span>
+              <span className="text-[10px] mt-1">Visitas</span>
             </a>
           </Link>
           
@@ -94,24 +103,40 @@ const BottomNavigation = () => {
               <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto my-2 opacity-80"></div>
               
               <div className="grid grid-cols-4 gap-3 p-4 max-h-[70vh] overflow-y-auto pb-8">
-                {/* Destaque especial para o botão de Nova Vistoria FAR */}
-                <Link href="/vistoria-far">
+                {/* Destaque especial para o botão de Nova Vistoria */}
+                <Link href="/nova-vistoria">
                   <a className="flex flex-col items-center p-3 rounded-xl bg-blue-50 hover:bg-blue-100 col-span-4 mb-3 border-2 border-blue-300" onClick={() => setShowMore(false)}>
                     <div className="p-3 rounded-full bg-blue-600 text-white mb-2 shadow-sm">
                       <FileText className="h-7 w-7" />
                     </div>
-                    <span className="text-sm font-semibold text-blue-800">Nova Vistoria FAR</span>
+                    <span className="text-sm font-semibold text-blue-800">Nova Vistoria</span>
                   </a>
                 </Link>
                 
-
-                
-                <Link href="/rotas">
+                <Link href="/clientes">
                   <a className="flex flex-col items-center p-3 rounded-xl bg-gray-50 hover:bg-gray-100" onClick={() => setShowMore(false)}>
-                    <div className={`p-3 rounded-full ${isActive('/rotas') ? 'bg-primary/10 text-primary' : 'bg-white text-neutral-700'} mb-2 shadow-sm`}>
-                      <MapPin className="h-6 w-6" />
+                    <div className={`p-3 rounded-full ${isActive('/clientes') ? 'bg-primary/10 text-primary' : 'bg-white text-neutral-700'} mb-2 shadow-sm`}>
+                      <Users className="h-6 w-6" />
                     </div>
-                    <span className="text-xs font-medium">Rotas</span>
+                    <span className="text-xs font-medium">Clientes</span>
+                  </a>
+                </Link>
+                
+                <Link href="/visitas">
+                  <a className="flex flex-col items-center p-3 rounded-xl bg-gray-50 hover:bg-gray-100" onClick={() => setShowMore(false)}>
+                    <div className={`p-3 rounded-full ${isActive('/visitas') ? 'bg-primary/10 text-primary' : 'bg-white text-neutral-700'} mb-2 shadow-sm`}>
+                      <ClipboardCheck className="h-6 w-6" />
+                    </div>
+                    <span className="text-xs font-medium">Visitas</span>
+                  </a>
+                </Link>
+                
+                <Link href="/relatorios">
+                  <a className="flex flex-col items-center p-3 rounded-xl bg-gray-50 hover:bg-gray-100" onClick={() => setShowMore(false)}>
+                    <div className={`p-3 rounded-full ${isActive('/relatorios') ? 'bg-primary/10 text-primary' : 'bg-white text-neutral-700'} mb-2 shadow-sm`}>
+                      <FileText className="h-6 w-6" />
+                    </div>
+                    <span className="text-xs font-medium">Relatórios</span>
                   </a>
                 </Link>
                 
