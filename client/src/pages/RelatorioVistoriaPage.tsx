@@ -12,7 +12,7 @@ import {
   espessurasTelhas,
   novoRelatorioVistoria,
   gerarRelatorioAleatorio
-} from '../../../shared/relatorioVistoriaSchema';
+} from '@shared/relatorioVistoriaSchema';
 import { gerarRelatorioVistoriaDoc } from '@/lib/relatorioVistoriaDocGenerator';
 
 import { DashboardLayoutNew } from '@/layouts/DashboardLayoutNew';

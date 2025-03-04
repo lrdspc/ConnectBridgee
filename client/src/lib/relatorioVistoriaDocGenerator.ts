@@ -16,7 +16,7 @@ import {
   SectionType,
   Packer
 } from 'docx';
-import { RelatorioVistoria, naoConformidadesDisponiveis } from '../../../shared/relatorioVistoriaSchema';
+import { RelatorioVistoria, naoConformidadesDisponiveis } from '@shared/relatorioVistoriaSchema';
 
 // Função auxiliar para trabalhar com imagens (não utilizada diretamente)
 function dataUrlToBuffer(dataUrl: string): Buffer {
