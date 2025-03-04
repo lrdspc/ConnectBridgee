@@ -63,13 +63,17 @@ export const useVisits = (filter: VisitFilter | string = "all") => {
     retry: isOffline ? false : 3
   });
 
-  // Query function para obter uma visita específica
+  // Query function para obter uma visita específica com refinamentos de cache
   const useVisitById = (id: string | undefined) => {
+    // Usando o hook useQuery do TanStack Query v5
     return useQuery({
       queryKey: ["visit", id],
       queryFn: () => id ? getVisitById(id) : Promise.resolve(undefined),
       enabled: !!id,
-      staleTime
+      staleTime,
+      // Removido o parâmetro gcTime/cacheTime para evitar erros de compatibilidade
+      refetchOnMount: true,
+      refetchOnWindowFocus: !isOffline
     });
   };
 

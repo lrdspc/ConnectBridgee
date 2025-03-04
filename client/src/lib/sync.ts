@@ -389,33 +389,65 @@ export const resolveConflict = async (visitId: string, useLocalVersion: boolean)
   try {
     const visit = await db.visits.get(visitId);
     
-    if (!visit || !visit._conflictDetected) {
-      throw new Error("Visita não encontrada ou não há conflito para resolver");
+    if (!visit) {
+      throw new Error("Visita não encontrada");
+    }
+    
+    if (!visit._conflictDetected) {
+      console.warn(`Visita ${visitId} não tem conflito marcado para resolver`);
+      return;
     }
     
     if (useLocalVersion) {
-      // Usar a versão local e marcá-la para sincronizar
-      await db.visits.update(visitId, {
+      // Criar uma nova versão mesclada com as informações locais
+      const resolvedVisit = {
         ...visit,
         _conflictDetected: false,
         _serverVersion: undefined,
-        synced: false
-      });
+        _syncAttempts: 0,
+        _lastSyncError: undefined,
+        synced: false,
+        updatedAt: new Date().toISOString() // Atualizar timestamp para garantir sincronização
+      };
+      
+      // Atualizar o banco de dados
+      await db.visits.update(visitId, resolvedVisit);
+      console.log(`Conflito resolvido para a visita ${visitId} usando versão local`);
+      
+      // Tentar sincronizar imediatamente se estiver online
+      if (navigator.onLine) {
+        try {
+          await syncVisitsToServer([resolvedVisit]);
+          console.log(`Visita ${visitId} resincronizada com sucesso após resolução de conflito`);
+        } catch (syncError) {
+          console.warn(`Não foi possível sincronizar a visita ${visitId} após resolução: ${syncError}`);
+          // Não lançar erro aqui, pois a resolução foi bem-sucedida
+        }
+      }
     } else {
       // Usar a versão do servidor
       if (!visit._serverVersion) {
-        throw new Error("Versão do servidor não disponível");
+        throw new Error("Versão do servidor não disponível para resolução de conflito");
       }
       
-      await db.visits.update(visitId, {
-        ...visit._serverVersion,
+      // Criar uma nova versão mesclada com as informações do servidor
+      const serverVersion = visit._serverVersion as Visit;
+      const resolvedVisit = {
+        ...serverVersion,
         _conflictDetected: false,
         _serverVersion: undefined,
+        _syncAttempts: 0,
+        _lastSyncError: undefined,
         synced: true
-      });
+      };
+      
+      // Atualizar o banco de dados
+      await db.visits.update(visitId, resolvedVisit);
+      console.log(`Conflito resolvido para a visita ${visitId} usando versão do servidor`);
     }
     
-    console.log(`Conflito resolvido para a visita ${visitId}`);
+    // Notificar o sucesso da operação
+    return Promise.resolve();
   } catch (error) {
     console.error(`Erro ao resolver conflito para visita ${visitId}:`, error);
     throw error;
@@ -475,26 +507,128 @@ export const syncData = async (): Promise<void> => {
   }
 };
 
+// Interface para informações de conflito
+export interface ConflictInfo {
+  visitId: string;
+  localTimestamp: string;
+  serverTimestamp: string;
+  clientName: string; 
+  conflictDate: string;
+}
+
+// Função para buscar visitas com conflitos
+export const getConflictingVisits = async (): Promise<ConflictInfo[]> => {
+  try {
+    // Buscar todas as visitas com a flag _conflictDetected
+    const conflictingVisits = await db.visits
+      .filter(visit => visit._conflictDetected === true)
+      .toArray();
+    
+    // Converter em informações mais concisas para a UI
+    return conflictingVisits.map(visit => {
+      const serverVersion = visit._serverVersion as Visit | undefined;
+      
+      return {
+        visitId: visit.id,
+        localTimestamp: visit.updatedAt,
+        serverTimestamp: serverVersion?.updatedAt || 'N/A',
+        clientName: visit.clientName,
+        conflictDate: new Date().toISOString() // Data atual como data de detecção do conflito
+      };
+    });
+  } catch (error) {
+    console.error("Erro ao buscar visitas com conflitos:", error);
+    return [];
+  }
+};
+
+// Interface para informações de erro de sincronização
+export interface SyncErrorInfo {
+  visitId: string;
+  errorMessage: string;
+  timestamp: string;
+  attempts: number;
+  clientName: string;
+}
+
+// Função para buscar visitas com erros de sincronização
+export const getSyncErrors = async (): Promise<SyncErrorInfo[]> => {
+  try {
+    // Buscar visitas que tiveram erros de sincronização
+    const errorVisits = await db.visits
+      .filter(visit => visit._lastSyncError !== undefined && visit._lastSyncError !== null)
+      .toArray();
+    
+    // Converter em informações para a UI
+    return errorVisits.map(visit => ({
+      visitId: visit.id,
+      errorMessage: visit._lastSyncError || 'Erro desconhecido',
+      timestamp: visit.updatedAt,
+      attempts: visit._syncAttempts || 0,
+      clientName: visit.clientName
+    }));
+  } catch (error) {
+    console.error("Erro ao buscar erros de sincronização:", error);
+    return [];
+  }
+};
+
 // Função para verificar a saúde da sincronização
-export const getSyncHealth = (): {
+export const getSyncHealth = async (): Promise<{
   status: 'healthy' | 'warning' | 'error';
   stats: SyncStats;
   pendingItems: number;
-} => {
+  offline: boolean;
+  conflictsCount: number;
+  errorsCount: number;
+  lastSuccessfulSync: string;
+}> => {
   const pendingItems = getSyncQueue().length;
   const stats = syncStats;
+  const offline = !navigator.onLine;
+  
+  // Obter contagem de conflitos
+  const conflicts = await getConflictingVisits();
+  const conflictsCount = conflicts.length;
+  
+  // Obter contagem de erros
+  const errors = await getSyncErrors();
+  const errorsCount = errors.length;
   
   // Decidir o status com base nas estatísticas
   let status: 'healthy' | 'warning' | 'error' = 'healthy';
   
-  if (stats.failedSyncs > stats.successfulSyncs * 0.5) {
-    status = 'error'; // Mais de 50% das sincronizações falham
-  } else if (pendingItems > 10 || stats.failedSyncs > stats.successfulSyncs * 0.2) {
-    status = 'warning'; // Muitos itens pendentes ou mais de 20% de falhas
+  if (stats.failedSyncs > stats.successfulSyncs * 0.5 || conflictsCount > 0) {
+    status = 'error'; // Mais de 50% das sincronizações falham ou há conflitos
+  } else if (pendingItems > 10 || stats.failedSyncs > stats.successfulSyncs * 0.2 || errorsCount > 0) {
+    status = 'warning'; // Muitos itens pendentes ou mais de 20% de falhas ou há erros
   }
   
-  return { status, stats, pendingItems };
+  // Formatar horário da última sincronização bem-sucedida
+  const lastSuccessfulSync = stats.lastSuccessfulSync === '0' 
+    ? 'Nunca'
+    : new Date(stats.lastSuccessfulSync).toLocaleString();
+  
+  return { 
+    status, 
+    stats, 
+    pendingItems, 
+    offline,
+    conflictsCount,
+    errorsCount,
+    lastSuccessfulSync
+  };
 };
+
+// Interface para compatibilidade do Service Worker
+interface ExtendedServiceWorkerRegistration extends ServiceWorkerRegistration {
+  sync?: {
+    register(tag: string): Promise<void>;
+  };
+  periodicSync?: {
+    register(tag: string, options: { minInterval: number }): Promise<void>;
+  };
+}
 
 // Setup enhanced background sync
 export const setupBackgroundSync = () => {
@@ -505,25 +639,37 @@ export const setupBackgroundSync = () => {
   const intervalId = setInterval(() => {
     if (navigator.onLine) {
       console.log('Executando sincronização periódica');
-      syncData().catch(console.error);
+      syncData().catch(error => console.error("Erro na sincronização periódica:", error));
     }
   }, SYNC_INTERVAL);
   
   // Verificar se o Service Worker está disponível
   if ('serviceWorker' in navigator && 'SyncManager' in window) {
-    navigator.serviceWorker.ready.then(registration => {
-      // Registrar um evento de sincronização que será acionado quando online
-      registration.sync.register('sync-visits')
-        .then(() => console.log('Background sync registrado com sucesso'))
-        .catch(err => console.error('Erro ao registrar background sync:', err));
-      
-      // Registrar para sincronização periódica via Service Worker
-      registration.periodicSync?.register('periodic-sync-visits', {
-        minInterval: 2 * 60 * 60 * 1000 // 2 horas (mínimo permitido)
-      }).catch(err => {
-        console.warn('Periodic sync não suportado ou falhou:', err);
-      });
+    navigator.serviceWorker.ready.then((registration: ExtendedServiceWorkerRegistration) => {
+      try {
+        // Registrar um evento de sincronização que será acionado quando online
+        if (registration.sync) {
+          registration.sync.register('sync-visits')
+            .then(() => console.log('Background sync registrado com sucesso'))
+            .catch((error: Error) => console.error('Erro ao registrar background sync:', error));
+        }
+        
+        // Registrar para sincronização periódica via Service Worker
+        if (registration.periodicSync) {
+          registration.periodicSync.register('periodic-sync-visits', {
+            minInterval: 2 * 60 * 60 * 1000 // 2 horas (mínimo permitido)
+          }).catch((error: Error) => {
+            console.warn('Periodic sync não suportado ou falhou:', error);
+          });
+        }
+      } catch (error) {
+        console.warn('Erro ao configurar sincronização em segundo plano:', error);
+      }
+    }).catch(error => {
+      console.warn('Service Worker não está pronto:', error);
     });
+  } else {
+    console.info('Sincronização em segundo plano não suportada por este navegador');
   }
   
   // Limpar o intervalo quando a página for descarregada
