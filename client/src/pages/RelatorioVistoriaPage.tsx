@@ -113,7 +113,8 @@ export default function RelatorioVistoriaPage() {
         
         toast({
           title: 'Dados do cliente carregados',
-          description: 'O formulário foi pré-preenchido com os dados do cliente selecionado.'
+          description: 'O formulário foi pré-preenchido com os dados do cliente selecionado.',
+          variant: 'default'
         });
       }
     }

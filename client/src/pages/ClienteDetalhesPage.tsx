@@ -273,13 +273,16 @@ export default function ClienteDetalhesPage() {
             {inspecoes.length === 0 ? (
               <div className="text-center py-6">
                 <p className="text-muted-foreground">Nenhuma inspeção encontrada para este cliente.</p>
-                <Button 
-                  onClick={() => setLocation(`/nova-vistoria?clientId=${cliente.id}`)} 
-                  variant="outline"
-                  className="mt-4"
-                >
-                  <ClipboardCheck className="mr-2 h-4 w-4" /> Realizar Nova Vistoria
-                </Button>
+                <div className="mt-4 space-y-2">
+                  <p className="text-sm text-muted-foreground">Deseja iniciar uma nova vistoria para este cliente?</p>
+                  <Button 
+                    onClick={() => setLocation(`/nova-vistoria?clientId=${cliente.id}`)} 
+                    variant="default"
+                    className="px-8"
+                  >
+                    <ClipboardCheck className="mr-2 h-4 w-4" /> Iniciar Nova Vistoria
+                  </Button>
+                </div>
               </div>
             ) : (
               <div className="space-y-4">
