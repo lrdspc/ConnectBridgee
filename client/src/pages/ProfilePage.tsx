@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
-import Header from "../components/layout/Header";
 import { syncData } from "../lib/sync";
 import { useOfflineStatus } from "../hooks/useOfflineStatus";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { User, LogOut, RefreshCw, Database, Mail, Phone, MapPin, Briefcase, HelpCircle, RotateCcw } from "lucide-react";
+import { DashboardLayoutNew } from "../layouts/DashboardLayoutNew";
+import { PageTransition } from "@/components/ui/loading-animation";
 
 const ProfilePage = () => {
   const { user, logout } = useAuth();
@@ -87,10 +88,13 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="page page-transition" id="profile">
-      <Header title="Perfil" showBackButton={true} />
-      
-      <div className="p-4">
+    <PageTransition>
+      <DashboardLayoutNew>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold tracking-tight">Meu Perfil</h1>
+        </div>
+        
+        <div>
         <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-4">
           <div className="bg-primary h-24 relative">
             <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2">
@@ -223,7 +227,8 @@ const ProfilePage = () => {
           <p className="mt-1">© {new Date().getFullYear()} Brasilit | Todos os direitos reservados</p>
         </div>
       </div>
-    </div>
+      </DashboardLayoutNew>
+    </PageTransition>
   );
 };
 

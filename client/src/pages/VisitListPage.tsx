@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import Header from "../components/layout/Header";
 import VisitFilter from "../components/visits/VisitFilter";
 import VisitCard from "../components/visits/VisitCard";
 import { useVisits } from "../hooks/useVisits";
@@ -9,6 +8,7 @@ import { Visit } from "../lib/db";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { LoadingAnimation, SkeletonCard, PageTransition } from "@/components/ui/loading-animation";
+import { DashboardLayoutNew } from "../layouts/DashboardLayoutNew";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -134,9 +134,10 @@ const VisitListPage = () => {
 
   return (
     <PageTransition>
-      <div className="page flex flex-col min-h-screen bg-gray-50" id="taskList">
-        <Header title="Lista de Visitas" showBackButton={true} />
-
+      <DashboardLayoutNew>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold tracking-tight">Lista de Visitas</h1>
+        </div>
 
 
         {/* Recent Visits Carousel */}
@@ -225,7 +226,7 @@ const VisitListPage = () => {
         </div>
 
 
-      </div>
+      </DashboardLayoutNew>
     </PageTransition>
   );
 };
