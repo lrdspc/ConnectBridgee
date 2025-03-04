@@ -140,10 +140,10 @@ export default function ClienteDetalhesPage() {
           </div>
           <div className="flex gap-2">
             <Button 
-              onClick={() => setLocation(`/inspecoes/novo?clienteId=${cliente.id}`)} 
+              onClick={() => setLocation(`/vistoria/${cliente.id}`)} 
               variant="default"
             >
-              <ClipboardCheck className="mr-2 h-4 w-4" /> Nova Inspeção
+              <ClipboardCheck className="mr-2 h-4 w-4" /> Nova Vistoria
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -274,11 +274,11 @@ export default function ClienteDetalhesPage() {
               <div className="text-center py-6">
                 <p className="text-muted-foreground">Nenhuma inspeção encontrada para este cliente.</p>
                 <Button 
-                  onClick={() => setLocation(`/inspecoes/novo?clienteId=${cliente.id}`)} 
+                  onClick={() => setLocation(`/vistoria/${cliente.id}`)} 
                   variant="outline"
                   className="mt-4"
                 >
-                  <ClipboardCheck className="mr-2 h-4 w-4" /> Realizar Nova Inspeção
+                  <ClipboardCheck className="mr-2 h-4 w-4" /> Realizar Nova Vistoria
                 </Button>
               </div>
             ) : (
