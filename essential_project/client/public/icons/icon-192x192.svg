@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <rect width="192" height="192" fill="#0057B8" rx="32" />
+  <rect x="38" y="58" width="116" height="76" fill="#FF6B00" rx="12" />
+  <text x="96" y="112" font-size="36" font-weight="bold" text-anchor="middle" fill="white" font-family="Arial, sans-serif">BRASILIT</text>
+  <path d="M96 46 L96 38 M122 53 L128 46 M139 77 L147 77 M128 101 L122 108 M96 115 L96 123 M70 108 L63 101 M53 77 L45 77 M63 53 L70 46" stroke="white" stroke-width="6" stroke-linecap="round" />
+  <path d="M116 77 A20 20 0 1 1 76 77 A20 20 0 1 1 116 77 Z" fill="none" stroke="white" stroke-width="6" />
+  <circle cx="96" cy="77" r="10" fill="white" />
+</svg>
