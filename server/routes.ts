@@ -229,6 +229,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Invalid sync data" });
       }
       
+      // Validando os campos obrigatórios mínimos
+      const requiredFields = ['clientName', 'address', 'date', 'type', 'status', 'priority'];
+      const missingFields = requiredFields.filter(field => !visit[field]);
+      
+      if (missingFields.length > 0) {
+        return res.status(400).json({ 
+          message: "Missing required fields", 
+          fields: missingFields 
+        });
+      }
+      
       if (typeof visit.id === 'string') {
         // This could be a new visit from the client with a temporary ID
         // In a real app, you would create a new visit with a proper ID
@@ -329,9 +340,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.query.userId ? Number(req.query.userId) : undefined;
       const filter = req.query.filter as string | undefined;
+      const page = req.query.page ? parseInt(req.query.page as string) : 1;
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
+      
+      // Validar parâmetros de paginação
+      if (isNaN(page) || page < 1) {
+        return res.status(400).json({ message: "Invalid page parameter" });
+      }
+      
+      if (isNaN(limit) || limit < 1 || limit > 100) {
+        return res.status(400).json({ message: "Invalid limit parameter (must be between 1 and 100)" });
+      }
       
       const reports = await storage.getReports(userId, filter);
-      return res.status(200).json(reports);
+      
+      // Calcular paginação
+      const totalReports = reports.length;
+      const totalPages = Math.ceil(totalReports / limit);
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
+      const paginatedReports = reports.slice(startIndex, endIndex);
+      
+      return res.status(200).json({
+        data: paginatedReports,
+        pagination: {
+          total: totalReports,
+          page,
+          limit,
+          totalPages
+        }
+      });
     } catch (error) {
       console.error("Get reports error:", error);
       return res.status(500).json({ message: "Internal server error" });
