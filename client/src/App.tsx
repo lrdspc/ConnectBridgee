@@ -40,7 +40,6 @@ function App() {
           {/* Página de relatórios */}
           <Route path="/relatorios" component={RelatoriosPage} />
           <Route path="/nova-vistoria" component={RelatorioVistoriaPage} />
-          <Route path="/vistoria/:clienteId?" component={RelatorioVistoriaPage} />
           
           <Route component={NotFound} />
         </Switch>

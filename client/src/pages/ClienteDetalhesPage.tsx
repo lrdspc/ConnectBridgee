@@ -140,7 +140,7 @@ export default function ClienteDetalhesPage() {
           </div>
           <div className="flex gap-2">
             <Button 
-              onClick={() => setLocation(`/vistoria/${cliente.id}`)} 
+              onClick={() => setLocation(`/nova-vistoria?clientId=${cliente.id}`)} 
               variant="default"
             >
               <ClipboardCheck className="mr-2 h-4 w-4" /> Nova Vistoria
@@ -274,7 +274,7 @@ export default function ClienteDetalhesPage() {
               <div className="text-center py-6">
                 <p className="text-muted-foreground">Nenhuma inspeção encontrada para este cliente.</p>
                 <Button 
-                  onClick={() => setLocation(`/vistoria/${cliente.id}`)} 
+                  onClick={() => setLocation(`/nova-vistoria?clientId=${cliente.id}`)} 
                   variant="outline"
                   className="mt-4"
                 >

@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useToast } from '@/hooks/use-toast';
+import { useParams, useLocation } from 'wouter';
+import { useVisits } from '../hooks/useVisits';
 import { 
   RelatorioVistoria,
   relatorioVistoriaSchema,
@@ -76,11 +78,45 @@ export default function RelatorioVistoriaPage() {
   const [previewHTML, setPreviewHTML] = useState<string>('');
   const [isGeneratingPreview, setIsGeneratingPreview] = useState(false);
   
+  // Obter o ID do cliente a partir dos parâmetros de consulta
+  const [, params] = useLocation();
+  const clientId = new URLSearchParams(params).get('clientId');
+  const { data: visits } = useVisits();
+  
   // Inicializar o formulário com valores padrão
   const form = useForm<RelatorioVistoria>({
     resolver: zodResolver(relatorioVistoriaSchema),
     defaultValues: novoRelatorioVistoria(),
   });
+  
+  // Carregar dados do cliente quando o clientId estiver disponível
+  useEffect(() => {
+    if (clientId && visits) {
+      const clientVisit = visits.find(visit => visit.id === clientId);
+      if (clientVisit) {
+        // Pré-preencher o formulário com os dados do cliente
+        form.setValue('cliente', clientVisit.clientName);
+        form.setValue('endereco', clientVisit.address);
+        form.setValue('protocolo', `VISTORIA-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000)}`);
+        
+        // Se a cidade/UF estiver disponível no endereço, tentar extrair
+        const addressParts = clientVisit.address.split(',');
+        if (addressParts.length > 1) {
+          const lastPart = addressParts[addressParts.length - 1].trim();
+          const cityUfMatch = lastPart.match(/(.+)\/(.+)/);
+          if (cityUfMatch) {
+            form.setValue('cidade', cityUfMatch[1].trim());
+            form.setValue('uf', cityUfMatch[2].trim());
+          }
+        }
+        
+        toast({
+          title: 'Dados do cliente carregados',
+          description: 'O formulário foi pré-preenchido com os dados do cliente selecionado.'
+        });
+      }
+    }
+  }, [clientId, visits, form, toast]);
   
   const watchNaoConformidades = form.watch('naoConformidades');
   const watchResultado = form.watch('resultado');
