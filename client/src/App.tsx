@@ -11,38 +11,32 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './lib/queryClient';
 import { Toaster } from '@/components/ui/toaster';
 
-// Páginas do sistema
+// Novas páginas para o fluxo revisado
 import ClientesPage from './pages/ClientesPage';
 import ClienteDetalhesPage from './pages/ClienteDetalhesPage';
-import RelatoriosPage from './pages/RelatoriosPage';
-import VistoriaFARPage from './pages/VistoriaFARPage';
-
-// Importação de folhas de estilo
-import './styles/smart-dashboard.css';
+import RelatorioVistoriaPage from './pages/RelatorioVistoriaPage';
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="smart-app-container">
+      <div>
         <Switch>
           <Route path="/login" component={LoginPage} />
           <Route path="/" component={DashboardPage} />
           <Route path="/perfil" component={ProfilePage} />
           <Route path="/rotas" component={RouteMapPage} />
           
-          {/* Páginas de Visitas */}
+          {/* Páginas antigas de visitas - serão gradualmente migradas para o novo fluxo */}
           <Route path="/visitas" component={VisitListPage} />
           <Route path="/visitas/nova" component={NewVisitPage} />
           <Route path="/visitas/:id" component={VisitDetailsPage} />
           
-          {/* Páginas de Clientes */}
+          {/* Novas páginas do fluxo revisado */}
           <Route path="/clientes" component={ClientesPage} />
           <Route path="/clientes/:id" component={ClienteDetalhesPage} />
           
-          {/* Relatórios */}
-          <Route path="/relatorios" component={RelatoriosPage} />
-          <Route path="/vistoria-far" component={VistoriaFARPage} />
-          <Route path="/relatorio-vistoria" component={VistoriaFARPage} />
+          {/* Página do relatório de vistoria técnica */}
+          <Route path="/relatorio-vistoria" component={RelatorioVistoriaPage} />
           
           <Route component={NotFound} />
         </Switch>
