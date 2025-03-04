@@ -6,6 +6,13 @@ import "./styles/exact-reference.css"; // Novo design exatamente como na referê
 import "./main.css"; // Dashboard moderno
 import "./styles/dashboard-widgets.css"; // Estilos específicos para widgets
 
+// Importando Bootstrap
+import 'bootstrap/dist/css/bootstrap.min.css';
+// Scripts do Bootstrap (para componentes interativos)
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+// Importando ícones do Bootstrap
+import 'bootstrap-icons/font/bootstrap-icons.css';
+
 import "./css/responsive.css"; // CSS responsivo global
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
