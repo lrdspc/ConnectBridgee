@@ -15,6 +15,7 @@ import { Toaster } from '@/components/ui/toaster';
 import ClientesPage from './pages/ClientesPage';
 import ClienteDetalhesPage from './pages/ClienteDetalhesPage';
 import RelatorioVistoriaPage from './pages/RelatorioVistoriaPage';
+import DynamicDashboardPage from './pages/DynamicDashboardPage';
 
 function App() {
   return (
@@ -25,6 +26,9 @@ function App() {
           <Route path="/" component={DashboardPage} />
           <Route path="/perfil" component={ProfilePage} />
           <Route path="/rotas" component={RouteMapPage} />
+          
+          {/* Nova página de dashboard com widgets */}
+          <Route path="/dashboard-widgets" component={DynamicDashboardPage} />
           
           {/* Páginas antigas de visitas - serão gradualmente migradas para o novo fluxo */}
           <Route path="/visitas" component={VisitListPage} />

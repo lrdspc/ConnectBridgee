@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import { Card } from '@/components/ui/card';
 import {
@@ -271,14 +270,9 @@ const DynamicDashboardPage: React.FC = () => {
     <div className="dashboard-container p-4 md:p-6">
       <header className="flex justify-between items-center mb-8">
         <div>
-          <motion.h1 
-            className="text-3xl font-bold"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          <h1 className="text-3xl font-bold animate-fade-in">
             Welcome back <span className="inline-block">👋</span>
-          </motion.h1>
+          </h1>
           <p className="text-gray-500 mt-1">Your personalized dashboard</p>
         </div>
         <div className="flex items-center gap-4">
