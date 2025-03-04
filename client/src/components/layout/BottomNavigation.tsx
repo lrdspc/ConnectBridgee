@@ -35,7 +35,7 @@ const BottomNavigation = () => {
       )}
       
       {/* Navegação inferior principal */}
-      <nav className="relative bg-white border-t border-slate-200 shadow mt-auto">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow mt-auto">
         <div className="flex items-center justify-between px-4 mx-auto h-16">
           {/* Links principais */}
           <div className="flex space-x-8">
@@ -88,7 +88,7 @@ const BottomNavigation = () => {
         
         {/* Menu hambúrguer */}
         {showMenu && (
-          <div className="absolute bottom-full right-0 mb-2 mr-4 w-48 bg-white rounded-lg shadow-xl z-50 overflow-hidden animate-in slide-in-from-right-52">
+          <div className="absolute bottom-full right-0 mb-2 mr-4 w-48 bg-white rounded-lg shadow-xl z-50 overflow-hidden animate-in slide-in-from-bottom-10">
             <div className="p-2">
               <Link href="/relatorios">
                 <a 
