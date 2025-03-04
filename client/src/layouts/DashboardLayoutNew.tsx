@@ -54,7 +54,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className="flex min-h-screen w-full bg-gray-50">
       {/* Top Header (com perfil de usuário) - não fixo */}
       <header className="h-16 bg-white border-b flex items-center justify-between px-4 shadow-sm">
         <div className="flex items-center">
