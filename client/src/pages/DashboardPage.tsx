@@ -137,8 +137,7 @@ export default function DashboardPage() {
     <PageTransition>
       <DashboardLayoutNew>
         <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+          <div className="flex items-center justify-end">
             <div className="flex items-center gap-3">
               <span className="text-sm text-gray-500">
                 {formatDate(today, 'dd/MM/yyyy')}
