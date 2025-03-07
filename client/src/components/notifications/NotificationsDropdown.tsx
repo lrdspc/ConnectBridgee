@@ -1,30 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuLabel
+  DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { 
-  Bell, 
-  X, 
-  Info, 
-  AlertTriangle, 
-  CheckCircle, 
-  ShieldAlert, 
-  Clock, 
-  Globe,
-  ShieldCheck
-} from 'lucide-react';
-import { formatDate } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Bell, Check, ChevronRight, Info, Shield, X } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Link } from 'wouter';
-import { useToast } from '@/hooks/use-toast';
 
 export interface Notification {
   id: string;
@@ -41,263 +31,192 @@ interface NotificationsDropdownProps {
 }
 
 export function NotificationsDropdown({ className }: NotificationsDropdownProps) {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [open, setOpen] = useState(false);
   const { toast } = useToast();
+  const [open, setOpen] = useState(false);
   
-  // Carregar notificações (mock para demonstração)
-  useEffect(() => {
-    // Em um caso real, isso seria carregado de uma API ou localStorage
-    const mockNotifications: Notification[] = [
-      {
-        id: '1',
-        title: 'Relatório pendente',
-        message: 'Você tem um relatório de vistoria pendente para finalizar.',
-        type: 'warning',
-        read: false,
-        date: new Date().toISOString(),
-        link: '/relatorio-vistoria'
-      },
-      {
-        id: '2',
-        title: 'Visita agendada hoje',
-        message: 'Você tem uma visita agendada com Construtora ABC às 14:30',
-        type: 'info',
-        read: false,
-        date: new Date().toISOString(),
-        link: '/visitas'
-      },
-      {
-        id: '3',
-        title: 'Relatório aprovado',
-        message: 'Seu relatório técnico foi aprovado pelo gerente.',
-        type: 'success',
-        read: true,
-        date: new Date(Date.now() - 86400000).toISOString(),
-        link: '/relatorios'
-      },
-      {
-        id: '4',
-        title: 'Atualização do sistema',
-        message: 'Nova versão disponível com melhorias no editor de relatórios.',
-        type: 'info',
-        read: true,
-        date: new Date(Date.now() - 172800000).toISOString()
-      }
-    ];
-    
-    setNotifications(mockNotifications);
-    
-    // Carregar do localStorage se existir
-    const savedNotifications = localStorage.getItem('notifications');
-    if (savedNotifications) {
-      try {
-        setNotifications(JSON.parse(savedNotifications));
-      } catch (error) {
-        console.error('Erro ao carregar notificações:', error);
-      }
+  // Estado para as notificações (normalmente viria de um contexto ou API)
+  const [notifications, setNotifications] = useState<Notification[]>([
+    {
+      id: '1',
+      title: 'Relatório pendente',
+      message: 'Você tem um relatório de vistoria pendente para finalizar',
+      type: 'warning',
+      read: false,
+      date: new Date().toISOString(),
+      link: '/relatorio-vistoria'
+    },
+    {
+      id: '2',
+      title: 'Visita agendada hoje',
+      message: 'Visita ao cliente Construtora ABC às 14:00',
+      type: 'info',
+      read: false,
+      date: new Date().toISOString(),
+      link: '/visitas'
+    },
+    {
+      id: '3',
+      title: 'Relatório aprovado',
+      message: 'Seu relatório de vistoria foi aprovado pelo gerente',
+      type: 'success',
+      read: true,
+      date: new Date(Date.now() - 86400000).toISOString(),
+      link: '/relatorios'
     }
-  }, []);
-  
-  // Salvar notificações no localStorage quando mudar
-  useEffect(() => {
-    if (notifications.length > 0) {
-      localStorage.setItem('notifications', JSON.stringify(notifications));
-    }
-  }, [notifications]);
-  
-  // Marcar uma notificação como lida
+  ]);
+
+  // Função para marcar notificação como lida
   const markAsRead = (id: string) => {
-    setNotifications(prev => 
-      prev.map(notification => 
-        notification.id === id ? { ...notification, read: true } : notification
-      )
-    );
+    setNotifications(notifications.map(notification => 
+      notification.id === id ? { ...notification, read: true } : notification
+    ));
   };
-  
-  // Marcar todas as notificações como lidas
+
+  // Função para marcar todas como lidas
   const markAllAsRead = () => {
-    setNotifications(prev => 
-      prev.map(notification => ({ ...notification, read: true }))
-    );
+    setNotifications(notifications.map(notification => ({
+      ...notification,
+      read: true
+    })));
     
     toast({
       title: "Notificações lidas",
       description: "Todas as notificações foram marcadas como lidas",
     });
   };
-  
-  // Remover uma notificação
-  const removeNotification = (id: string) => {
-    setNotifications(prev => prev.filter(notification => notification.id !== id));
+
+  // Função para remover notificação
+  const removeNotification = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setNotifications(notifications.filter(notification => notification.id !== id));
   };
-  
-  // Remover todas as notificações
-  const removeAllNotifications = () => {
-    setNotifications([]);
-    
-    toast({
-      title: "Notificações removidas",
-      description: "Todas as notificações foram removidas",
-    });
-  };
-  
-  // Obter o ícone com base no tipo da notificação
-  const getIcon = (type: string) => {
+
+  // Contador de notificações não lidas
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+  // Função para renderizar o ícone com base no tipo
+  const getNotificationIcon = (type: string) => {
     switch (type) {
       case 'info':
-        return <Info className="h-5 w-5 text-blue-500" />;
+        return <Info className="h-4 w-4 text-blue-500" />;
       case 'warning':
-        return <AlertTriangle className="h-5 w-5 text-amber-500" />;
+        return <Bell className="h-4 w-4 text-amber-500" />;
       case 'success':
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
+        return <Shield className="h-4 w-4 text-green-500" />;
       case 'error':
-        return <ShieldAlert className="h-5 w-5 text-red-500" />;
+        return <X className="h-4 w-4 text-red-500" />;
       default:
-        return <Globe className="h-5 w-5 text-gray-500" />;
+        return <Info className="h-4 w-4 text-gray-500" />;
     }
   };
-  
-  // Contar notificações não lidas
-  const unreadCount = notifications.filter(n => !n.read).length;
-  
+
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger asChild className={className}>
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-5 w-5" />
-          {unreadCount > 0 && (
-            <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white">
-              {unreadCount > 9 ? '9+' : unreadCount}
-            </span>
+      <DropdownMenuTrigger asChild>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className={cn(
+            "relative h-9 w-9",
+            unreadCount > 0 && "after:absolute after:top-1 after:right-1 after:h-2 after:w-2 after:rounded-full after:bg-red-500",
+            className
           )}
+        >
+          <Bell className="h-5 w-5" />
+          <span className="sr-only">Notificações</span>
         </Button>
       </DropdownMenuTrigger>
       
-      <DropdownMenuContent align="end" className="w-80">
-        <div className="flex items-center justify-between p-4">
-          <DropdownMenuLabel className="font-semibold text-lg">
+      <DropdownMenuContent align="end" className="w-80 p-0">
+        <div className="flex items-center justify-between p-4 border-b">
+          <DropdownMenuLabel className="font-semibold cursor-default">
             Notificações
             {unreadCount > 0 && (
-              <Badge variant="destructive" className="ml-2">
+              <Badge variant="secondary" className="ml-2 px-1 py-0 text-xs">
                 {unreadCount}
               </Badge>
             )}
           </DropdownMenuLabel>
           
-          <div className="flex gap-2">
-            {notifications.some(n => !n.read) && (
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={markAllAsRead}
-                className="h-8 text-xs"
-              >
-                Marcar todas como lidas
-              </Button>
-            )}
-            
-            {notifications.length > 0 && (
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={removeAllNotifications}
-                className="h-8 w-8 text-gray-500 hover:text-gray-900"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
-        </div>
-        
-        <DropdownMenuSeparator />
-        
-        <div className="max-h-[400px] overflow-y-auto">
-          {notifications.length === 0 ? (
-            <div className="py-8 text-center text-gray-500">
-              <Bell className="mx-auto h-10 w-10 text-gray-300 mb-2" />
-              <p>Nenhuma notificação no momento</p>
-            </div>
-          ) : (
-            notifications.map(notification => (
-              <div 
-                key={notification.id} 
-                className={`p-3 border-b last:border-b-0 ${notification.read ? 'bg-white' : 'bg-blue-50'}`}
-              >
-                <div className="flex">
-                  <div className="mr-3 mt-0.5">
-                    {getIcon(notification.type)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between">
-                      <p className={`text-sm font-medium ${!notification.read && 'font-semibold'}`}>
-                        {notification.title}
-                      </p>
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        className="h-6 w-6 -mt-1 -mr-1"
-                        onClick={() => removeNotification(notification.id)}
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </div>
-                    <p className="text-sm text-muted-foreground mt-1">{notification.message}</p>
-                    <div className="flex items-center justify-between mt-2">
-                      <div className="flex items-center text-xs text-gray-500">
-                        <Clock className="h-3 w-3 mr-1" />
-                        <span>
-                          {format(new Date(notification.date), "dd 'de' MMMM, HH:mm", { locale: ptBR })}
-                        </span>
-                      </div>
-                      
-                      <div className="flex items-center gap-1">
-                        {!notification.read && (
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            className="h-7 text-xs text-blue-600"
-                            onClick={() => markAsRead(notification.id)}
-                          >
-                            Marcar como lida
-                          </Button>
-                        )}
-                        
-                        {notification.link && (
-                          <DropdownMenuItem asChild className="p-0" onSelect={() => {
-                            if (!notification.read) {
-                              markAsRead(notification.id);
-                            }
-                            setOpen(false);
-                          }}>
-                            <Link href={notification.link}>
-                              <Button variant="ghost" size="sm" className="h-7 text-xs">
-                                Ver
-                              </Button>
-                            </Link>
-                          </DropdownMenuItem>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))
+          {unreadCount > 0 && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-xs h-7 px-2"
+              onClick={markAllAsRead}
+            >
+              <Check className="h-3 w-3 mr-1" />
+              Marcar todas como lidas
+            </Button>
           )}
         </div>
         
-        {notifications.length > 0 && (
-          <>
-            <DropdownMenuSeparator />
-            <div className="p-2 text-center">
-              <Link href="/configuracoes?tab=notificacoes" onClick={() => setOpen(false)}>
-                <Button variant="ghost" size="sm" className="w-full text-xs">
-                  Gerenciar notificações
-                </Button>
+        {notifications.length === 0 ? (
+          <div className="text-center p-6 text-muted-foreground">
+            <Bell className="h-8 w-8 mx-auto mb-2 opacity-20" />
+            <p>Sem notificações no momento</p>
+          </div>
+        ) : (
+          <div className="max-h-[60vh] overflow-y-auto py-1">
+            {notifications.map(notification => (
+              <Link key={notification.id} href={notification.link || '#'}>
+                <DropdownMenuItem 
+                  className={cn(
+                    "flex flex-col items-start px-4 py-3 cursor-pointer gap-1",
+                    !notification.read && "bg-muted/40"
+                  )}
+                  onClick={() => markAsRead(notification.id)}
+                >
+                  <div className="flex w-full justify-between">
+                    <div className="flex gap-2 items-center">
+                      {getNotificationIcon(notification.type)}
+                      <span className={cn(
+                        "font-medium text-sm",
+                        !notification.read && "font-semibold"
+                      )}>
+                        {notification.title}
+                      </span>
+                    </div>
+                    <Button
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-5 w-5 -mt-1 -mr-1 opacity-50 hover:opacity-100"
+                      onClick={(e) => removeNotification(notification.id, e)}
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  </div>
+                  
+                  <p className="text-xs text-muted-foreground ml-6">
+                    {notification.message}
+                  </p>
+                  
+                  <div className="flex w-full justify-between items-center mt-1">
+                    <span className="text-[10px] text-muted-foreground ml-6">
+                      {format(new Date(notification.date), "dd MMM, HH:mm", { locale: ptBR })}
+                    </span>
+                    
+                    {notification.link && (
+                      <span className="flex items-center text-[10px] text-blue-500">
+                        Ver detalhes 
+                        <ChevronRight className="h-3 w-3 ml-1" />
+                      </span>
+                    )}
+                  </div>
+                </DropdownMenuItem>
               </Link>
-            </div>
-          </>
+            ))}
+          </div>
         )}
+
+        <DropdownMenuSeparator />
+        
+        <DropdownMenuItem 
+          className="p-3 text-center cursor-pointer justify-center"
+          onClick={() => window.location.href = '/configuracoes?tab=notificacoes'}
+        >
+          <span>Configurações de notificação</span>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

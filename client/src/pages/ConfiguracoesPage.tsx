@@ -59,7 +59,6 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Notification } from '@/components/notifications/NotificationsDropdown';
 import { avatarFallback, cn } from '@/lib/utils';
-import { X, Shield, FileText as FileTextIcon } from 'lucide-react';
 
 export default function ConfiguracoesPage() {
   const { toast } = useToast();
@@ -939,7 +938,7 @@ export default function ConfiguracoesPage() {
                         {notifications.map((notification) => (
                           <div 
                             key={notification.id} 
-                            className={cnLocal(
+                            className={cn(
                               "flex items-start p-3 rounded-lg border",
                               notification.read ? "bg-card" : "bg-muted/30 border-primary/20"
                             )}
@@ -949,7 +948,7 @@ export default function ConfiguracoesPage() {
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-start justify-between">
-                                <p className={cnLocal(
+                                <p className={cn(
                                   "text-sm font-medium",
                                   !notification.read && "font-semibold"
                                 )}>
