@@ -2,48 +2,11 @@ import {
   Document, Paragraph, TextRun, HeadingLevel, AlignmentType, 
   BorderStyle, Tab, TabStopPosition, TabStopType, NumberFormat, LevelFormat,
   convertInchesToTwip, PageOrientation, WidthType, Table, TableRow, TableCell,
-  SectionType, Header, Footer, PageNumber, ShadingType,
-  UnderlineType, Media, ExternalHyperlink, PageBreak,
-  ImageRun, FileChild, IParagraphStyleOptions
+  SectionType, Header, Footer, PageNumber, BorderOptions, ShadingType,
+  UnderlineType, Media, ParagraphStyle, ExternalHyperlink, Pict, PageBreak,
+  HyperlinkRef, SimpleField, FieldOptions, ImageRun, FileChild
 } from "docx";
-// Definição de tipos para usar com o relatório
-interface NaoConformidade {
-  id: number;
-  titulo: string;
-  descricao?: string;
-  selecionado: boolean;
-}
-
-// Importação do tipo RelatorioVistoria como uma interface genérica para o parâmetro
-interface RelatorioVistoria {
-  id?: string;
-  protocolo?: string;
-  dataVistoria?: string;
-  cliente?: string;
-  empreendimento?: string;
-  endereco?: string;
-  cidade?: string;
-  uf?: string;
-  assunto?: string;
-  elaboradoPor?: string;
-  departamento?: string;
-  unidade?: string;
-  coordenador?: string;
-  gerente?: string;
-  regional?: string;
-  modeloTelha?: string;
-  quantidade?: number;
-  area?: number;
-  introducao?: string;
-  analiseTecnica?: string;
-  conclusao?: string;
-  resultado?: string;
-  naoConformidades?: NaoConformidade[];
-  fotos?: any[];
-  anosGarantia?: string;
-  anosGarantiaSistemaCompleto?: string;
-  anosGarantiaTotal?: string;
-}
+import { RelatorioVistoria, NaoConformidade } from "../../shared/relatorioVistoriaSchema";
 
 // Configurações de estilo para manter consistência com a especificação
 const FONTE_PRINCIPAL = "Times New Roman";
@@ -144,7 +107,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
           bold: true
         }),
         new TextRun({
-          text: `${relatorio.cidade || ""} - ${relatorio.uf || ""}`,
+          text: `${relatorio.cidade || ""} - ${relatorio.estado || ""}`,
           font: FONTE_PRINCIPAL,
           size: TAMANHO_FONTE
         })
@@ -224,7 +187,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
           bold: true
         }),
         new TextRun({
-          text: relatorio.elaboradoPor || "",
+          text: relatorio.tecnico || "",
           font: FONTE_PRINCIPAL,
           size: TAMANHO_FONTE
         })
@@ -349,7 +312,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
 
   // Texto da introdução - dividir por parágrafos
   const paragrafosIntroducao = relatorio.introducao?.split('\n\n') || [];
-  paragrafosIntroducao.forEach((paragrafo: string, index: number) => {
+  paragrafosIntroducao.forEach((paragrafo, index) => {
     children.push(
       new Paragraph({
         spacing: { after: 240 },
@@ -366,7 +329,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   });
 
   // ==== QUANTIDADE E MODELO ====
-  if (relatorio.quantidade || relatorio.modeloTelha || relatorio.area) {
+  if (relatorio.quantidadeTelhas || relatorio.modeloTelha || relatorio.areaCoberta) {
     children.push(
       new Paragraph({
         spacing: { after: 240 },
@@ -382,7 +345,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
     );
 
     // Item 1 - Quantidade e modelo de telhas
-    if (relatorio.quantidade && relatorio.modeloTelha) {
+    if (relatorio.quantidadeTelhas && relatorio.modeloTelha) {
       children.push(
         new Paragraph({
           spacing: { after: 240 },
@@ -394,7 +357,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
               size: TAMANHO_FONTE
             }),
             new TextRun({
-              text: `${relatorio.quantidade}: ${relatorio.modeloTelha}.`,
+              text: `${relatorio.quantidadeTelhas}: ${relatorio.modeloTelha}.`,
               font: FONTE_PRINCIPAL,
               size: TAMANHO_FONTE
             })
@@ -404,7 +367,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
     }
 
     // Item 2 - Área coberta
-    if (relatorio.area) {
+    if (relatorio.areaCoberta) {
       children.push(
         new Paragraph({
           spacing: { after: 240 },
@@ -416,7 +379,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
               size: TAMANHO_FONTE
             }),
             new TextRun({
-              text: `Área coberta: ${relatorio.area}m² aproximadamente.`,
+              text: `Área coberta: ${relatorio.areaCoberta}m² aproximadamente.`,
               font: FONTE_PRINCIPAL,
               size: TAMANHO_FONTE
             })
@@ -474,7 +437,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   // Não conformidades
   const naoConformidades = relatorio.naoConformidades?.filter(nc => nc.selecionado) || [];
 
-  naoConformidades.forEach((nc: NaoConformidade, index: number) => {
+  naoConformidades.forEach((nc, index) => {
     // Título da não conformidade (numerado de acordo com o ID original)
     children.push(
       new Paragraph({
@@ -537,7 +500,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   );
 
   // Lista de não conformidades na conclusão (apenas os títulos, numerados sequencialmente)
-  naoConformidades.forEach((nc: NaoConformidade, index: number) => {
+  naoConformidades.forEach((nc, index) => {
     children.push(
       new Paragraph({
         spacing: { after: 240 },
@@ -554,7 +517,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
 
   // Parágrafos da conclusão
   const paragrafosConclusao = relatorio.conclusao?.split('\n\n') || [];
-  paragrafosConclusao.forEach((paragrafo: string) => {
+  paragrafosConclusao.forEach((paragrafo) => {
     children.push(
       new Paragraph({
         spacing: { after: 240 },
