@@ -321,7 +321,7 @@ function generateIntroducao(relatorio: RelatorioVistoria): Paragraph[] {
     })
   );
 
-  // Texto padrão da introdução
+  // Primeiro parágrafo da introdução - completo
   paragraphs.push(
     new Paragraph({
       spacing: { before: 200, after: 200 },
@@ -333,7 +333,7 @@ function generateIntroducao(relatorio: RelatorioVistoria): Paragraph[] {
     })
   );
 
-  // Continuação do texto padrão
+  // Segundo parágrafo - detalhes do protocolo
   paragraphs.push(
     new Paragraph({
       spacing: { before: 100, after: 200 },
@@ -345,7 +345,7 @@ function generateIntroducao(relatorio: RelatorioVistoria): Paragraph[] {
     })
   );
 
-  // Modelo da telha
+  // Terceiro parágrafo - detalhes técnicos da telha
   paragraphs.push(
     new Paragraph({
       spacing: { before: 100, after: 200 },
@@ -357,7 +357,7 @@ function generateIntroducao(relatorio: RelatorioVistoria): Paragraph[] {
     })
   );
 
-  // Quantidade e modelo
+  // Seção de quantidade e modelo
   paragraphs.push(
     new Paragraph({
       spacing: { before: 200, after: 100 },
@@ -370,7 +370,7 @@ function generateIntroducao(relatorio: RelatorioVistoria): Paragraph[] {
     })
   );
 
-  // Quantidade específica
+  // Item quantidade de telhas
   paragraphs.push(
     new Paragraph({
       spacing: { before: 100, after: 100 },
@@ -382,7 +382,7 @@ function generateIntroducao(relatorio: RelatorioVistoria): Paragraph[] {
     })
   );
 
-  // Área coberta
+  // Item área coberta
   paragraphs.push(
     new Paragraph({
       spacing: { before: 100, after: 200 },
@@ -394,7 +394,7 @@ function generateIntroducao(relatorio: RelatorioVistoria): Paragraph[] {
     })
   );
 
-  // Norma técnica
+  // Parágrafo final - referência à norma técnica
   paragraphs.push(
     new Paragraph({
       spacing: { before: 100, after: 300 },
@@ -455,17 +455,42 @@ function generateAnaliseTecnica(relatorio: RelatorioVistoria): Paragraph[] {
       })
     );
 
-    // Descrição da não conformidade
-    paragraphs.push(
-      new Paragraph({
-        spacing: { before: 100, after: 200 },
-        children: [
-          new TextRun({
-            text: nc.descricao || "",
-          }),
-        ],
-      })
-    );
+    // Dividir a descrição em parágrafos para garantir texto completo
+    if (nc.descricao) {
+      // Se a descrição for muito longa, pode ser melhor dividi-la em múltiplos parágrafos
+      // para garantir que seja exibida corretamente
+      const maxLength = 1500; // Tamanho máximo para cada parágrafo (ajustável)
+      if (nc.descricao.length > maxLength) {
+        // Dividir em chunks para garantir que o texto seja exibido na íntegra
+        let descricao = nc.descricao;
+        while (descricao.length > 0) {
+          const chunk = descricao.slice(0, Math.min(maxLength, descricao.length));
+          paragraphs.push(
+            new Paragraph({
+              spacing: { before: 100, after: 100 },
+              children: [
+                new TextRun({
+                  text: chunk,
+                }),
+              ],
+            })
+          );
+          descricao = descricao.slice(chunk.length);
+        }
+      } else {
+        // Descrição normal em um único parágrafo
+        paragraphs.push(
+          new Paragraph({
+            spacing: { before: 100, after: 200 },
+            children: [
+              new TextRun({
+                text: nc.descricao,
+              }),
+            ],
+          })
+        );
+      }
+    }
   });
 
   return paragraphs;
@@ -507,6 +532,7 @@ function generateConclusao(relatorio: RelatorioVistoria): Paragraph[] {
     paragraphs.push(
       new Paragraph({
         spacing: { before: 100, after: 100 },
+        indent: { left: 360 }, // Indentação para melhor formatação da lista
         children: [
           new TextRun({
             text: `${index+1}. ${nc.titulo}`,
