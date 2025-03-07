@@ -15,8 +15,7 @@ import { Loader, Save, X } from "lucide-react";
 import { toast } from "sonner";
 import type { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { modelosTelhas, espessurasTelhas, resultadoReclamacaoEnum } from "@shared/relatorioVistoriaSchema";
-import { generateRelatorioVistoria } from "@/lib/relatorioVistoriaGenerator";
-import { generateRelatorioVistoriaBrasil } from "@/lib/relatorioVistoriaBrasilGenerator";
+import { gerarRelatorioSimples } from "@/lib/relatorioVistoriaSimpleGenerator";
 
 // Interface estendida para compatibilidade com versões anteriores do código
 interface ExtendedRelatorioVistoria extends RelatorioVistoria {
@@ -114,8 +113,8 @@ export function GerarRelatorioVistoriaModal({
         return;
       }
       
-      // Gerar o relatório usando o novo gerador com o template Brasil
-      const blob = await generateRelatorioVistoriaBrasil(relatorio);
+      // Gerar o relatório usando o gerador simplificado que funciona corretamente
+      const blob = await gerarRelatorioSimples(relatorio);
       
       // Criar URL para download
       const url = URL.createObjectURL(blob);

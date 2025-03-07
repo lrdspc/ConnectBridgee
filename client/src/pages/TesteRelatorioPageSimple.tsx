@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { FileDown, Loader2, FileText, FileCheck, User, Building, MapPin, Calendar, ClipboardList, FileSparkles, Save } from 'lucide-react';
+import { FileDown, Loader2, FileText, FileCheck, User, Building, MapPin, Calendar, ClipboardList, Sparkles, Save } from 'lucide-react';
 import { 
   novoRelatorioVistoria, 
   gerarRelatorioAleatorio, 
@@ -43,7 +43,7 @@ export default function TesteRelatorioPageSimple() {
   };
   
   // Atualiza um campo de não conformidade
-  const updateNaoConformidade = (id: string, field: string, value: any) => {
+  const updateNaoConformidade = (id: number, field: string, value: any) => {
     setRelatorio(prev => ({
       ...prev,
       naoConformidades: prev.naoConformidades.map(nc => 
