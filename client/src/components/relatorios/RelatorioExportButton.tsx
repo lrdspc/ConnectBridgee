@@ -4,6 +4,7 @@ import { FileDown, Loader2 } from "lucide-react";
 import type { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { toast } from "sonner";
 import { gerarRelatorioSimples } from "@/lib/relatorioVistoriaSimpleGenerator";
+import { saveAs } from "file-saver";
 
 // Logs para debug
 const DEBUG = true;
@@ -87,21 +88,37 @@ export function RelatorioExportButton({
 }: RelatorioExportButtonProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   
-  // Função para salvar o arquivo DOCX a partir de um blob
+  // Função para salvar o arquivo DOCX a partir de um blob usando FileSaver
   const saveDocFile = (blob: Blob, fileName: string) => {
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    log("Download iniciado para arquivo:", fileName);
+    log("Iniciando download com FileSaver:", fileName);
     
-    // Limpar recursos
-    setTimeout(() => {
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    }, 100);
+    try {
+      // Usar FileSaver.js que funciona em mais navegadores
+      saveAs(blob, fileName);
+      log("Download iniciado para arquivo:", fileName);
+    } catch (error) {
+      console.error("Erro ao usar saveAs:", error);
+      
+      // Fallback para método nativo (apenas como garantia)
+      try {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        log("Download via método alternativo:", fileName);
+        
+        // Limpar recursos
+        setTimeout(() => {
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }, 100);
+      } catch (fallbackError) {
+        console.error("Erro no método alternativo:", fallbackError);
+        toast.error("Não foi possível iniciar o download do arquivo");
+      }
+    }
   };
   
   // Função para gerar o relatório e salvar
