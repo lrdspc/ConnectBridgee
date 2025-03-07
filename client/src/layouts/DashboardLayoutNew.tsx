@@ -145,34 +145,42 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
           </div>
         </div>
 
-        {/* Ações e perfil do usuário - versão simplificada para mobile */}
+        {/* Ações e perfil do usuário */}
         <div className="flex items-center gap-2">
-          {/* Em mobile mostramos o menu hambúrguer, perfil e notificações */}
           {isMobile ? (
             <>
-              <Button variant="ghost" size="icon" className="relative">
+              {/* Versão mobile - Menu, notificações e perfil */}
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="ml-auto relative"
+              >
                 <Bell className="h-5 w-5" />
                 <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-white">
                   2
                 </span>
               </Button>
-              <Avatar>
+              
+              <Avatar className="h-8 w-8">
                 <AvatarImage src={user?.photoUrl} />
                 <AvatarFallback className="bg-primary text-primary-foreground">
                   {user?.name?.charAt(0) || 'U'}
                 </AvatarFallback>
               </Avatar>
+              
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="ml-1" 
+                className="mr-0 ml-1" 
                 onClick={() => setOpen(true)}
+                aria-label="Menu principal"
               >
                 <MenuIcon className="h-6 w-6" />
               </Button>
             </>
           ) : (
             <>
+              {/* Versão desktop - Notificações, ajuda, configurações e perfil */}
               <TooltipProvider>
                 {/* Botão de notificações */}
                 <Tooltip>
@@ -369,12 +377,17 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
         {/* Conteúdo principal */}
         <main 
           ref={mainRef}
-          className="flex-1 overflow-auto bg-gray-50 pb-16"
+          className={cn(
+            "flex-1 overflow-auto bg-gray-50",
+            isMobile ? "pb-24" : "pb-16" // Mais espaço no mobile para o BottomNavigation
+          )}
         >
           {/* Espaçador para compensar o cabeçalho fixo em mobile */}
           {isMobile && <div className="h-16" />}
 
-          <div className="container mx-auto p-6">
+          <div className={cn(
+            isMobile ? "px-4 py-5" : "container mx-auto p-6"
+          )}>
             {children}
           </div>
         </main>
