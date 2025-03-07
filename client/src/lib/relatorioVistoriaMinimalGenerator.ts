@@ -105,6 +105,7 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
     });
     
     // Criar um documento seguindo as normas ABNT e usar fonte Arial
+    // Com espaçamento reduzido para caber mais informações na primeira página
     const doc = new Document({
       // Configurações globais do documento de acordo com ABNT
       styles: {
@@ -112,13 +113,13 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
           document: {
             run: {
               font: "Arial",
-              size: 24, // 12pt (24 half-points)
+              size: 22, // 11pt (22 half-points)
               color: "000000"
             },
             paragraph: {
               spacing: {
-                line: 360, // Espaçamento entre linhas (1.5 de acordo com ABNT)
-                after: 240 // Espaçamento após cada parágrafo (padrão ABNT)
+                line: 276, // Espaçamento entre linhas (1.15 - reduzido para caber mais conteúdo)
+                after: 120 // Espaçamento após cada parágrafo (reduzido)
               },
               alignment: AlignmentType.JUSTIFIED // Texto justificado (ABNT)
             }
@@ -132,27 +133,13 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
             },
             paragraph: {
               spacing: {
-                before: 360,
-                after: 240
+                before: 240,
+                after: 120
               },
               alignment: AlignmentType.CENTER
             }
           },
           heading2: {
-            run: {
-              font: "Arial",
-              size: 26, // 13pt
-              bold: true,
-              color: "000000"
-            },
-            paragraph: {
-              spacing: {
-                before: 360,
-                after: 240
-              }
-            }
-          },
-          heading3: {
             run: {
               font: "Arial",
               size: 24, // 12pt
@@ -161,8 +148,22 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
             },
             paragraph: {
               spacing: {
-                before: 360,
-                after: 240
+                before: 180,
+                after: 120
+              }
+            }
+          },
+          heading3: {
+            run: {
+              font: "Arial",
+              size: 22, // 11pt
+              bold: true,
+              color: "000000"
+            },
+            paragraph: {
+              spacing: {
+                before: 120,
+                after: 60
               }
             }
           }
@@ -187,12 +188,12 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
                 new TextRun({
                   text: "RELATÓRIO DE VISTORIA TÉCNICA",
                   bold: true,
-                  size: 32, // 16pt
+                  size: 30, // 15pt
                   font: "Arial"
                 })
               ],
               alignment: AlignmentType.CENTER,
-              spacing: { after: 400 },
+              spacing: { after: 200 },
               border: {
                 bottom: {
                   color: "000000",
@@ -203,124 +204,150 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
               }
             }),
             
-            // 1. IDENTIFICAÇÃO DO PROJETO
+            // 1. IDENTIFICAÇÃO DO PROJETO - sem numeração para economizar espaço
             new Paragraph({
-              text: "IDENTIFICAÇÃO DO PROJETO",
-              heading: HeadingLevel.HEADING_2,
-              spacing: { before: 400, after: 200 }
+              children: [
+                new TextRun({
+                  text: "IDENTIFICAÇÃO DO PROJETO",
+                  bold: true,
+                  size: 24, // 12pt
+                  font: "Arial"
+                })
+              ],
+              spacing: { before: 120, after: 60 }
             }),
             
-            // Dados do projeto
+            // Dados do projeto com espaçamento reduzido
             new Paragraph({
               children: [
-                new TextRun({ text: "Protocolo/FAR: ", bold: true }),
-                new TextRun(relatorio.protocolo || "")
+                new TextRun({ text: "Protocolo/FAR: ", bold: true, font: "Arial" }),
+                new TextRun({ text: relatorio.protocolo || "", font: "Arial" })
               ],
-              spacing: { after: 100 }
+              spacing: { after: 40 }
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Data de vistoria: ", bold: true }),
-                new TextRun(relatorio.dataVistoria || "")
+                new TextRun({ text: "Data de vistoria: ", bold: true, font: "Arial" }),
+                new TextRun({ text: relatorio.dataVistoria || "", font: "Arial" })
               ],
-              spacing: { after: 100 }
+              spacing: { after: 40 }
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Cliente: ", bold: true }),
-                new TextRun(relatorio.cliente || "")
+                new TextRun({ text: "Cliente: ", bold: true, font: "Arial" }),
+                new TextRun({ text: relatorio.cliente || "", font: "Arial" })
               ],
-              spacing: { after: 100 }
+              spacing: { after: 40 }
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Empreendimento: ", bold: true }),
-                new TextRun(relatorio.empreendimento || "")
+                new TextRun({ text: "Empreendimento: ", bold: true, font: "Arial" }),
+                new TextRun({ text: relatorio.empreendimento || "", font: "Arial" })
               ],
-              spacing: { after: 100 }
+              spacing: { after: 40 }
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Endereço: ", bold: true }),
-                new TextRun(relatorio.endereco || "")
+                new TextRun({ text: "Endereço: ", bold: true, font: "Arial" }),
+                new TextRun({ text: relatorio.endereco || "", font: "Arial" })
               ],
-              spacing: { after: 100 }
+              spacing: { after: 40 }
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Cidade/UF: ", bold: true }),
-                new TextRun(`${relatorio.cidade || ""} - ${relatorio.uf || ""}`)
+                new TextRun({ text: "Cidade/UF: ", bold: true, font: "Arial" }),
+                new TextRun({ text: `${relatorio.cidade || ""} - ${relatorio.uf || ""}`, font: "Arial" })
               ],
-              spacing: { after: 100 }
+              spacing: { after: 40 }
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Assunto: ", bold: true }),
-                new TextRun(relatorio.assunto || "")
+                new TextRun({ text: "Assunto: ", bold: true, font: "Arial" }),
+                new TextRun({ text: relatorio.assunto || "", font: "Arial" })
               ],
-              spacing: { after: 300 }
+              spacing: { after: 120 }
             }),
             
-            // 2. RESPONSÁVEIS TÉCNICOS
+            // RESPONSÁVEIS TÉCNICOS - sem numeração para economizar espaço
             new Paragraph({
-              text: "RESPONSÁVEIS TÉCNICOS",
-              heading: HeadingLevel.HEADING_2,
-              spacing: { before: 300, after: 200 }
+              children: [
+                new TextRun({
+                  text: "RESPONSÁVEIS TÉCNICOS",
+                  bold: true,
+                  size: 24, // 12pt
+                  font: "Arial"
+                })
+              ],
+              spacing: { before: 120, after: 60 }
+            }),
+            
+            // Dados dos responsáveis com espaçamento reduzido
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Elaborado por: ", bold: true, font: "Arial" }),
+                new TextRun({ text: relatorio.elaboradoPor || "", font: "Arial" })
+              ],
+              spacing: { after: 40 }
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Departamento: ", bold: true, font: "Arial" }),
+                new TextRun({ text: relatorio.departamento || "", font: "Arial" })
+              ],
+              spacing: { after: 40 }
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Unidade: ", bold: true, font: "Arial" }),
+                new TextRun({ text: relatorio.unidade || "", font: "Arial" })
+              ],
+              spacing: { after: 40 }
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Coordenador: ", bold: true, font: "Arial" }),
+                new TextRun({ text: relatorio.coordenador || "", font: "Arial" })
+              ],
+              spacing: { after: 40 }
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Gerente: ", bold: true, font: "Arial" }),
+                new TextRun({ text: relatorio.gerente || "", font: "Arial" })
+              ],
+              spacing: { after: 40 }
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Regional: ", bold: true, font: "Arial" }),
+                new TextRun({ text: relatorio.regional || "", font: "Arial" })
+              ],
+              spacing: { after: 120 }
+            }),
+            
+            // 1. INTRODUÇÃO - Adicionamos a numeração correta
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "1. INTRODUÇÃO",
+                  bold: true,
+                  size: 24, // 12pt
+                  font: "Arial"
+                })
+              ],
+              alignment: AlignmentType.JUSTIFIED,
+              spacing: { before: 120, after: 80 }
             }),
             
             new Paragraph({
               children: [
-                new TextRun({ text: "Elaborado por: ", bold: true }),
-                new TextRun(relatorio.elaboradoPor || "")
+                new TextRun({
+                  text: introducaoTexto,
+                  font: "Arial"
+                })
               ],
-              spacing: { after: 100 }
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: "Departamento: ", bold: true }),
-                new TextRun(relatorio.departamento || "")
-              ],
-              spacing: { after: 100 }
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: "Unidade: ", bold: true }),
-                new TextRun(relatorio.unidade || "")
-              ],
-              spacing: { after: 100 }
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: "Coordenador: ", bold: true }),
-                new TextRun(relatorio.coordenador || "")
-              ],
-              spacing: { after: 100 }
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: "Gerente: ", bold: true }),
-                new TextRun(relatorio.gerente || "")
-              ],
-              spacing: { after: 100 }
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: "Regional: ", bold: true }),
-                new TextRun(relatorio.regional || "")
-              ],
-              spacing: { after: 300 }
-            }),
-            
-            // 3. INTRODUÇÃO
-            new Paragraph({
-              text: "1. INTRODUÇÃO",
-              heading: HeadingLevel.HEADING_2,
-              spacing: { before: 300, after: 200 }
-            }),
-            
-            new Paragraph({
-              text: introducaoTexto,
-              spacing: { after: 200 }
+              alignment: AlignmentType.JUSTIFIED,
+              spacing: { after: 120 }
             }),
             
             // 3.1 DADOS DO PRODUTO
