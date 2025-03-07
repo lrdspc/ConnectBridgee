@@ -13,7 +13,8 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader, Save, X } from "lucide-react";
 import { toast } from "sonner";
-import { RelatorioVistoria, modelosTelhas, espessurasTelhas, resultadoReclamacaoEnum } from "../../../shared/relatorioVistoriaSchema.js";
+import type { RelatorioVistoria } from "../../../shared/relatorioVistoriaSchema";
+import { modelosTelhas, espessurasTelhas, resultadoReclamacaoEnum } from "../../../shared/relatorioVistoriaSchema";
 import { generateRelatorioVistoria } from "@/lib/relatorioVistoriaGenerator";
 import { generateRelatorioVistoriaBrasil } from "@/lib/relatorioVistoriaBrasilGenerator";
 
@@ -40,7 +41,7 @@ export function GerarRelatorioVistoriaModal({
   // Handler para atualizar os campos básicos
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setRelatorio(prev => ({
+    setRelatorio((prev: RelatorioVistoria) => ({
       ...prev,
       [name]: value
     }));

@@ -521,7 +521,7 @@ O modelo de telha escolhido para a edificação foi: ${relatorio.modeloTelha || 
         levels: [
           {
             level: 0,
-            format: "decimal",
+            format: "decimal" as "decimal",
             text: "%1.",
             alignment: AlignmentType.START,
             style: {
