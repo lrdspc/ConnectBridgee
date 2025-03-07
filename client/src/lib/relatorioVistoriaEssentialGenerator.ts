@@ -3,7 +3,7 @@
  * Usa a biblioteca docx diretamente, sem dependências complexas
  */
 
-import { Document, Packer, Paragraph, TextRun, AlignmentType, BorderStyle } from "docx";
+import { Document, Packer, Paragraph, AlignmentType, BorderStyle } from "docx";
 import { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { naoConformidadesDisponiveis } from "@shared/relatorioVistoriaSchema";
 import { TEMPLATE_ANALISE_TECNICA } from '@/lib/relatorioVistoriaTemplates';

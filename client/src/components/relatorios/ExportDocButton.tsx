@@ -7,7 +7,7 @@ import { generateRelatorioVistoriaBrasil } from "@/lib/relatorioVistoriaBrasilGe
 import { gerarRelatorioVistoriaDoc as gerarRelatorioVistoriaDocOriginal } from "@/lib/relatorioVistoriaDocGenerator";
 import { gerarRelatorioVistoriaDoc as gerarRelatorioVistoriaDocSimples } from "@/lib/relatorioVistoriaDocGeneratorSimple";
 import { gerarRelatorioVistoriaHTML } from "@/lib/relatorioVistoriaFallbackGenerator";
-import { gerarRelatorioVistoriaMinimal } from "@/lib/relatorioVistoriaEssentialGenerator";
+import { gerarRelatorioVistoriaAlternativo } from "@/lib/relatorioVistoriaAlternativeGenerator";
 
 // Logs para debug - Habilitado para ajudar na diagnóstico de problemas
 const DEBUG = true;

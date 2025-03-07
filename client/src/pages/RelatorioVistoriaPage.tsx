@@ -15,7 +15,7 @@ import {
 } from '@shared/relatorioVistoriaSchema';
 import { gerarRelatorioVistoriaDoc as gerarRelatorioVistoriaDocOriginal } from '@/lib/relatorioVistoriaDocGenerator';
 import { gerarRelatorioVistoriaDoc as gerarRelatorioVistoriaDocSimples } from '@/lib/relatorioVistoriaDocGeneratorSimple';
-import { gerarRelatorioVistoriaMinimal } from '@/lib/relatorioVistoriaEssentialGenerator';
+import { gerarRelatorioVistoriaAlternativo } from '@/lib/relatorioVistoriaAlternativeGenerator';
 import { aplicarTemplateIntroducao, aplicarTemplateConclusao, TEMPLATE_ANALISE_TECNICA } from '@/lib/relatorioVistoriaTemplates';
 
 import { DashboardLayoutNew } from '@/layouts/DashboardLayoutNew';
@@ -480,22 +480,22 @@ export default function RelatorioVistoriaPage() {
       
       // Tentar gerar usando várias estratégias em sequência
       try {
-        // Estratégia 1: Gerador DOCX minimalista com formatação ABNT (implementação essencial)
-        console.log('▶️ TENTATIVA 1: Usando gerador essencial otimizado (formatação ABNT)');
-        const blob = await gerarRelatorioVistoriaMinimal(formData);
+        // Estratégia 1: Gerador DOCX alternativo com formatação ABNT (mais confiável)
+        console.log('▶️ TENTATIVA 1: Usando gerador alternativo otimizado (formatação ABNT)');
+        const blob = await gerarRelatorioVistoriaAlternativo(formData);
         saveDocFile(blob, fileName);
         toast({
           title: 'Documento gerado com sucesso!',
           description: 'O relatório foi exportado no formato DOCX com formatação ABNT.',
         });
         return; // Sair após sucesso
-      } catch (minimalError) {
-        console.error('❌ Erro na geração essencial:', minimalError);
+      } catch (alternativeError) {
+        console.error('❌ Erro na geração alternativa:', alternativeError);
         
         // Notificar o usuário do problema na primeira tentativa
         toast({
           title: 'Tentando método alternativo...',
-          description: 'O gerador essencial falhou, tentando gerador simples...',
+          description: 'O gerador alternativo falhou, tentando gerador simples...',
           variant: 'default'
         });
         
