@@ -8,12 +8,17 @@ import {
 } from "docx";
 import { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 
+// Interface estendida para compatibilidade com versões anteriores do código
+interface ExtendedRelatorioVistoria extends RelatorioVistoria {
+  [key: string]: any; // Para permitir propriedades adicionais
+}
+
 // Configurações de estilo para manter consistência com a especificação
 const FONTE_PRINCIPAL = "Times New Roman";
 const TAMANHO_FONTE = 24; // 12pt = 24 half-points
 
 // Função para gerar o documento Word
-export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): Promise<Blob> {
+export async function gerarRelatorioVistoriaDoc(relatorio: ExtendedRelatorioVistoria): Promise<Blob> {
   // Criar conjunto de parágrafos do documento
   const children: FileChild[] = [];
 
@@ -107,7 +112,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
           bold: true
         }),
         new TextRun({
-          text: `${relatorio.cidade || ""} - ${relatorio.estado || ""}`,
+          text: `${relatorio.cidade || ""} - ${relatorio.uf || ""}`,
           font: FONTE_PRINCIPAL,
           size: TAMANHO_FONTE
         })
@@ -312,7 +317,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
 
   // Texto da introdução - dividir por parágrafos
   const paragrafosIntroducao = relatorio.introducao?.split('\n\n') || [];
-  paragrafosIntroducao.forEach((paragrafo, index) => {
+  paragrafosIntroducao.forEach((paragrafo: string, index: number) => {
     children.push(
       new Paragraph({
         spacing: { after: 240 },
@@ -437,7 +442,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   // Não conformidades
   const naoConformidades = relatorio.naoConformidades?.filter(nc => nc.selecionado) || [];
 
-  naoConformidades.forEach((nc, index) => {
+  naoConformidades.forEach((nc: {id: number|string, titulo: string, descricao?: string, selecionado: boolean}, index: number) => {
     // Título da não conformidade (numerado de acordo com o ID original)
     children.push(
       new Paragraph({
@@ -500,7 +505,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   );
 
   // Lista de não conformidades na conclusão (apenas os títulos, numerados sequencialmente)
-  naoConformidades.forEach((nc, index) => {
+  naoConformidades.forEach((nc: {id: number|string, titulo: string, descricao?: string, selecionado: boolean}, index: number) => {
     children.push(
       new Paragraph({
         spacing: { after: 240 },
@@ -517,7 +522,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
 
   // Parágrafos da conclusão
   const paragrafosConclusao = relatorio.conclusao?.split('\n\n') || [];
-  paragrafosConclusao.forEach((paragrafo) => {
+  paragrafosConclusao.forEach((paragrafo: string) => {
     children.push(
       new Paragraph({
         spacing: { after: 240 },
