@@ -9,14 +9,18 @@ import { PageTransition, LoadingAnimation } from '@/components/ui/loading-animat
 import { Chart } from '@/components/ui/chart';
 import { 
   Calendar, Clock, User, MapPin, CheckCircle, AlertCircle, Clock3,
-  CloudSun, FileText, Settings, PlusCircle, BarChart2
+  CloudSun, FileText, Settings, PlusCircle, BarChart2, Layers,
+  Grid, List
 } from 'lucide-react';
 import { Users, ClipboardList, Droplets, ChevronRight, RefreshCw } from "lucide-react";
-import { formatDate } from '@/lib/utils';
+import { formatDate, cn } from '@/lib/utils';
 import { Link } from 'wouter';
+import { DashboardCustomizationModal, DashboardConfig, DashboardWidgetConfig } from '@/components/dashboard/DashboardCustomizationModal';
+import { useToast } from '@/hooks/use-toast';
 
 export default function DashboardPage() {
   const { visits, isLoading } = useVisits();
+  const { toast } = useToast();
   const [stats, setStats] = useState({
     completed: 0,
     scheduled: 0,
@@ -26,17 +30,76 @@ export default function DashboardPage() {
   const [weeklyVisits, setWeeklyVisits] = useState<{day: string, count: number}[]>([]);
   const [today] = useState(new Date());
   const [activeTab, setActiveTab] = useState("visitas");
-  const [dashboardConfig, setDashboardConfig] = useState({
-    showVisitasHoje: true,
-    showProximaVisita: true,
-    showAcoesRapidas: true,
-    showVisitasAgendadas: true,
-    showEmAndamento: true,
-    showPendentes: true,
-    showConcluidas: true,
-    showVisitasSemanais: true,
-    showRotaDia: true,
-    showClimaHoje: true,
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  
+  // Configuração inicial dos widgets do dashboard
+  const [dashboardConfig, setDashboardConfig] = useState<DashboardConfig>(() => {
+    const savedConfig = localStorage.getItem('dashboard_config');
+    if (savedConfig) {
+      try {
+        return JSON.parse(savedConfig);
+      } catch (error) {
+        console.error('Erro ao carregar configuração do dashboard:', error);
+      }
+    }
+    
+    // Configuração padrão
+    return {
+      widgets: [
+        {
+          id: 'resumo',
+          title: 'Resumo do dia',
+          description: 'Visão geral das visitas do dia',
+          enabled: true,
+          required: true,
+          order: 0
+        },
+        {
+          id: 'proxima_visita',
+          title: 'Próxima visita',
+          description: 'Detalhes da próxima visita agendada',
+          enabled: true,
+          order: 1
+        },
+        {
+          id: 'acoes_rapidas',
+          title: 'Ações rápidas',
+          description: 'Botões de acesso rápido para tarefas comuns',
+          enabled: true,
+          order: 2
+        },
+        {
+          id: 'visitas_agendadas',
+          title: 'Visitas agendadas',
+          description: 'Lista de visitas agendadas para os próximos dias',
+          enabled: true,
+          order: 3
+        },
+        {
+          id: 'grafico_semanal',
+          title: 'Gráfico semanal',
+          description: 'Desempenho da semana em visitas realizadas',
+          enabled: true,
+          order: 4
+        },
+        {
+          id: 'rota_dia',
+          title: 'Rota do dia',
+          description: 'Mapa com a rota das visitas do dia',
+          enabled: true,
+          order: 5
+        },
+        {
+          id: 'clima',
+          title: 'Previsão do tempo',
+          description: 'Condições climáticas atuais',
+          enabled: true,
+          order: 6
+        }
+      ],
+      layout: 'grid',
+      compactMode: false
+    };
   });
 
   // Processar estatísticas quando os dados de visitas mudarem
@@ -133,33 +196,70 @@ export default function DashboardPage() {
     );
   }
 
+  // Função para salvar configurações
+  const handleConfigChange = (newConfig: DashboardConfig) => {
+    setDashboardConfig(newConfig);
+    setViewMode(newConfig.layout);
+    
+    // Salvar no localStorage
+    localStorage.setItem('dashboard_config', JSON.stringify(newConfig));
+    
+    toast({
+      title: "Dashboard personalizado",
+      description: "Suas preferências foram salvas com sucesso",
+    });
+  };
+
+  // Verifica se um widget está habilitado
+  const isWidgetEnabled = (widgetId: string): boolean => {
+    const widget = dashboardConfig.widgets.find(w => w.id === widgetId);
+    return widget ? widget.enabled : false;
+  };
+
   return (
     <PageTransition>
       <DashboardLayoutNew>
-        <div className="space-y-6">
-          <div className="flex items-center justify-end">
+        <div className={cn(
+          "space-y-6",
+          dashboardConfig.compactMode && "space-y-3"
+        )}>
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-bold tracking-tight hidden sm:block">Dashboard</h1>
             <div className="flex items-center gap-3">
               <span className="text-sm text-gray-500">
                 {formatDate(today, 'dd/MM/yyyy')}
               </span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  // Abre um diálogo de personalização (simples por enquanto)
-                  if (typeof window !== 'undefined') {
-                    alert('Função de personalização estará disponível em breve!');
-                  }
-                }}
-              >
-                <Settings className="h-4 w-4 mr-2" />
-                Personalizar
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
+                  className="h-8 w-8"
+                >
+                  {viewMode === 'grid' ? (
+                    <List className="h-4 w-4" />
+                  ) : (
+                    <Grid className="h-4 w-4" />
+                  )}
+                </Button>
+                <DashboardCustomizationModal
+                  config={dashboardConfig}
+                  onConfigChange={handleConfigChange}
+                >
+                  <Button
+                    variant="outline"
+                    size="sm"
+                  >
+                    <Settings className="h-4 w-4 mr-2" />
+                    Personalizar
+                  </Button>
+                </DashboardCustomizationModal>
+              </div>
             </div>
           </div>
 
           {/* Seção principal - Visitas de Hoje */}
-          {dashboardConfig.showVisitasHoje && (
+          {isWidgetEnabled('resumo') && (
             <Card className="border-blue-200">
               <CardHeader className="bg-blue-50 pb-2">
                 <div className="flex justify-between items-center">
@@ -224,7 +324,7 @@ export default function DashboardPage() {
           )}
 
           {/* Próxima Visita */}
-          {dashboardConfig.showProximaVisita && nextVisit && (
+          {isWidgetEnabled('proxima_visita') && nextVisit && (
             <Card className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white">
               <CardHeader>
                 <CardTitle className="flex items-center text-white">
@@ -264,7 +364,7 @@ export default function DashboardPage() {
           )}
 
           {/* Ações Rápidas */}
-          {dashboardConfig.showAcoesRapidas && (
+          {isWidgetEnabled('acoes_rapidas') && (
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center">
