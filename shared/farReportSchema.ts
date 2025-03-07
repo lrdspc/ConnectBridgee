@@ -61,9 +61,6 @@ export const farReportSchema = z.object({
   anosGarantiaSistemaCompleto: z.string().optional().default("10"),
   anosGarantiaTotal: z.string().optional().default("10"),
   
-  // Resultado da análise
-  resultado: z.enum(["PROCEDENTE", "IMPROCEDENTE"]).optional().default("IMPROCEDENTE"),
-  
   // Campos de assinatura
   assinadoPor: z.string().optional().default(""),
   assinadoEm: z.string().optional().default(""),
@@ -281,8 +278,6 @@ export function gerarFARReportAleatorio(): FARReport {
     anosGarantia: "5",
     anosGarantiaSistemaCompleto: "10",
     anosGarantiaTotal: "10",
-    
-    resultado: Math.random() > 0.5 ? "PROCEDENTE" : "IMPROCEDENTE",
     
     assinadoPor: getRandomItem(responsaveis),
     assinadoEm: dataVistoria,
