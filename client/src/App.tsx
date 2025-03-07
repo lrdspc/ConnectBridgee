@@ -28,6 +28,7 @@ const VistoriaFARPage = lazy(() => import('./pages/VistoriaFARPage'));
 const ConfiguracoesPage = lazy(() => import('./pages/ConfiguracoesPage'));
 const InspecoesPage = lazy(() => import('./pages/archive/InspecoesPage'));
 const InspecaoDetalhesPage = lazy(() => import('./pages/archive/InspecaoDetalhesPage'));
+const NovaInspecaoPage = lazy(() => import('./pages/archive/NovaInspecaoPage'));
 
 // Componente de loading para mostrar durante o carregamento das páginas
 const PageLoading = () => (
@@ -65,6 +66,7 @@ function App() {
             
             {/* Inspeções */}
             <Route path="/inspecoes" component={InspecoesPage} />
+            <Route path="/inspecoes/novo" component={NovaInspecaoPage} />
             <Route path="/inspecoes/:id" component={InspecaoDetalhesPage} />
             
             {/* Fallback para rota não encontrada */}
