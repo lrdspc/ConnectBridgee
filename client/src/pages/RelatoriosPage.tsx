@@ -114,7 +114,7 @@ export default function RelatoriosPage() {
   const [, setLocation] = useLocation();
   
   const navegarParaNovaVistoria = () => {
-    setLocation("/nova-vistoria");
+    setLocation("/relatorio-vistoria");
   };
 
   // Filtrar relatórios
