@@ -93,162 +93,366 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   // Criar conteúdo principal
   const mainContent: Paragraph[] = [];
   
-  // Título
+  // ===== TÍTULO PRINCIPAL =====
   mainContent.push(
     new Paragraph({
       text: "RELATÓRIO DE VISTORIA TÉCNICA",
       heading: HeadingLevel.HEADING_1,
       alignment: AlignmentType.CENTER,
-      spacing: { after: 400 }
+      spacing: { after: 200, before: 200 },
+      border: {
+        bottom: { color: "000000", space: 1, style: BorderStyle.SINGLE, size: 1 }
+      }
     })
   );
   
-  // Seção de informações gerais
+  // ===== SEÇÃO DE IDENTIFICAÇÃO DO PROJETO =====
   mainContent.push(
     new Paragraph({
-      text: "Informações Gerais",
+      text: "IDENTIFICAÇÃO DO PROJETO",
       heading: HeadingLevel.HEADING_2,
-      spacing: { before: 300, after: 200 }
+      spacing: { before: 300, after: 200 },
+      bold: true
     })
   );
   
-  // Lista de informações gerais com bullets
-  mainContent.push(
-    new Paragraph({
-      bullet: { level: 0 },
-      children: [
-        new TextRun({ text: "Data de vistoria: " }),
-        new TextRun({ text: relatorio.dataVistoria || "[Data da Vistoria]" })
-      ]
-    })
-  );
+  // Criar tabela de informações do projeto
+  const tabelaIdentificacao = new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    borders: {
+      top: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' },
+      bottom: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' },
+      left: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' },
+      right: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' },
+      insideHorizontal: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' },
+      insideVertical: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' }
+    },
+    rows: [
+      // Protocolo/FAR
+      new TableRow({
+        children: [
+          new TableCell({
+            width: { size: 40, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: "Protocolo/FAR:", bold: true })],
+              }),
+            ],
+            shading: { fill: "FFFFFF" }
+          }),
+          new TableCell({
+            width: { size: 60, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: relatorio.protocolo || "" })],
+              }),
+            ],
+          }),
+        ],
+      }),
+      // Data de vistoria
+      new TableRow({
+        children: [
+          new TableCell({
+            width: { size: 40, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: "Data de vistoria:", bold: true })],
+              }),
+            ],
+            shading: { fill: "FFFFFF" }
+          }),
+          new TableCell({
+            width: { size: 60, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: relatorio.dataVistoria || "" })],
+              }),
+            ],
+          }),
+        ],
+      }),
+      // Cliente
+      new TableRow({
+        children: [
+          new TableCell({
+            width: { size: 40, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: "Cliente:", bold: true })],
+              }),
+            ],
+            shading: { fill: "FFFFFF" }
+          }),
+          new TableCell({
+            width: { size: 60, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: relatorio.cliente || "" })],
+              }),
+            ],
+          }),
+        ],
+      }),
+      // Empreendimento
+      new TableRow({
+        children: [
+          new TableCell({
+            width: { size: 40, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: "Empreendimento:", bold: true })],
+              }),
+            ],
+            shading: { fill: "FFFFFF" }
+          }),
+          new TableCell({
+            width: { size: 60, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: relatorio.empreendimento || "" })],
+              }),
+            ],
+          }),
+        ],
+      }),
+      // Endereço
+      new TableRow({
+        children: [
+          new TableCell({
+            width: { size: 40, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: "Endereço:", bold: true })],
+              }),
+            ],
+            shading: { fill: "FFFFFF" }
+          }),
+          new TableCell({
+            width: { size: 60, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: relatorio.endereco || "" })],
+              }),
+            ],
+          }),
+        ],
+      }),
+      // Cidade/UF
+      new TableRow({
+        children: [
+          new TableCell({
+            width: { size: 40, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: "Cidade/UF:", bold: true })],
+              }),
+            ],
+            shading: { fill: "FFFFFF" }
+          }),
+          new TableCell({
+            width: { size: 60, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: `${relatorio.cidade || ""} - ${relatorio.uf || ""}` })],
+              }),
+            ],
+          }),
+        ],
+      }),
+      // Assunto
+      new TableRow({
+        children: [
+          new TableCell({
+            width: { size: 40, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: "Assunto:", bold: true })],
+              }),
+            ],
+            shading: { fill: "FFFFFF" }
+          }),
+          new TableCell({
+            width: { size: 60, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: relatorio.assunto || "" })],
+              }),
+            ],
+          }),
+        ],
+      }),
+    ],
+  });
   
-  mainContent.push(
-    new Paragraph({
-      bullet: { level: 0 },
-      children: [
-        new TextRun({ text: "Cliente: " }),
-        new TextRun({ text: relatorio.cliente || "[Nome do Cliente]" })
-      ]
-    })
-  );
+  mainContent.push(tabelaIdentificacao);
   
+  // ===== SEÇÃO DE RESPONSÁVEIS TÉCNICOS =====
   mainContent.push(
     new Paragraph({
-      bullet: { level: 0 },
-      children: [
-        new TextRun({ text: "Empreendimento: " }),
-        new TextRun({ text: relatorio.empreendimento || "[Nome do Empreendimento]" })
-      ]
-    })
-  );
-  
-  mainContent.push(
-    new Paragraph({
-      bullet: { level: 0 },
-      children: [
-        new TextRun({ text: "Cidade: " }),
-        new TextRun({ text: relatorio.cidade || "[Cidade]" })
-      ]
-    })
-  );
-  
-  mainContent.push(
-    new Paragraph({
-      bullet: { level: 0 },
-      children: [
-        new TextRun({ text: "Endereço: " }),
-        new TextRun({ text: relatorio.endereco || "[Endereço]" })
-      ]
-    })
-  );
-  
-  mainContent.push(
-    new Paragraph({
-      bullet: { level: 0 },
-      children: [
-        new TextRun({ text: "FAR/Protocolo: " }),
-        new TextRun({ text: relatorio.protocolo || "[Número do Protocolo]" })
-      ]
-    })
-  );
-  
-  mainContent.push(
-    new Paragraph({
-      bullet: { level: 0 },
-      children: [
-        new TextRun({ text: "Assunto: " }),
-        new TextRun({ text: relatorio.assunto || "[Assunto]" })
-      ]
-    })
-  );
-  
-  mainContent.push(
-    new Paragraph({
-      bullet: { level: 0 },
-      children: [
-        new TextRun({ text: "Elaborado por: " }),
-        new TextRun({ text: relatorio.elaboradoPor || "[Nome do Técnico]" })
-      ]
-    })
-  );
-  
-  mainContent.push(
-    new Paragraph({
-      bullet: { level: 0 },
-      children: [
-        new TextRun({ text: "Departamento: " }),
-        new TextRun({ text: relatorio.departamento || "[Nome do Departamento]" })
-      ]
-    })
-  );
-  
-  mainContent.push(
-    new Paragraph({
-      bullet: { level: 0 },
-      children: [
-        new TextRun({ text: "Unidade: " }),
-        new TextRun({ text: relatorio.unidade || "[Unidade]" })
-      ]
-    })
-  );
-  
-  mainContent.push(
-    new Paragraph({
-      bullet: { level: 0 },
-      children: [
-        new TextRun({ text: "Coordenador Responsável: " }),
-        new TextRun({ text: relatorio.coordenador || "[Nome do Coordenador]" })
-      ]
-    })
-  );
-  
-  mainContent.push(
-    new Paragraph({
-      bullet: { level: 0 },
-      children: [
-        new TextRun({ text: "Gerente Responsável: " }),
-        new TextRun({ text: relatorio.gerente || "[Nome do Gerente]" })
-      ]
-    })
-  );
-  
-  mainContent.push(
-    new Paragraph({
-      bullet: { level: 0 },
-      children: [
-        new TextRun({ text: "Regional: " }),
-        new TextRun({ text: relatorio.regional || "[Nome da Regional]" })
-      ]
-    })
-  );
-  
-  // Seção de introdução
-  mainContent.push(
-    new Paragraph({
-      text: "Introdução",
+      text: "RESPONSÁVEIS TÉCNICOS",
       heading: HeadingLevel.HEADING_2,
-      spacing: { before: 400, after: 200 }
+      spacing: { before: 300, after: 200 },
+      bold: true
+    })
+  );
+  
+  // Criar tabela de responsáveis técnicos
+  const tabelaResponsaveis = new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    borders: {
+      top: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' },
+      bottom: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' },
+      left: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' },
+      right: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' },
+      insideHorizontal: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' },
+      insideVertical: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' }
+    },
+    rows: [
+      // Elaborado por
+      new TableRow({
+        children: [
+          new TableCell({
+            width: { size: 40, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: "Elaborado por:", bold: true })],
+              }),
+            ],
+            shading: { fill: "FFFFFF" }
+          }),
+          new TableCell({
+            width: { size: 60, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: relatorio.elaboradoPor || "" })],
+              }),
+            ],
+          }),
+        ],
+      }),
+      // Departamento
+      new TableRow({
+        children: [
+          new TableCell({
+            width: { size: 40, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: "Departamento:", bold: true })],
+              }),
+            ],
+            shading: { fill: "FFFFFF" }
+          }),
+          new TableCell({
+            width: { size: 60, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: relatorio.departamento || "" })],
+              }),
+            ],
+          }),
+        ],
+      }),
+      // Unidade
+      new TableRow({
+        children: [
+          new TableCell({
+            width: { size: 40, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: "Unidade:", bold: true })],
+              }),
+            ],
+            shading: { fill: "FFFFFF" }
+          }),
+          new TableCell({
+            width: { size: 60, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: relatorio.unidade || "" })],
+              }),
+            ],
+          }),
+        ],
+      }),
+      // Coordenador
+      new TableRow({
+        children: [
+          new TableCell({
+            width: { size: 40, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: "Coordenador:", bold: true })],
+              }),
+            ],
+            shading: { fill: "FFFFFF" }
+          }),
+          new TableCell({
+            width: { size: 60, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: relatorio.coordenador || "" })],
+              }),
+            ],
+          }),
+        ],
+      }),
+      // Gerente
+      new TableRow({
+        children: [
+          new TableCell({
+            width: { size: 40, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: "Gerente:", bold: true })],
+              }),
+            ],
+            shading: { fill: "FFFFFF" }
+          }),
+          new TableCell({
+            width: { size: 60, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: relatorio.gerente || "" })],
+              }),
+            ],
+          }),
+        ],
+      }),
+      // Regional
+      new TableRow({
+        children: [
+          new TableCell({
+            width: { size: 40, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: "Regional:", bold: true })],
+              }),
+            ],
+            shading: { fill: "FFFFFF" }
+          }),
+          new TableCell({
+            width: { size: 60, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: relatorio.regional || "" })],
+              }),
+            ],
+          }),
+        ],
+      }),
+    ],
+  });
+  
+  mainContent.push(tabelaResponsaveis);
+  
+  // ===== SEÇÃO DE INTRODUÇÃO =====
+  mainContent.push(
+    new Paragraph({
+      text: "1. INTRODUÇÃO",
+      heading: HeadingLevel.HEADING_2,
+      spacing: { before: 300, after: 200 },
+      bold: true
     })
   );
   
@@ -269,42 +473,105 @@ O modelo de telha escolhido para a edificação foi: ${relatorio.modeloTelha || 
     })
   );
   
-  // Informações sobre quantidade e área
+  // Subseção de dados do produto
   mainContent.push(
     new Paragraph({
-      bullet: { level: 0 },
-      children: [
-        new TextRun({ text: "Quantidade e modelo:" })
-      ]
+      text: "1.1 DADOS DO PRODUTO",
+      heading: HeadingLevel.HEADING_3,
+      spacing: { before: 200, after: 200 },
+      bold: true
     })
   );
   
-  mainContent.push(
-    new Paragraph({
-      bullet: { level: 0 },
-      indent: { left: 720 },
-      children: [
-        new TextRun({ text: `${relatorio.quantidade || "[Número]"}: ${relatorio.modeloTelha || "Ondulada"} ${relatorio.espessura || "6"}mm CRFS.` })
-      ]
-    })
-  );
+  // Tabela com os dados do produto
+  const tabelaDadosProduto = new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    borders: {
+      top: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' },
+      bottom: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' },
+      left: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' },
+      right: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' },
+      insideHorizontal: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' },
+      insideVertical: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' }
+    },
+    rows: [
+      // Quantidade
+      new TableRow({
+        children: [
+          new TableCell({
+            width: { size: 40, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: "Quantidade:", bold: true })],
+              }),
+            ],
+            shading: { fill: "FFFFFF" }
+          }),
+          new TableCell({
+            width: { size: 60, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: relatorio.quantidade ? relatorio.quantidade.toString() : "" })],
+              }),
+            ],
+          }),
+        ],
+      }),
+      // Modelo
+      new TableRow({
+        children: [
+          new TableCell({
+            width: { size: 40, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: "Modelo:", bold: true })],
+              }),
+            ],
+            shading: { fill: "FFFFFF" }
+          }),
+          new TableCell({
+            width: { size: 60, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: `${relatorio.modeloTelha || ""} ${relatorio.espessura || ""}mm CRFS` })],
+              }),
+            ],
+          }),
+        ],
+      }),
+      // Área coberta
+      new TableRow({
+        children: [
+          new TableCell({
+            width: { size: 40, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: "Área coberta:", bold: true })],
+              }),
+            ],
+            shading: { fill: "FFFFFF" }
+          }),
+          new TableCell({
+            width: { size: 60, type: WidthType.PERCENTAGE },
+            children: [
+              new Paragraph({
+                children: [new TextRun({ text: `${relatorio.area || ""}m² (aproximadamente)` })],
+              }),
+            ],
+          }),
+        ],
+      }),
+    ]
+  });
   
-  mainContent.push(
-    new Paragraph({
-      bullet: { level: 0 },
-      indent: { left: 720 },
-      children: [
-        new TextRun({ text: `Área coberta: ${relatorio.area || "[Área]"}m² aproximadamente.` })
-      ]
-    })
-  );
+  mainContent.push(tabelaDadosProduto);
   
-  // Análise técnica
+  // ===== SEÇÃO DE ANÁLISE TÉCNICA =====
   mainContent.push(
     new Paragraph({
-      text: "Análise Técnica",
+      text: "2. ANÁLISE TÉCNICA",
       heading: HeadingLevel.HEADING_2,
-      spacing: { before: 400, after: 200 }
+      spacing: { before: 300, after: 200 }
     })
   );
   
@@ -321,40 +588,76 @@ O modelo de telha escolhido para a edificação foi: ${relatorio.modeloTelha || 
     })
   );
   
+  // Subseção de Não Conformidades
+  mainContent.push(
+    new Paragraph({
+      text: "2.1 NÃO CONFORMIDADES IDENTIFICADAS",
+      heading: HeadingLevel.HEADING_3,
+      spacing: { before: 200, after: 200 }
+    })
+  );
+  
   // Filtrar não conformidades selecionadas para usar em várias seções do documento
   const naosConformidadesSelecionadas = relatorio.naoConformidades.filter(nc => nc.selecionado);
   
   if (naosConformidadesSelecionadas.length > 0) {
-    // Usar as descrições completas das não conformidades disponíveis (importadas no topo do arquivo)
-    naosConformidadesSelecionadas.forEach((nc: {id: number, titulo: string, descricao?: string, selecionado: boolean}, index: number) => {
+    // Criar a tabela de não conformidades
+    const rowsNaoConformidades = naosConformidadesSelecionadas.map((nc: {id: number, titulo: string, descricao?: string, selecionado: boolean}, index: number) => {
       // Buscar a não conformidade completa a partir dos dados disponíveis
       const ncCompleta = naoConformidadesDisponiveis.find((item: {id: number, titulo: string, descricao: string}) => item.id === nc.id);
       
-      // Título com formatação numérica
-      mainContent.push(
-        new Paragraph({
-          children: [
-            new TextRun({ 
-              text: `${index + 1}. ${ncCompleta?.titulo || nc.titulo || ""}`, 
-              bold: true
-            })
-          ],
-          spacing: { before: 200, after: 100 }
-        })
-      );
-      
-      // Descrição com recuo, garantindo que sempre apareça
-      mainContent.push(
-        new Paragraph({
-          children: [
-            new TextRun({ 
-              text: ncCompleta?.descricao || nc.descricao || "Descrição não disponível" 
-            })
-          ],
-          spacing: { after: 200 }
-        })
-      );
+      return new TableRow({
+        children: [
+          new TableCell({
+            children: [
+              new Paragraph({
+                children: [
+                  new TextRun({ 
+                    text: `${index + 1}. ${ncCompleta?.titulo || nc.titulo || ""}`, 
+                    bold: true 
+                  })
+                ],
+              }),
+              new Paragraph({
+                children: [
+                  new TextRun({ 
+                    text: ncCompleta?.descricao || nc.descricao || "Descrição não disponível" 
+                  })
+                ],
+                spacing: { before: 100 }
+              })
+            ],
+            margins: {
+              top: 100,
+              bottom: 100,
+              left: 100,
+              right: 100
+            }
+          })
+        ]
+      });
     });
+    
+    const tabelaNaoConformidades = new Table({
+      width: { size: 100, type: WidthType.PERCENTAGE },
+      borders: {
+        top: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' },
+        bottom: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' },
+        left: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' },
+        right: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' },
+        insideHorizontal: { style: BorderStyle.SINGLE, size: 1, color: 'DDDDDD' }
+      },
+      rows: rowsNaoConformidades
+    });
+    
+    // Adicionar a tabela como um elemento
+    const tableElement = {
+      type: 'table',
+      value: tabelaNaoConformidades
+    };
+    
+    // Adicionar a tabela ao conteúdo principal usando JavaScript
+    (mainContent as any).push(tabelaNaoConformidades);
   } else {
     mainContent.push(
       new Paragraph({
@@ -366,12 +669,12 @@ O modelo de telha escolhido para a edificação foi: ${relatorio.modeloTelha || 
     );
   }
   
-  // Conclusão
+  // ===== SEÇÃO DE CONCLUSÃO =====
   mainContent.push(
     new Paragraph({
-      text: "Conclusão",
+      text: "3. CONCLUSÃO",
       heading: HeadingLevel.HEADING_2,
-      spacing: { before: 400, after: 200 }
+      spacing: { before: 300, after: 200 }
     })
   );
   
@@ -385,50 +688,70 @@ O modelo de telha escolhido para a edificação foi: ${relatorio.modeloTelha || 
     })
   );
   
-  // Lista numerada das não conformidades na conclusão
+  // Lista das não conformidades em tabela
   if (naosConformidadesSelecionadas.length > 0) {
-    // Lista com os títulos das não conformidades com formatação numerada
-    naosConformidadesSelecionadas.forEach((nc: {id: number, titulo: string, descricao?: string, selecionado: boolean}, index: number) => {
-      mainContent.push(
-        new Paragraph({
-          numbering: {
-            reference: "naoConformidades",
-            level: 0,
-          },
-          children: [
-            new TextRun({ text: nc.titulo || "" })
-          ],
-          spacing: { after: 80 }
-        })
-      );
+    // Tabela com listagem de não conformidades
+    const rowsListaNaoConformidades = naosConformidadesSelecionadas.map((nc: {id: number, titulo: string, descricao?: string, selecionado: boolean}, index: number) => {
+      return new TableRow({
+        children: [
+          new TableCell({
+            children: [
+              new Paragraph({
+                children: [
+                  new TextRun({ 
+                    text: `${index + 1}.`, 
+                    bold: true 
+                  })
+                ],
+              }),
+            ],
+            width: { size: 5, type: WidthType.PERCENTAGE }
+          }),
+          new TableCell({
+            children: [
+              new Paragraph({
+                children: [
+                  new TextRun({ 
+                    text: nc.titulo || "" 
+                  })
+                ],
+              }),
+            ],
+            width: { size: 95, type: WidthType.PERCENTAGE }
+          })
+        ]
+      });
     });
     
+    const tabelaListaNaoConformidades = new Table({
+      width: { size: 100, type: WidthType.PERCENTAGE },
+      borders: {
+        top: { style: BorderStyle.NONE },
+        bottom: { style: BorderStyle.NONE },
+        left: { style: BorderStyle.NONE },
+        right: { style: BorderStyle.NONE },
+        insideHorizontal: { style: BorderStyle.NONE },
+        insideVertical: { style: BorderStyle.NONE }
+      },
+      rows: rowsListaNaoConformidades
+    });
+    
+    // Adicionar a tabela ao conteúdo principal usando JavaScript
+    (mainContent as any).push(tabelaListaNaoConformidades);
+    
     // Parágrafo de conclusão com base no resultado
-    if (relatorio.resultado === "IMPROCEDENTE") {
-      mainContent.push(
-        new Paragraph({
-          children: [
-            new TextRun({ 
-              text: "Em função das não conformidades constatadas no manuseio e instalação das chapas Brasilit, finalizamos o atendimento considerando a reclamação como IMPROCEDENTE, onde os problemas reclamados se dão pelo incorreto manuseio e instalação das telhas e não a problemas relacionados à qualidade do material.",
-              bold: false
-            })
-          ],
-          spacing: { before: 200, after: 200 }
-        })
-      );
-    } else {
-      mainContent.push(
-        new Paragraph({
-          children: [
-            new TextRun({ 
-              text: "Após análise das evidências técnicas coletadas, finalizamos o atendimento considerando a reclamação como PROCEDENTE. Recomendamos o seguinte procedimento para resolução do problema apresentado.",
-              bold: false
-            })
-          ],
-          spacing: { before: 200, after: 200 }
-        })
-      );
-    }
+    // SEMPRE USAR IMPROCEDENTE AQUI
+    mainContent.push(
+      new Paragraph({
+        children: [
+          new TextRun({ 
+            text: "Em função das não conformidades constatadas no manuseio e instalação das chapas Brasilit, finalizamos o atendimento considerando a reclamação como IMPROCEDENTE, onde os problemas reclamados se dão pelo incorreto manuseio e instalação das telhas e não a problemas relacionados à qualidade do material.",
+            bold: false
+          })
+        ],
+        spacing: { before: 200, after: 200 }
+      })
+    );
   }
   
   // Informações sobre garantia
