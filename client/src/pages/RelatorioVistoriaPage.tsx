@@ -917,58 +917,32 @@ export default function RelatorioVistoriaPage() {
                           </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                          <FormField
-                            control={form.control}
-                            name="introducao"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Introdução</FormLabel>
-                                <FormControl>
-                                  <Textarea 
-                                    {...field} 
-                                    placeholder="Descreva a introdução do relatório"
-                                    className="min-h-[100px]"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={form.control}
-                            name="analiseTecnica"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Análise Técnica</FormLabel>
-                                <FormControl>
-                                  <Textarea 
-                                    {...field} 
-                                    placeholder="Descreva a análise técnica realizada"
-                                    className="min-h-[100px]"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={form.control}
-                            name="conclusao"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Conclusão</FormLabel>
-                                <FormControl>
-                                  <Textarea 
-                                    {...field} 
-                                    placeholder="Descreva a conclusão da análise"
-                                    className="min-h-[100px]"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
+                          <div className="bg-muted p-4 rounded-md space-y-3">
+                            <h3 className="font-medium text-lg flex items-center">
+                              <FileText className="mr-2 h-4 w-4" /> 
+                              Textos automáticos do template
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                              Os textos de <strong>Introdução</strong>, <strong>Análise Técnica</strong> e <strong>Conclusão</strong> agora
+                              são gerados automaticamente a partir de templates predefinidos.
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              Isso garante uma padronização da linguagem e formato dos relatórios. 
+                              Os templates serão preenchidos com os dados inseridos em outras seções do formulário.
+                            </p>
+                            <div className="bg-background p-3 rounded-md border text-sm">
+                              <p className="font-medium mb-1">Exemplo de texto da introdução:</p>
+                              <p className="text-xs text-muted-foreground">
+                                "A Área de Assistência Técnica foi solicitada para atender uma reclamação
+                                relacionada ao surgimento de infiltrações nas telhas de fibrocimento [...]"
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Campos ocultos para manter a compatibilidade */}
+                          <input type="hidden" {...form.register("introducao")} />
+                          <input type="hidden" {...form.register("analiseTecnica")} />
+                          <input type="hidden" {...form.register("conclusao")}
                           />
                           
                           <FormField
