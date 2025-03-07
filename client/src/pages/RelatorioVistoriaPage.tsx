@@ -84,6 +84,8 @@ import {
 } from 'lucide-react';
 
 export default function RelatorioVistoriaPage() {
+  // Estados
+  const [isGeneratingDocx, setIsGeneratingDocx] = useState(false);
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('informacoes-basicas');
   const [fotos, setFotos] = useState<{ id: string; dataUrl: string; descricao?: string; timestamp: string }[]>([]);
@@ -426,8 +428,7 @@ export default function RelatorioVistoriaPage() {
   
   // Removida a função para exportar HTML, mantendo apenas a exportação para DOCX
   
-  // Estado para controlar o carregamento ao gerar DOCX
-  const [isGeneratingDocx, setIsGeneratingDocx] = useState(false);
+  // Estado já definido acima
   
   // Função para baixar o relatório em DOCX
   const baixarRelatorioDocx = async () => {
@@ -513,49 +514,88 @@ export default function RelatorioVistoriaPage() {
     <PageTransition>
       <DashboardLayoutNew>
         <div className="container mx-auto py-6">
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold tracking-tight">Relatório de Vistoria Técnica</h1>
-            <div className="flex space-x-2">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <Badge variant="outline" className="text-primary bg-primary/10 border-primary/20">Relatório</Badge>
+                <Badge variant="outline">Vistoria Técnica</Badge>
+              </div>
+              <h1 className="text-2xl font-bold tracking-tight">Relatório de Vistoria Técnica</h1>
+              <p className="text-sm text-muted-foreground mt-1">Preencha o formulário com os dados da vistoria técnica realizada.</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
               <Button
                 variant="outline"
                 onClick={() => window.history.back()}
+                size="sm"
+                className="flex items-center gap-1"
               >
-                Voltar
+                <X className="h-4 w-4" /> Cancelar
               </Button>
               <Button
                 variant="outline"
                 onClick={() => form.reset(novoRelatorioVistoria())}
+                size="sm"
+                className="flex items-center gap-1"
               >
-                Limpar
+                <Clipboard className="h-4 w-4" /> Limpar
+              </Button>
+              <Button 
+                variant="outline" 
+                className="flex items-center gap-1"
+                size="sm"
+                onClick={() => {
+                  const dadosAleatorios = gerarRelatorioAleatorio();
+                  // Sempre definir como IMPROCEDENTE
+                  dadosAleatorios.resultado = "IMPROCEDENTE";
+                  form.reset(dadosAleatorios);
+                  setFotos(dadosAleatorios.fotos || []);
+                  toast({
+                    title: 'Dados carregados',
+                    description: 'O formulário foi preenchido com dados de exemplo.',
+                  });
+                }}
+              >
+                <FileText className="h-4 w-4" /> Carregar Exemplo
               </Button>
               <Button 
                 variant="default" 
                 onClick={form.handleSubmit(onSubmit)}
+                size="sm"
+                className="flex items-center gap-1"
               >
-                <Save className="mr-2 h-4 w-4" /> Salvar Relatório
+                <Save className="h-4 w-4" /> Salvar Relatório
               </Button>
             </div>
           </div>
           
-          {/* Botão para gerar dados aleatórios */}
-          <div className="mb-4 flex justify-end">
-            <Button 
-              type="button" 
-              variant="outline" 
-              className="gap-2" 
-              onClick={() => {
-                const dadosAleatorios = gerarRelatorioAleatorio();
-                // Sempre definir como IMPROCEDENTE
-                dadosAleatorios.resultado = "IMPROCEDENTE";
-                form.reset(dadosAleatorios);
-                toast({
-                  title: "Dados gerados com sucesso",
-                  description: "O formulário foi preenchido com dados de teste aleatórios.",
-                });
-              }}
-            >
-              <HardHat className="h-4 w-4" /> Gerar Dados de Teste
-            </Button>
+          {/* Progresso do formulário */}
+          <div className="mb-8 max-w-4xl mx-auto">
+            <div className="flex justify-between items-center mb-2 text-sm">
+              <span>Progresso do relatório</span>
+              <span className="text-primary font-medium">
+                {
+                  activeTab === 'preview' ? '100%' :
+                  activeTab === 'fotos' ? '75%' :
+                  activeTab === 'nao-conformidades' ? '50%' :
+                  activeTab === 'responsaveis' ? '25%' :
+                  '0%'
+                }
+              </span>
+            </div>
+            <div className="w-full bg-gray-100 rounded-full h-2">
+              <div 
+                className="bg-primary h-2 rounded-full transition-all duration-300" 
+                style={{ 
+                  width: 
+                    activeTab === 'preview' ? '100%' :
+                    activeTab === 'fotos' ? '75%' :
+                    activeTab === 'nao-conformidades' ? '50%' :
+                    activeTab === 'responsaveis' ? '25%' :
+                    '0%'
+                }}
+              ></div>
+            </div>
           </div>
 
           <Form {...form}>
