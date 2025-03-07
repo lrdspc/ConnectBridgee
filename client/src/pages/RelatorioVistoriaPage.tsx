@@ -490,713 +490,652 @@ export default function RelatorioVistoriaPage() {
               </Button>
             </div>
           </div>
-        
-          <Tabs 
-            value={activeTab} 
-            onValueChange={setActiveTab}
-            className="w-full"
-          >
-            <TabsList className="grid grid-cols-4 w-full">
-              <TabsTrigger value="informacoes-basicas">
-                <Building className="mr-2 h-4 w-4" /> Informações Básicas
-              </TabsTrigger>
-              <TabsTrigger value="analise-tecnica">
-                <HardHat className="mr-2 h-4 w-4" /> Análise Técnica
-              </TabsTrigger>
-              <TabsTrigger value="fotos">
-                <Camera className="mr-2 h-4 w-4" /> Fotos
-              </TabsTrigger>
-              <TabsTrigger value="preview">
-                <FileText className="mr-2 h-4 w-4" /> Visualização
-              </TabsTrigger>
-            </TabsList>
-            
-            {/* Botão para gerar dados aleatórios */}
-            <div className="mb-4 flex justify-end">
-              <Button 
-                type="button" 
-                variant="outline" 
-                className="gap-2" 
-                onClick={() => {
-                  const dadosAleatorios = gerarRelatorioAleatorio();
-                  form.reset(dadosAleatorios);
-                  setFotos(dadosAleatorios.fotos || []);
-                  toast({
-                    title: "Dados gerados com sucesso",
-                    description: "O formulário foi preenchido com dados de teste aleatórios.",
-                  });
-                }}
-              >
-                <HardHat className="h-4 w-4" /> Gerar Dados de Teste
-              </Button>
-            </div>
-            
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)}>
-                {/* Tab de Informações Básicas */}
-                <TabsContent value="informacoes-basicas">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Identificação do Projeto</CardTitle>
-                        <CardDescription>
-                          Informações básicas sobre o local da vistoria
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
-                          <FormField
-                            control={form.control}
-                            name="protocolo"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Protocolo/FAR</FormLabel>
-                                <FormControl>
-                                  <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={form.control}
-                            name="dataVistoria"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Data da Vistoria</FormLabel>
-                                <FormControl>
-                                  <Input type="date" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                        
-                        <FormField
-                          control={form.control}
-                          name="cliente"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Cliente</FormLabel>
-                              <FormControl>
-                                <Input {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="empreendimento"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Empreendimento</FormLabel>
-                              <FormControl>
-                                <Input {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="endereco"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Endereço</FormLabel>
-                              <FormControl>
-                                <Input {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <div className="grid grid-cols-2 gap-4">
-                          <FormField
-                            control={form.control}
-                            name="cidade"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Cidade</FormLabel>
-                                <FormControl>
-                                  <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={form.control}
-                            name="uf"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>UF</FormLabel>
-                                <FormControl>
-                                  <Input {...field} maxLength={2} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                        
-                        <FormField
-                          control={form.control}
-                          name="assunto"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Assunto</FormLabel>
-                              <FormControl>
-                                <Input {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </CardContent>
-                    </Card>
-                    
-                    <div className="space-y-6">
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>Responsáveis Técnicos</CardTitle>
-                          <CardDescription>
-                            Informações dos responsáveis pela vistoria
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                          <FormField
-                            control={form.control}
-                            name="elaboradoPor"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Elaborado por</FormLabel>
-                                <FormControl>
-                                  <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={form.control}
-                            name="departamento"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Departamento</FormLabel>
-                                <FormControl>
-                                  <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <div className="grid grid-cols-2 gap-4">
-                            <FormField
-                              control={form.control}
-                              name="unidade"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Unidade</FormLabel>
-                                  <FormControl>
-                                    <Input {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            
-                            <FormField
-                              control={form.control}
-                              name="regional"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Regional</FormLabel>
-                                  <FormControl>
-                                    <Input {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
-                          
-                          <FormField
-                            control={form.control}
-                            name="coordenador"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Coordenador</FormLabel>
-                                <FormControl>
-                                  <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={form.control}
-                            name="gerente"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Gerente</FormLabel>
-                                <FormControl>
-                                  <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={form.control}
-                            name="numeroRegistro"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>CREA/CAU</FormLabel>
-                                <FormControl>
-                                  <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </CardContent>
-                      </Card>
-                      
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>Dados do Produto</CardTitle>
-                          <CardDescription>
-                            Informações sobre as telhas
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                          <div className="grid grid-cols-2 gap-4">
-                            <FormField
-                              control={form.control}
-                              name="modeloTelha"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Modelo</FormLabel>
-                                  <Select
-                                    onValueChange={field.onChange}
-                                    defaultValue={field.value}
-                                  >
-                                    <FormControl>
-                                      <SelectTrigger>
-                                        <SelectValue placeholder="Selecione o modelo" />
-                                      </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                      {modelosTelhas.map((modelo) => (
-                                        <SelectItem key={modelo} value={modelo}>
-                                          {modelo}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            
-                            <FormField
-                              control={form.control}
-                              name="espessura"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Espessura (mm)</FormLabel>
-                                  <Select
-                                    onValueChange={field.onChange}
-                                    defaultValue={field.value}
-                                  >
-                                    <FormControl>
-                                      <SelectTrigger>
-                                        <SelectValue placeholder="Selecione a espessura" />
-                                      </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                      {espessurasTelhas.map((espessura) => (
-                                        <SelectItem key={espessura} value={espessura}>
-                                          {espessura}mm
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
-                          
-                          <div className="grid grid-cols-2 gap-4">
-                            <FormField
-                              control={form.control}
-                              name="quantidade"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Quantidade</FormLabel>
-                                  <FormControl>
-                                    <Input 
-                                      type="number" 
-                                      {...field}
-                                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            
-                            <FormField
-                              control={form.control}
-                              name="area"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Área (m²)</FormLabel>
-                                  <FormControl>
-                                    <Input 
-                                      type="number" 
-                                      {...field}
-                                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
-                          
-                          <div className="grid grid-cols-3 gap-4">
-                            <FormField
-                              control={form.control}
-                              name="anosGarantia"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Anos de Garantia</FormLabel>
-                                  <FormControl>
-                                    <Input {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            
-                            <FormField
-                              control={form.control}
-                              name="anosGarantiaSistemaCompleto"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Garantia Sistema</FormLabel>
-                                  <FormControl>
-                                    <Input {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            
-                            <FormField
-                              control={form.control}
-                              name="anosGarantiaTotal"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Garantia Total</FormLabel>
-                                  <FormControl>
-                                    <Input {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </div>
-                </TabsContent>
-                
-                {/* Tab de Análise Técnica */}
-                <TabsContent value="analise-tecnica">
-                  <div className="grid md:grid-cols-[1fr_380px] gap-6">
-                    <div className="space-y-6">
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>Introdução e Análise</CardTitle>
-                          <CardDescription>
-                            Detalhes sobre a análise técnica realizada
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                          <div className="bg-muted p-4 rounded-md space-y-3">
-                            <h3 className="font-medium text-lg flex items-center">
-                              <FileText className="mr-2 h-4 w-4" /> 
-                              Textos automáticos do template
-                            </h3>
-                            <p className="text-sm text-muted-foreground">
-                              Os textos de <strong>Introdução</strong>, <strong>Análise Técnica</strong> e <strong>Conclusão</strong> agora
-                              são gerados automaticamente a partir de templates predefinidos.
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              Isso garante uma padronização da linguagem e formato dos relatórios. 
-                              Os templates serão preenchidos com os dados inseridos em outras seções do formulário.
-                            </p>
-                            <div className="bg-background p-3 rounded-md border text-sm">
-                              <p className="font-medium mb-1">Exemplo de texto da introdução:</p>
-                              <p className="text-xs text-muted-foreground">
-                                "A Área de Assistência Técnica foi solicitada para atender uma reclamação
-                                relacionada ao surgimento de infiltrações nas telhas de fibrocimento [...]"
-                              </p>
-                            </div>
-                          </div>
-                          
-                          {/* Os campos de texto fixo (introducao, analiseTecnica, conclusao) foram removidos
-                              pois agora são gerados automaticamente pelos templates */}
-                        </CardContent>
-                      </Card>
-                      
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>Resultado da Análise</CardTitle>
-                          <CardDescription>
-                            Avaliação final da reclamação
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                          <FormField
-                            control={form.control}
-                            name="resultado"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Resultado</FormLabel>
-                                <div className="flex gap-4">
-                                  <div 
-                                    className={`flex-1 border rounded-md p-4 cursor-pointer ${field.value === 'PROCEDENTE' ? 'border-primary bg-primary/10' : 'border-gray-200'}`}
-                                    onClick={() => field.onChange('PROCEDENTE')}
-                                  >
-                                    <div className="flex items-center gap-2">
-                                      <Check className={`h-5 w-5 ${field.value === 'PROCEDENTE' ? 'text-primary' : 'text-gray-400'}`} />
-                                      <div className="font-medium">PROCEDENTE</div>
-                                    </div>
-                                    <div className="text-sm text-muted-foreground mt-2">
-                                      A reclamação procede. Garantia aplicável.
-                                    </div>
-                                  </div>
-                                  
-                                  <div 
-                                    className={`flex-1 border rounded-md p-4 cursor-pointer ${field.value === 'IMPROCEDENTE' ? 'border-primary bg-primary/10' : 'border-gray-200'}`}
-                                    onClick={() => field.onChange('IMPROCEDENTE')}
-                                  >
-                                    <div className="flex items-center gap-2">
-                                      <X className={`h-5 w-5 ${field.value === 'IMPROCEDENTE' ? 'text-primary' : 'text-gray-400'}`} />
-                                      <div className="font-medium">IMPROCEDENTE</div>
-                                    </div>
-                                    <div className="text-sm text-muted-foreground mt-2">
-                                      A reclamação não procede. Garantia não aplicável.
-                                    </div>
-                                  </div>
-                                </div>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </CardContent>
-                      </Card>
-                    </div>
-                    
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Não Conformidades</CardTitle>
-                        <CardDescription>
-                          Selecione as não conformidades identificadas na vistoria
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <ScrollArea className="h-[700px] pr-4">
-                          <div className="space-y-2">
-                            {naoConformidadesDisponiveis.map((nc) => {
-                              const naoConformidade = watchNaoConformidades.find(item => item.id === nc.id);
-                              const selecionado = naoConformidade?.selecionado || false;
-                              
-                              return (
-                                <div 
-                                  key={nc.id} 
-                                  className={`p-3 border rounded-md ${selecionado ? 'border-primary bg-primary/5' : 'border-gray-200'}`}
-                                >
-                                  <div className="flex items-start space-x-2">
-                                    <Checkbox 
-                                      id={`nc-${nc.id}`} 
-                                      checked={selecionado}
-                                      onCheckedChange={() => toggleNaoConformidade(nc.id)}
-                                      className="mt-1"
-                                    />
-                                    <div className="flex-1">
-                                      <label
-                                        htmlFor={`nc-${nc.id}`}
-                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-                                      >
-                                        {nc.titulo}
-                                      </label>
-                                      <p className="text-sm text-muted-foreground mt-1">
-                                        {nc.descricao}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </ScrollArea>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </TabsContent>
-                
-                {/* Tab de Fotos */}
-                <TabsContent value="fotos">
+          
+          {/* Botão para gerar dados aleatórios */}
+          <div className="mb-4 flex justify-end">
+            <Button 
+              type="button" 
+              variant="outline" 
+              className="gap-2" 
+              onClick={() => {
+                const dadosAleatorios = gerarRelatorioAleatorio();
+                form.reset(dadosAleatorios);
+                setFotos(dadosAleatorios.fotos || []);
+                toast({
+                  title: "Dados gerados com sucesso",
+                  description: "O formulário foi preenchido com dados de teste aleatórios.",
+                });
+              }}
+            >
+              <HardHat className="h-4 w-4" /> Gerar Dados de Teste
+            </Button>
+          </div>
+
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                {/* Informações do Cliente e Produto */}
+                <div className="space-y-6">
                   <Card>
                     <CardHeader>
-                      <CardTitle>Fotos da Vistoria</CardTitle>
+                      <CardTitle>Informações Básicas</CardTitle>
                       <CardDescription>
-                        Adicione fotos para documentar a vistoria
+                        Dados do cliente e da vistoria
                       </CardDescription>
                     </CardHeader>
-                    <CardContent>
-                      <div className="flex flex-col items-center justify-center border-2 border-dashed rounded-md p-8 mb-6">
-                        <Camera className="h-10 w-10 text-muted-foreground mb-4" />
-                        <p className="text-sm text-muted-foreground mb-4">
-                          Arraste e solte imagens aqui ou clique para selecionar arquivos
-                        </p>
-                        <Button
-                          variant="outline"
-                          onClick={() => document.getElementById('foto-upload')?.click()}
-                        >
-                          <Upload className="mr-2 h-4 w-4" />
-                          Selecionar imagens
-                        </Button>
-                        <input
-                          id="foto-upload"
-                          type="file"
-                          accept="image/*"
-                          multiple
-                          onChange={handleFotoUpload}
-                          className="hidden"
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="protocolo"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Protocolo/FAR</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <FormField
+                          control={form.control}
+                          name="dataVistoria"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Data da Vistoria</FormLabel>
+                              <FormControl>
+                                <Input type="date" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
                         />
                       </div>
                       
-                      {fotos.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                          {fotos.map((foto) => (
-                            <Card key={foto.id} className="overflow-hidden">
-                              <img 
-                                src={foto.dataUrl} 
-                                alt="Foto da vistoria" 
-                                className="h-48 w-full object-cover"
-                              />
-                              <CardContent className="p-3">
-                                <div className="space-y-2">
-                                  <textarea
-                                    placeholder="Descrição da foto"
-                                    className="w-full text-sm rounded-md border p-2 h-20 resize-none"
-                                    value={foto.descricao || ''}
-                                    onChange={(e) => handleFotoDescricaoChange(foto.id, e.target.value)}
-                                  />
-                                  <Button
-                                    variant="destructive"
-                                    size="sm"
-                                    className="w-full"
-                                    onClick={() => handleRemoverFoto(foto.id)}
-                                  >
-                                    Remover
-                                  </Button>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="text-center py-10 text-muted-foreground">
-                          Nenhuma foto adicionada.
-                        </div>
-                      )}
+                      <FormField
+                        control={form.control}
+                        name="cliente"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Cliente</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="empreendimento"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Empreendimento</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="endereco"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Endereço</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="cidade"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Cidade</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <FormField
+                          control={form.control}
+                          name="uf"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>UF</FormLabel>
+                              <FormControl>
+                                <Input {...field} maxLength={2} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      
+                      <FormField
+                        control={form.control}
+                        name="assunto"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Assunto</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </CardContent>
                   </Card>
-                </TabsContent>
-              </form>
-            </Form>
-            
-            {/* Tab de Preview */}
-            <TabsContent value="preview">
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Dados do Produto</CardTitle>
+                      <CardDescription>
+                        Informações sobre as telhas
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="modeloTelha"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Modelo</FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Selecione o modelo" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {modelosTelhas.map((modelo) => (
+                                    <SelectItem key={modelo} value={modelo}>
+                                      {modelo}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <FormField
+                          control={form.control}
+                          name="espessura"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Espessura (mm)</FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Selecione a espessura" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {espessurasTelhas.map((espessura) => (
+                                    <SelectItem key={espessura} value={espessura}>
+                                      {espessura}mm
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="quantidade"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Quantidade</FormLabel>
+                              <FormControl>
+                                <Input 
+                                  type="number" 
+                                  {...field}
+                                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <FormField
+                          control={form.control}
+                          name="area"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Área (m²)</FormLabel>
+                              <FormControl>
+                                <Input 
+                                  type="number" 
+                                  {...field}
+                                  onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      
+                      <div className="grid grid-cols-3 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="anosGarantia"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Anos de Garantia</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <FormField
+                          control={form.control}
+                          name="anosGarantiaSistemaCompleto"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Garantia Sistema</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <FormField
+                          control={form.control}
+                          name="anosGarantiaTotal"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Garantia Total</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Responsáveis e Resultados */}
+                <div className="space-y-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Responsáveis Técnicos</CardTitle>
+                      <CardDescription>
+                        Informações dos responsáveis pela vistoria
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <FormField
+                        control={form.control}
+                        name="elaboradoPor"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Elaborado por</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="departamento"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Departamento</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="unidade"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Unidade</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <FormField
+                          control={form.control}
+                          name="regional"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Regional</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      
+                      <FormField
+                        control={form.control}
+                        name="coordenador"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Coordenador</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="gerente"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Gerente</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="numeroRegistro"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>CREA/CAU</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Resultado da Análise</CardTitle>
+                      <CardDescription>
+                        Avaliação final da reclamação
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <FormField
+                        control={form.control}
+                        name="resultado"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Resultado</FormLabel>
+                            <div className="flex gap-4">
+                              <div 
+                                className={`flex-1 border rounded-md p-4 cursor-pointer ${field.value === 'PROCEDENTE' ? 'border-primary bg-primary/10' : 'border-gray-200'}`}
+                                onClick={() => field.onChange('PROCEDENTE')}
+                              >
+                                <div className="flex items-center gap-2">
+                                  <Check className={`h-5 w-5 ${field.value === 'PROCEDENTE' ? 'text-primary' : 'text-gray-400'}`} />
+                                  <div className="font-medium">PROCEDENTE</div>
+                                </div>
+                                <div className="text-sm text-muted-foreground mt-2">
+                                  A reclamação procede. Garantia aplicável.
+                                </div>
+                              </div>
+                              
+                              <div 
+                                className={`flex-1 border rounded-md p-4 cursor-pointer ${field.value === 'IMPROCEDENTE' ? 'border-primary bg-primary/10' : 'border-gray-200'}`}
+                                onClick={() => field.onChange('IMPROCEDENTE')}
+                              >
+                                <div className="flex items-center gap-2">
+                                  <X className={`h-5 w-5 ${field.value === 'IMPROCEDENTE' ? 'text-primary' : 'text-gray-400'}`} />
+                                  <div className="font-medium">IMPROCEDENTE</div>
+                                </div>
+                                <div className="text-sm text-muted-foreground mt-2">
+                                  A reclamação não procede. Garantia não aplicável.
+                                </div>
+                              </div>
+                            </div>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Textos Automáticos</CardTitle>
+                      <CardDescription>
+                        Informações sobre os textos gerados automaticamente
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="bg-muted p-4 rounded-md space-y-3">
+                        <h3 className="font-medium text-lg flex items-center">
+                          <FileText className="mr-2 h-4 w-4" /> 
+                          Textos do relatório
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          Os textos de <strong>Introdução</strong>, <strong>Análise Técnica</strong> e <strong>Conclusão</strong> são gerados automaticamente a partir 
+                          dos dados inseridos no formulário usando templates padronizados.
+                        </p>
+                        <div className="bg-background p-3 rounded-md border text-sm">
+                          <p className="font-medium mb-1">Exemplo de texto gerado:</p>
+                          <p className="text-xs text-muted-foreground">
+                            "A Área de Assistência Técnica foi solicitada para atender uma reclamação
+                            relacionada a infiltrações nas telhas..."
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+
+              {/* Não Conformidades */}
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle>Não Conformidades</CardTitle>
+                  <CardDescription>
+                    Selecione as não conformidades identificadas na vistoria
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {naoConformidadesDisponiveis.map((nc) => {
+                      const naoConformidade = watchNaoConformidades.find(item => item.id === nc.id);
+                      const selecionado = naoConformidade?.selecionado || false;
+                      
+                      return (
+                        <div 
+                          key={nc.id} 
+                          className={`p-3 border rounded-md ${selecionado ? 'border-primary bg-primary/5' : 'border-gray-200'}`}
+                        >
+                          <div className="flex items-start space-x-2">
+                            <Checkbox 
+                              id={`nc-${nc.id}`} 
+                              checked={selecionado}
+                              onCheckedChange={() => toggleNaoConformidade(nc.id)}
+                              className="mt-1"
+                            />
+                            <div className="flex-1">
+                              <label
+                                htmlFor={`nc-${nc.id}`}
+                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                              >
+                                {nc.titulo}
+                              </label>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {nc.descricao?.substring(0, 120)}...
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Fotos */}
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle>Fotos da Vistoria</CardTitle>
+                  <CardDescription>
+                    Adicione fotos para documentar a vistoria
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button
+                    variant="outline"
+                    className="w-full mb-4 p-6 h-auto flex-col"
+                    onClick={() => document.getElementById('foto-upload')?.click()}
+                  >
+                    <Camera className="h-8 w-8 text-muted-foreground mb-3" />
+                    <p className="text-sm text-muted-foreground">
+                      Clique para adicionar fotos
+                    </p>
+                    <input
+                      id="foto-upload"
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleFotoUpload}
+                      className="hidden"
+                    />
+                  </Button>
+                  
+                  {fotos.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {fotos.map((foto) => (
+                        <Card key={foto.id} className="overflow-hidden">
+                          <img 
+                            src={foto.dataUrl} 
+                            alt="Foto da vistoria" 
+                            className="h-40 w-full object-cover"
+                          />
+                          <CardContent className="p-3">
+                            <div className="space-y-2">
+                              <input
+                                placeholder="Descrição da foto"
+                                className="w-full text-sm rounded-md border p-2 resize-none"
+                                value={foto.descricao || ''}
+                                onChange={(e) => handleFotoDescricaoChange(foto.id, e.target.value)}
+                              />
+                              <Button
+                                variant="destructive"
+                                size="sm"
+                                className="w-full"
+                                onClick={() => handleRemoverFoto(foto.id)}
+                              >
+                                Remover
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-4 text-muted-foreground">
+                      Nenhuma foto adicionada.
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Visualização e Exportação */}
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
                   <div>
-                    <CardTitle>Visualização do Relatório</CardTitle>
+                    <CardTitle>Visualização e Exportação</CardTitle>
                     <CardDescription>
-                      Visualize como o relatório será gerado
+                      Visualize e exporte o relatório final
                     </CardDescription>
                   </div>
                   <div className="flex gap-2">
                     <Button
                       variant="outline"
-                      size="sm"
                       onClick={gerarPreviewRelatorio}
                       disabled={isGeneratingPreview}
                     >
                       <FileCheck className="mr-2 h-4 w-4" />
-                      Atualizar Preview
+                      {isGeneratingPreview ? "Gerando..." : "Visualizar Relatório"}
                     </Button>
-                    <div className="flex flex-col sm:flex-row gap-2">
-                      <Button 
-                        variant="default"
-                        size="sm"
-                        onClick={baixarRelatorioDocx}
-                        disabled={!form.formState.isValid}
-                      >
-                        <FileText className="mr-2 h-4 w-4" />
-                        {isGeneratingDocx ? "Gerando..." : "Exportar DOC"}
-                      </Button>
-                    </div>
+                    <Button 
+                      variant="default"
+                      onClick={baixarRelatorioDocx}
+                      disabled={!form.formState.isValid || isGeneratingDocx}
+                    >
+                      <FileText className="mr-2 h-4 w-4" />
+                      {isGeneratingDocx ? "Gerando..." : "Exportar DOC"}
+                    </Button>
                   </div>
                 </CardHeader>
-                <CardContent>
-                  {previewHTML ? (
+                {previewHTML && (
+                  <CardContent>
                     <div className="border rounded-md">
                       <iframe
                         srcDoc={previewHTML}
                         title="Visualização do Relatório"
-                        className="w-full h-[800px] rounded-md"
+                        className="w-full h-[600px] rounded-md"
                       />
                     </div>
-                  ) : (
-                    <div className="flex flex-col items-center justify-center py-20">
-                      <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-                      <p className="text-muted-foreground">
-                        Clique em "Atualizar Preview" para visualizar o relatório.
-                      </p>
-                      <Button
-                        variant="outline"
-                        className="mt-4"
-                        onClick={gerarPreviewRelatorio}
-                      >
-                        <FileCheck className="mr-2 h-4 w-4" />
-                        Gerar Visualização
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
+                  </CardContent>
+                )}
               </Card>
-            </TabsContent>
-          </Tabs>
+            </form>
+          </Form>
         </div>
       </DashboardLayoutNew>
     </PageTransition>
