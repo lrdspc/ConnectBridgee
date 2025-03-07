@@ -546,7 +546,7 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
       ],
     });
 
-    // Tabela de Análise/Introdução - Sem bordas na tabela conforme referência
+    // Tabela de Introdução - Sem bordas na tabela conforme referência
     const tabelaIntroducao = new Table({
       width: {
         size: 100,
@@ -574,7 +574,128 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
                   alignment: AlignmentType.CENTER,
                   children: [
                     new TextRun({
-                      text: "ANÁLISE",
+                      text: "Introdução",
+                      bold: true,
+                      color: "FFFFFF",
+                      size: 24, // 12pt
+                    }),
+                  ],
+                }),
+              ],
+            }),
+          ],
+        }),
+        // Conteúdo da introdução
+        new TableRow({
+          children: [
+            new TableCell({
+              children: [
+                new Paragraph({
+                  alignment: AlignmentType.JUSTIFIED,
+                  children: [
+                    new TextRun({
+                      text: `A Área de Assistência Técnica foi solicitada para atender uma reclamação relacionada ao surgimento de infiltrações nas telhas de fibrocimento: - Telha da marca BRASILIT modelo ONDULADA de ${relatorio.telhas && relatorio.telhas.length > 0 ? relatorio.telhas[0].espessura : "6mm"}, produzidas com tecnologia CRFS - Cimento Reforçado com Fios Sintéticos - 100% sem amianto - cuja fabricação segue a norma internacional ISO 9933, bem como as normas técnicas da ABNT: NBR-15210-1, NBR-15210-2 e NBR-15210-3.`,
+                      size: 20,
+                    }),
+                  ],
+                  spacing: { after: 120 },
+                }),
+                new Paragraph({
+                  alignment: AlignmentType.JUSTIFIED,
+                  children: [
+                    new TextRun({
+                      text: `Em atenção a vossa solicitação, analisamos as evidências encontradas, para avaliar as manifestações patológicas reclamadas em telhas de nossa marca aplicada em sua cobertura conforme registro de reclamação protocolo FAR ${relatorio.farProtocolo || "Não Informado"}.`,
+                      size: 20,
+                    }),
+                  ],
+                  spacing: { after: 120 },
+                }),
+                new Paragraph({
+                  alignment: AlignmentType.JUSTIFIED,
+                  children: [
+                    new TextRun({
+                      text: `O modelo de telha escolhido para a edificação foi: ${relatorio.telhas && relatorio.telhas.length > 0 ? relatorio.telhas[0].modelo : "ONDULADA"} de ${relatorio.telhas && relatorio.telhas.length > 0 ? relatorio.telhas[0].espessura : "6mm"}. Esse modelo, como os demais, possui a necessidade de seguir rigorosamente as orientações técnicas contidas no Guia Técnico de Telhas de Fibrocimento e Acessórios para Telhado — Brasilit para o melhor desempenho do produto, assim como a garantia do produto coberta por ${relatorio.anosGarantia || "10"} anos (ou ${relatorio.anosGarantiaSistemaCompleto || "15"} anos para sistema completo).`,
+                      size: 20,
+                    }),
+                  ],
+                  spacing: { after: 120 },
+                }),
+                new Paragraph({
+                  alignment: AlignmentType.JUSTIFIED,
+                  children: [
+                    new TextRun({
+                      text: `Quantidade e modelo:`,
+                      size: 20,
+                    }),
+                  ],
+                  spacing: { after: 120 },
+                }),
+                new Paragraph({
+                  alignment: AlignmentType.JUSTIFIED,
+                  children: [
+                    new TextRun({
+                      text: `${relatorio.telhas && relatorio.telhas.length > 0 ? relatorio.telhas[0].quantidade || '0' : '0'}: ${relatorio.telhas && relatorio.telhas.length > 0 ? relatorio.telhas[0].modelo : "ONDULADA"} ${relatorio.telhas && relatorio.telhas.length > 0 ? relatorio.telhas[0].espessura : "6mm"} CRFS.`,
+                      size: 20,
+                    }),
+                  ],
+                  spacing: { after: 120 },
+                }),
+                new Paragraph({
+                  alignment: AlignmentType.JUSTIFIED,
+                  children: [
+                    new TextRun({
+                      text: `Área coberta: ${relatorio.telhas && relatorio.telhas.length > 0 && relatorio.telhas[0].area ? relatorio.telhas[0].area : '0'}m² aproximadamente.`,
+                      size: 20,
+                    }),
+                  ],
+                  spacing: { after: 120 },
+                }),
+                new Paragraph({
+                  alignment: AlignmentType.JUSTIFIED,
+                  children: [
+                    new TextRun({
+                      text: `A análise do caso segue os requisitos presentes na norma ABNT NBR 7196: Telhas de fibrocimento sem amianto — Execução de coberturas e fechamentos laterais —Procedimento e Guia Técnico de Telhas de Fibrocimento e Acessórios para Telhado — Brasilit.`,
+                      size: 20,
+                    }),
+                  ],
+                  spacing: { after: 120 },
+                }),
+              ],
+            }),
+          ],
+        }),
+      ],
+    });
+    
+    // Tabela de Análise Técnica
+    const tabelaAnaliseTecnica = new Table({
+      width: {
+        size: 100,
+        type: WidthType.PERCENTAGE,
+      },
+      borders: {
+        top: { style: BorderStyle.NONE },
+        bottom: { style: BorderStyle.NONE },
+        left: { style: BorderStyle.NONE },
+        right: { style: BorderStyle.NONE },
+        insideHorizontal: { style: BorderStyle.NONE },
+        insideVertical: { style: BorderStyle.NONE },
+      },
+      rows: [
+        // Cabeçalho da tabela
+        new TableRow({
+          children: [
+            new TableCell({
+              shading: {
+                fill: "c00000", // Cor vermelha conforme modelo
+                type: ShadingType.CLEAR,
+              },
+              children: [
+                new Paragraph({
+                  alignment: AlignmentType.CENTER,
+                  children: [
+                    new TextRun({
+                      text: "Análise Técnica",
                       bold: true,
                       color: "FFFFFF",
                       size: 24, // 12pt
@@ -594,7 +715,7 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
                   alignment: AlignmentType.JUSTIFIED,
                   children: [
                     new TextRun({
-                      text: "A Área de Assistência Técnica foi solicitada para atender uma reclamação relacionada à permeabilidade de telhas de fibrocimento. As telhas instaladas são do modelo BRASILIT FIBROCIMENTO ONDULADA de 6 mm e instaladas com elementos complementares CBP3 - Cumeeira Articulada e parafusos. Tudo conforme especificações técnicas e norma institucional ISO 9001, bem como as normas técnicas da ABNT: NBR 15210-1, NBR15210-2 e NBR 7581-3.",
+                      text: "Durante a visita técnica realizada no local, nossa equipe conduziu uma vistoria minuciosa da cobertura, documentando e analisando as condições de instalação e o estado atual das telhas. Após criteriosa avaliação das evidências coletadas em campo, identificamos alguns desvios nos procedimentos de manuseio e instalação em relação às especificações técnicas do fabricante, os quais são detalhados a seguir:",
                       size: 20,
                     }),
                   ],
@@ -944,8 +1065,16 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
               spacing: { before: 120, after: 120 }
             }),
             
-            // Tabela de análise/introdução
+            // Tabela de introdução
             tabelaIntroducao,
+            
+            // Espaçamento entre tabelas
+            new Paragraph({
+              spacing: { before: 120, after: 120 }
+            }),
+            
+            // Tabela de análise técnica
+            tabelaAnaliseTecnica,
             
             // Espaçamento entre tabelas
             new Paragraph({
