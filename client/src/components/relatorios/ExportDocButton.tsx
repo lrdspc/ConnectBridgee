@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { FileText, FileDown, AlertTriangle } from "lucide-react";
+import { FileText, FileDown, AlertTriangle, Loader2 } from "lucide-react";
 import type { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { toast } from "sonner";
 import { generateRelatorioVistoriaBrasil } from "@/lib/relatorioVistoriaBrasilGenerator";
@@ -8,6 +8,12 @@ import { gerarRelatorioVistoriaDoc as gerarRelatorioVistoriaDocOriginal } from "
 import { gerarRelatorioVistoriaDoc as gerarRelatorioVistoriaDocSimples } from "@/lib/relatorioVistoriaDocGeneratorSimple";
 import { gerarRelatorioVistoriaHTML } from "@/lib/relatorioVistoriaFallbackGenerator";
 import { gerarRelatorioVistoriaMinimal } from "@/lib/relatorioVistoriaMinimalGenerator";
+
+// Logs para debug
+const DEBUG = true;
+function log(...args: any[]) {
+  if (DEBUG) console.log("[ExportDocButton]", ...args);
+}
 
 // Interface estendida para compatibilidade com versões anteriores do código
 interface ExtendedRelatorioVistoria extends RelatorioVistoria {
