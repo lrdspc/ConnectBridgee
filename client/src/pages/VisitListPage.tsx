@@ -214,7 +214,7 @@ export default function VisitListPage() {
               <p className="text-neutral-600 mb-4">
                 {searchTerm ? 'Nenhuma visita encontrada com esses termos' : 'Nenhuma visita disponível'}
               </p>
-              <Link href="/vistoria-far">
+              <Link href="/relatorio-vistoria">
                 <a>
                   <Button className="bg-primary hover:bg-primary/90">
                     <Plus className="mr-2 h-4 w-4" /> Nova Vistoria
