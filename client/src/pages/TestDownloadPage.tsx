@@ -2,15 +2,59 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { saveAs } from 'file-saver';
+import { Document, Packer, Paragraph, TextRun } from 'docx';
 
 export default function TestDownloadPage() {
   const [isLoading, setIsLoading] = useState(false);
 
-  // Função para criar um documento DOCX básico
+  // Função para criar um documento DOCX básico usando a biblioteca docx
   const createBasicDocx = async (): Promise<Blob> => {
-    // Criar um arquivo de texto simples
-    const text = 'Este é um arquivo de teste básico.';
-    const blob = new Blob([text], { type: 'text/plain' });
+    console.log("Criando documento DOCX com a biblioteca docx");
+    
+    // Criar um documento DOCX simples
+    const doc = new Document({
+      sections: [{
+        properties: {},
+        children: [
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Este é um documento DOCX de teste.",
+                bold: true,
+                size: 28
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Criado com a biblioteca 'docx' para testar o download.",
+                size: 24
+              }),
+            ],
+          }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "Se você está vendo este documento, o download funcionou com sucesso!",
+                italics: true,
+                size: 24
+              }),
+            ],
+          }),
+        ],
+      }],
+    });
+
+    // Gerar o buffer do documento
+    const buffer = await Packer.toBuffer(doc);
+    
+    // Criar um Blob com o tipo MIME correto para DOCX
+    const blob = new Blob([buffer], { 
+      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" 
+    });
+    
+    console.log("Documento DOCX criado com sucesso");
     return blob;
   };
 
@@ -21,7 +65,7 @@ export default function TestDownloadPage() {
       toast.info("Gerando arquivo de teste...");
 
       const blob = await createBasicDocx();
-      const fileName = "teste-download.txt";
+      const fileName = "teste-download.docx";
 
       // Método usando createObjectURL
       const url = URL.createObjectURL(blob);
@@ -54,7 +98,7 @@ export default function TestDownloadPage() {
       toast.info("Gerando arquivo de teste com FileSaver...");
 
       const blob = await createBasicDocx();
-      const fileName = "teste-download-filesaver.txt";
+      const fileName = "teste-download-filesaver.docx";
 
       // Usar FileSaver
       saveAs(blob, fileName);
@@ -76,7 +120,7 @@ export default function TestDownloadPage() {
       toast.info("Tentando método alternativo via abertura em nova aba...");
 
       const blob = await createBasicDocx();
-      const fileName = "teste-download-redirect.txt";
+      const fileName = "teste-download-redirect.docx";
 
       // Criar URL temporária e abrir em nova aba
       const url = URL.createObjectURL(blob);
