@@ -487,6 +487,33 @@ export async function gerarFARReportDoc(relatorio: FARReport): Promise<Blob> {
     );
   }
   
+  // Resultado da análise
+  mainContent.push(
+    new Paragraph({
+      text: "RESULTADO DA ANÁLISE",
+      heading: HeadingLevel.HEADING_2,
+      spacing: { after: 120 }
+    })
+  );
+  
+  mainContent.push(
+    new Paragraph({
+      children: [
+        new TextRun({ 
+          text: "Após análise técnica, a reclamação foi considerada: ", 
+          size: 24
+        }),
+        new TextRun({ 
+          text: relatorio.resultado || "IMPROCEDENTE", 
+          bold: true, 
+          size: 28,
+          color: relatorio.resultado === "PROCEDENTE" ? "FF0000" : "000000" // Vermelho para PROCEDENTE
+        })
+      ],
+      spacing: { after: 200 }
+    })
+  );
+  
   // Texto sobre a garantia
   mainContent.push(
     new Paragraph({
