@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { FileDown, Loader2 } from "lucide-react";
 import type { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { toast } from "sonner";
-import { gerarRelatorioFixo } from "@/lib/relatorioVistoriaFixed";
+import { gerarRelatorioSimples } from "@/lib/relatorioVistoriaSimpleGenerator";
 
 // Logs para debug - Habilitado para ajudar na diagnóstico de problemas
 const DEBUG = true;
@@ -71,8 +71,8 @@ export function ExportDocButtonNew({
       const fileName = `Relatório-${relatorioPreparado.protocolo || 'Vistoria'}-ABNT.docx`;
       
       // Usar o gerador que funciona corretamente
-      log("Gerando relatório com o gerador fixo (formatação ABNT)");
-      const blob = await gerarRelatorioFixo(relatorioPreparado);
+      log("Gerando relatório com o gerador simples (formatação ABNT)");
+      const blob = await gerarRelatorioSimples(relatorioPreparado);
       saveDocFile(blob, fileName);
       toast.success("Relatório ABNT exportado com sucesso!");
     } catch (error) {
