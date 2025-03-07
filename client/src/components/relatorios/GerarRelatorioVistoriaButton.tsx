@@ -1,43 +1,62 @@
+
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { FilePenLine } from 'lucide-react';
-import GerarRelatorioVistoriaModal from './GerarRelatorioVistoriaModal';
-import { novoRelatorioVistoria, RelatorioVistoria } from '../../../shared/relatorioVistoriaSchema';
+import { Button } from "@/components/ui/button";
+import { FileText } from "lucide-react";
+import { GerarRelatorioVistoriaModal } from "./GerarRelatorioVistoriaModal";
+import { RelatorioVistoria, novoRelatorioVistoria } from "../../../shared/relatorioVistoriaSchema";
+import { toast } from "sonner";
 
 interface GerarRelatorioVistoriaButtonProps {
-  variant?: "default" | "outline" | "ghost" | "link" | "destructive" | "secondary";
   relatorio?: RelatorioVistoria;
+  onSave?: (relatorio: RelatorioVistoria) => void;
+  variant?: "default" | "outline" | "secondary" | "destructive" | "ghost" | "link";
+  size?: "default" | "sm" | "lg" | "icon";
+  className?: string;
 }
 
-const GerarRelatorioVistoriaButton: React.FC<GerarRelatorioVistoriaButtonProps> = ({ 
+export function GerarRelatorioVistoriaButton({ 
+  relatorio,
+  onSave,
   variant = "default",
-  relatorio: relatorioInicial 
-}) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [relatorio, setRelatorio] = useState<RelatorioVistoria | undefined>(relatorioInicial);
-
-  const handleOpenModal = () => {
-    // Se não houver um relatório inicial, criar um novo
-    if (!relatorio) {
-      setRelatorio(novoRelatorioVistoria());
-    }
-    setIsModalOpen(true);
+  size = "default",
+  className = ""
+}: GerarRelatorioVistoriaButtonProps) {
+  const [open, setOpen] = useState(false);
+  
+  const handleOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen);
   };
-
+  
+  const handleSave = (savedRelatorio: RelatorioVistoria) => {
+    if (onSave) {
+      onSave(savedRelatorio);
+    } else {
+      // Se não tiver callback de salvamento, apenas informa o usuário
+      toast.info("Relatório gerado com sucesso!");
+    }
+  };
+  
+  // Se não for fornecido um relatório, criar um novo
+  const initialRelatorio = relatorio || novoRelatorioVistoria();
+  
   return (
     <>
-      <Button variant={variant} onClick={handleOpenModal}>
-        <FilePenLine className="mr-2 h-4 w-4" />
-        Gerar Relatório de Vistoria
+      <Button 
+        onClick={() => setOpen(true)} 
+        variant={variant} 
+        size={size}
+        className={`gap-2 ${className}`}
+      >
+        <FileText className="h-4 w-4" />
+        Gerar Relatório
       </Button>
-
+      
       <GerarRelatorioVistoriaModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        relatorio={relatorio}
+        open={open}
+        onOpenChange={handleOpenChange}
+        relatorio={initialRelatorio}
+        onSave={handleSave}
       />
     </>
   );
-};
-
-export default GerarRelatorioVistoriaButton;
+}
