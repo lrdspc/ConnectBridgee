@@ -184,7 +184,7 @@ conforme a legislação em vigor.`;
     
     // === CRIAÇÃO DO DOCUMENTO ===
     
-    // Criar o documento com configurações ABNT exatas
+    // Criar o documento com configurações profissionais para um laudo técnico
     const doc = new Document({
       creator: "Brasilit Assistência Técnica",
       title: `Relatório de Vistoria Técnica - ${relatorio.cliente || ""}`,
@@ -195,16 +195,50 @@ conforme a legislação em vigor.`;
             id: "Normal",
             name: "Normal",
             run: {
-              font: "Arial", // Utilizando Arial conforme solicitado pelo cliente
+              font: "Times New Roman", // Fonte mais formal para documentos jurídicos
               size: 24 // 12pt
             },
             paragraph: {
               spacing: {
                 line: 360, // 1.5 de espaçamento (padrão ABNT)
                 before: 0,
-                after: 240 // 8pt de espaçamento após parágrafo (padrão especificado)
+                after: 240 // 8pt de espaçamento após parágrafo
               },
               alignment: AlignmentType.JUSTIFIED
+            }
+          },
+          {
+            id: "Heading1",
+            name: "Heading 1",
+            basedOn: "Normal",
+            next: "Normal",
+            run: {
+              font: "Times New Roman",
+              size: 28, // 14pt
+              bold: true
+            },
+            paragraph: {
+              spacing: {
+                before: 240,
+                after: 240
+              }
+            }
+          },
+          {
+            id: "Heading2",
+            name: "Heading 2",
+            basedOn: "Normal",
+            next: "Normal",
+            run: {
+              font: "Times New Roman",
+              size: 26, // 13pt
+              bold: true
+            },
+            paragraph: {
+              spacing: {
+                before: 240,
+                after: 120
+              }
             }
           }
         ]
@@ -264,13 +298,37 @@ conforme a legislação em vigor.`;
             }
           },
           children: [
-            // Título principal
+            // Cabeçalho com logo e informações da empresa - simulado com texto centralizado
+            new Paragraph({
+              children: [
+                new TextRun({ 
+                  text: "SAINT-GOBAIN DO BRASIL",
+                  bold: true,
+                  size: 28 // 14pt
+                })
+              ],
+              alignment: AlignmentType.CENTER,
+              spacing: { after: 120 }
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ 
+                  text: "DIVISÃO PRODUTOS PARA CONSTRUÇÃO - BRASILIT",
+                  bold: true,
+                  size: 24 // 12pt
+                })
+              ],
+              alignment: AlignmentType.CENTER,
+              spacing: { after: 240 } // Linha em branco após o subtítulo
+            }),
+            
+            // Título principal com formatação mais formal
             new Paragraph({
               children: [
                 new TextRun({ 
                   text: "RELATÓRIO DE VISTORIA TÉCNICA",
                   bold: true,
-                  size: 24 // 12pt - mesmo tamanho do texto principal conforme especificação
+                  size: 32 // 16pt - Aumentado para destaque
                 })
               ],
               alignment: AlignmentType.CENTER,
@@ -376,15 +434,24 @@ conforme a legislação em vigor.`;
               spacing: { after: 480 } // Duas linhas em branco após responsáveis técnicos
             }),
             
-            // INTRODUÇÃO (sem numeração)
+            // INTRODUÇÃO (com formato de seção numerada)
             new Paragraph({
               children: [
                 new TextRun({ 
-                  text: "Introdução", 
-                  bold: true
+                  text: "1. INTRODUÇÃO", 
+                  bold: true,
+                  size: 26, // 13pt
+                  color: "000080" // Azul escuro
                 })
               ],
-              spacing: { before: 240, after: 240 }
+              spacing: { before: 360, after: 240 },
+              border: {
+                bottom: {
+                  color: "C0C0C0", // Cinza claro
+                  size: 6, // 1/2 pt
+                  space: 1
+                }
+              }
             }),
             
             new Paragraph({
@@ -435,15 +502,24 @@ conforme a legislação em vigor.`;
               spacing: { after: 240 }
             }),
             
-            // ANÁLISE TÉCNICA (sem numeração)
+            // ANÁLISE TÉCNICA (com formato de seção numerada)
             new Paragraph({
               children: [
                 new TextRun({ 
-                  text: "Análise Técnica", 
-                  bold: true
+                  text: "2. ANÁLISE TÉCNICA", 
+                  bold: true,
+                  size: 26, // 13pt
+                  color: "000080" // Azul escuro
                 })
               ],
-              spacing: { before: 240, after: 240 }
+              spacing: { before: 360, after: 240 },
+              border: {
+                bottom: {
+                  color: "C0C0C0", // Cinza claro
+                  size: 6, // 1/2 pt
+                  space: 1
+                }
+              }
             }),
             
             new Paragraph({
