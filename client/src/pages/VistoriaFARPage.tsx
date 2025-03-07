@@ -21,11 +21,12 @@ import {
   DialogFooter,
   DialogClose
 } from "@/components/ui/dialog";
-import { X, Camera, Image as ImageIcon, Trash2, Save, CheckCircle2 } from "lucide-react";
+import { X, Camera, Image as ImageIcon, Trash2, Save, CheckCircle2, FileDown, FilePlus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LoadingAnimation } from "@/components/ui/loading-animation";
 import { PageTransition } from '@/components/ui/loading-animation';
+import { gerarFARReportDoc } from "../lib/farReportDocGenerator";
 
 import { 
   problemasPredefinidosFAR, 
@@ -556,6 +557,113 @@ const VistoriaFARPage = () => {
     return Object.keys(errors).length === 0;
   };
   
+  // Função para gerar e baixar o documento
+  const gerarDocumento = async () => {
+    if (!validateForm()) {
+      const firstErrorField = Object.keys(formErrors)[0];
+      if (firstErrorField) {
+        // Verificar a qual tab pertence o primeiro erro
+        const fieldToTabMap: Record<string, string> = {
+          cliente: 'dados',
+          endereco: 'dados',
+          cidade: 'dados',
+          uf: 'dados',
+          dataVistoria: 'dados',
+          elaboradoPor: 'dados',
+          departamento: 'dados',
+          telhas: 'telhas',
+          problemas: 'problemas',
+          introducao: 'textos',
+          analiseTecnica: 'textos',
+          conclusao: 'conclusao',
+          recomendacao: 'conclusao'
+        };
+        
+        const tabToFocus = fieldToTabMap[firstErrorField] || 'dados';
+        setActiveTab(tabToFocus);
+        
+        toast({
+          title: "Formulário incompleto",
+          description: "Por favor, corrija os campos destacados antes de gerar o documento.",
+          variant: "destructive"
+        });
+        
+        return;
+      }
+    }
+    
+    try {
+      // Converter os dados do formulário para o formato esperado pelo gerador de documento
+      const reportData: FARReport = {
+        id: uuidv4(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        dataVistoria: formData.dataVistoria,
+        cliente: formData.cliente,
+        empreendimento: formData.empreendimento,
+        cidade: formData.cidade,
+        uf: formData.uf,
+        endereco: formData.endereco,
+        farProtocolo: formData.farProtocolo,
+        assunto: formData.assunto,
+        
+        elaboradoPor: formData.elaboradoPor,
+        departamento: formData.departamento,
+        regional: formData.regional,
+        unidade: formData.unidade,
+        coordenador: formData.coordenador,
+        gerente: formData.gerente,
+        
+        telhas: formData.telhas,
+        problemas: formData.problemas,
+        
+        introducao: formData.introducao,
+        analiseTecnica: formData.analiseTecnica,
+        
+        conclusao: formData.conclusao,
+        recomendacao: formData.recomendacao,
+        observacoesGerais: formData.observacoesGerais,
+        
+        anosGarantia: formData.anosGarantia,
+        anosGarantiaSistemaCompleto: formData.anosGarantiaSistemaCompleto,
+        anosGarantiaTotal: formData.anosGarantiaTotal,
+        
+        resultado: formData.resultado
+      };
+      
+      toast({
+        title: "Gerando documento...",
+        description: "Por favor, aguarde enquanto o relatório está sendo criado.",
+      });
+      
+      // Gerar o documento DOCX
+      const reportBlob = await gerarFARReportDoc(reportData);
+      
+      // Criar URL para o blob e iniciar download
+      const url = URL.createObjectURL(reportBlob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `relatorio_FAR_${formData.farProtocolo.replace(/[\/\\:*?"<>|]/g, '-')}_${formData.cliente.replace(/[\/\\:*?"<>|]/g, '-')}.docx`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      toast({
+        title: "Documento gerado com sucesso!",
+        description: "O download do relatório foi iniciado.",
+      });
+      
+    } catch (error) {
+      console.error("Erro ao gerar documento:", error);
+      toast({
+        title: "Erro ao gerar documento",
+        description: "Não foi possível gerar o relatório. Tente novamente mais tarde.",
+        variant: "destructive"
+      });
+    }
+  };
+
   // Função para o envio do formulário
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -613,16 +721,19 @@ const VistoriaFARPage = () => {
         notes: `Relatório de vistoria técnica FAR realizado em ${formData.dataVistoria}. Elaborado por: ${formData.elaboradoPor}. ${formData.problemas.filter(p => p.selecionado).length} problemas identificados.`,
       };
       
+      // Gerar o documento após salvar
+      await gerarDocumento();
+      
       // Simulação de criação de visita
       toast({
         title: "Relatório salvo com sucesso!",
         description: "O relatório de vistoria FAR foi registrado no sistema.",
       });
       
-      // Redirecionar para a página de relatórios após 2 segundos
+      // Redirecionar para a página de relatórios após 3 segundos (tempo maior para permitir o download)
       setTimeout(() => {
         setLocation('/relatorios');
-      }, 2000);
+      }, 3000);
       
     } catch (error) {
       console.error("Erro ao enviar relatório:", error);
