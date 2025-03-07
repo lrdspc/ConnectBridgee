@@ -120,7 +120,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: ExtendedRelatorioVist
       <head>
         <style>
           body { 
-            font-family: 'Times New Roman', Times, serif; 
+            font-family: 'Arial', Helvetica, sans-serif; /* Alterado para Arial conforme ABNT */
             font-size: 12pt; 
             line-height: 1.5;
           }
@@ -273,14 +273,14 @@ export async function gerarRelatorioVistoriaDoc(relatorio: ExtendedRelatorioVist
     
     // Opções para o html-to-docx
     const options = {
-      title: `Relatório de Vistoria - ${relatorio.protocolo || 'Novo'}`,
+      title: `Relatório de Vistoria - ${relatorio.protocolo || 'Novo'} [VERSÃO ABNT]`,
       margin: {
-        top: 1440,      // 1 polegada = 1440 twips
-        right: 1080,    // 0.75 polegada
-        bottom: 1440,   // 1 polegada
-        left: 1080      // 0.75 polegada
+        top: 720,       // 2,5 cm = ~720 twips (padrão ABNT)
+        right: 720,     // 2,5 cm = ~720 twips
+        bottom: 720,    // 2,5 cm = ~720 twips
+        left: 864       // 3,0 cm = ~864 twips (padrão ABNT para encadernação)
       },
-      font: 'Times New Roman',
+      font: 'Arial', // Alterado para Arial conforme ABNT
       fontSize: 12, // pt
       pageNumbers: true,
       tableLayout: 'fixed',

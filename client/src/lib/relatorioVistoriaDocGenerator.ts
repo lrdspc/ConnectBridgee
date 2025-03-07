@@ -604,7 +604,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: ExtendedRelatorioVist
     })
   );
 
-  // Criar o documento com as configurações de página definidas
+  // Criar o documento com as configurações de página definidas conforme ABNT NBR 14724
   const doc = new Document({
     sections: [
       {
@@ -635,11 +635,12 @@ export async function gerarRelatorioVistoriaDoc(relatorio: ExtendedRelatorioVist
             size: TAMANHO_FONTE
           },
           paragraph: {
-            spacing: { line: 360 } // 1.5 linhas = 360
+            spacing: { line: 360 } // 1.5 linhas = 360 (padrão ABNT)
           }
         }
       ]
-    }
+    },
+    title: "Relatório de Vistoria Técnica [VERSÃO ABNT]" // Marcador para identificar versão
   });
 
   // Gerar o documento e retornar como Blob
