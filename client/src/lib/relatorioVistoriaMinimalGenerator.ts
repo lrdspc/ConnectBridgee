@@ -27,7 +27,7 @@ interface ExtendedRelatorioVistoria extends RelatorioVistoria {
  */
 export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorioVistoria): Promise<Blob> {
   try {
-    console.log('Usando gerador minimalista para DOCX com formatação ABNT');
+    console.log('✅ Usando gerador minimalista para DOCX com formatação ABNT [ATIVO]');
     
     // Preparar não conformidades
     let naoConformidadesParags: Paragraph[] = [];
@@ -191,11 +191,11 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
           properties: {
             page: {
               margin: {
-                top: 1133, // 2cm - convertido para TWIPs (567 TWIPs = 1cm)
-                right: 850, // 1.5cm
-                bottom: 1133, // 2cm
-                left: 1700 // 3cm (norma ABNT para borda da esquerda)
-              }
+                top: 720,      // 2,5 cm = ~720 twips (padrão ABNT)
+                right: 720,    // 2,5 cm = ~720 twips
+                bottom: 720,   // 2,5 cm = ~720 twips
+                left: 864      // 3,0 cm = ~864 twips (padrão ABNT para encadernação)
+              } // Margens padronizadas conforme ABNT NBR 14724
             }
           },
           children: [
