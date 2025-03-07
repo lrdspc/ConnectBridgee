@@ -1,0 +1,119 @@
+Plano Detalhado de Revisão e Finalização do Aplicativo Brasilit Técnico
+Fase 1: Revisão Arquitetural e Levantamento da Situação Atual
+Análise do Fluxo de Geração de Relatórios
+
+Mapear todos os geradores de relatório existentes
+Identificar o melhor gerador para padronização (relatorioVistoriaSimpleGenerator.ts)
+Entender a integração entre telas e geradores
+Revisão de Esquemas e Estruturas de Dados
+
+Análise do relatorioVistoriaSchema.ts
+Verificar a compatibilidade dos modelos com a UI e exportação
+Identificar possíveis melhorias ou inconsistências
+Avaliação das Interfaces de Usuário
+
+Analisar a RelatorioVistoriaPage.tsx e TesteRelatorioPageSimple.tsx
+Comparar funcionalidades entre as versões
+Documentar os recursos necessários para a versão final
+Análise de Integrações
+
+Verificar a integração com dados de clientes
+Avaliar como os dados das visitas são incorporados aos relatórios
+Identificar pontos de melhoria na sincronização de dados
+Fase 2: Plano de Consolidação e Aprimoramento
+Consolidação dos Geradores de Relatório
+
+Definir um único gerador padrão (relatorioVistoriaSimpleGenerator.ts)
+Depurar o código deste gerador para garantir robustez
+Remover ou depreciar geradores redundantes
+Padronização da Função de Pré-visualização
+
+Criar função unificada para geração de HTML de preview
+Garantir que o HTML gerado reflita exatamente o documento final
+Implementar reutilização de lógica entre preview e exportação
+Integração Completa com Dados de Cliente
+
+Aprimorar a captura de dados das visitas para formulário
+Padronizar a conversão de dados entre modelos
+Implementar validações e tratamento de dados faltantes
+Aprimoramento das Interfaces de Usuário
+
+Consolidar as melhores funcionalidades das páginas existentes
+Implementar interface unificada com preview e exportação
+Adicionar validação em tempo real dos campos obrigatórios
+Fase 3: Implementação das Melhorias
+Desenvolvimento da Nova Página Unificada
+
+Criar NovoRelatorioVistoriaPage.tsx integrando recursos:
+Formulário completo com validação
+Preview em tempo real
+Exportação idêntica ao preview
+Melhor integração com dados de clientes/visitas
+Implementação do Preview Idêntico ao Documento Final
+
+Desenvolver função que compartilha lógica entre preview e documento
+Garantir mesma formatação, estilos e conteúdo
+Implementar detecção de discrepâncias
+Otimização do Gerador de Documentos
+
+Refinar o gerador para garantir conformidade ABNT
+Implementar tratamento robusto de erros
+Adicionar suporte para diferentes tipos de relatório
+Integração com o Sistema de Rotas
+
+Atualizar routes em App.tsx para incluir a nova página
+Manter compatibilidade com rotas existentes
+Adicionar redirecionamentos necessários
+Fase 4: Testes e Validação
+Testes de Integração
+
+Verificar a integração completa com banco de dados
+Testar o fluxo de dados cliente → relatório → exportação
+Validar o comportamento da sincronização offline
+Testes de Interface
+
+Validar responsividade em diferentes dispositivos
+Testar formulários com diferentes conjuntos de dados
+Verificar a navegação entre as seções
+Validação da Exportação de Documentos
+
+Testar exportação com diferentes configurações
+Verificar a identidade entre preview e documento exportado
+Validar a conformidade com requisitos ABNT
+Testes de Desempenho
+
+Avaliar o tempo de carregamento da página
+Medir o tempo de geração de documentos
+Identificar gargalos e otimizar
+Fase 5: Documentação e Finalização
+Documentação de Código
+
+Adicionar comentários claros em funções principais
+Documentar fluxos de dados e interações
+Atualizar JSDoc nos componentes principais
+Documentação de Usuário
+
+Criar guia de uso para preenchimento de relatórios
+Documentar opções de não conformidades disponíveis
+Explicar o processo de exportação e compartilhamento
+Eliminação de Código Legado
+
+Remover geradores de relatórios não utilizados
+Limpar importações e dependências desnecessárias
+Consolidar lógicas duplicadas
+Preparação para Produção
+
+Revisar configurações de build
+Otimizar importações e carregamento
+Garantir tratamento adequado de erros
+Cronograma Estimado
+Fase 1: 1 dia
+Fase 2: 1 dia
+Fase 3: 2-3 dias
+Fase 4: 1-2 dias
+Fase 5: 1 dia
+Prioridades Imediatas
+Começar a revisão do relatorioVistoriaSimpleGenerator.ts para garantir a conformidade ABNT
+Analisar as páginas TesteRelatorioPageSimple.tsx e RelatorioVistoriaPage.tsx para consolidação
+Desenvolver função unificada para preview e exportação de documentos
+Implementar melhor integração com dados de clientes e visitas
