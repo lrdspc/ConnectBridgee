@@ -165,7 +165,8 @@ export default function DashboardPage() {
 
   // Verifica se um widget está habilitado
   const isWidgetEnabled = (widgetId: string): boolean => {
-    return !!dashboardConfig.visibleWidgets[widgetId];
+    // Verificação segura com fallback para evitar erros
+    return !!(dashboardConfig?.visibleWidgets && dashboardConfig.visibleWidgets[widgetId]);
   };
 
   if (isLoading) {
@@ -183,7 +184,7 @@ export default function DashboardPage() {
       <DashboardLayoutNew>
         <div className={cn(
           "space-y-6",
-          dashboardConfig.layout === 'compact' && "space-y-3"
+          dashboardConfig?.layout === 'compact' && "space-y-3"
         )}>
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold tracking-tight hidden sm:block">Dashboard</h1>
