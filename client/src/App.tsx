@@ -56,6 +56,7 @@ function App() {
             <Route path="/relatorios" component={RelatoriosPage} />
             <Route path="/nova-vistoria" component={RelatorioVistoriaPage} />
             <Route path="/teste-relatorio" component={TesteRelatorioPage} />
+            <Route path="/teste-relatorio-simple" component={TesteRelatorioPage} />
             
             {/* Redirecionar antiga rota FAR para a nova página consolidada */}
             <Route path="/vistoria-far" component={RelatorioVistoriaPage} />
