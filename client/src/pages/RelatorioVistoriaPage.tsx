@@ -19,6 +19,7 @@ import { aplicarTemplateIntroducao, aplicarTemplateConclusao, TEMPLATE_ANALISE_T
 import { DashboardLayoutNew } from '@/layouts/DashboardLayoutNew';
 import { PageTransition } from '@/components/ui/loading-animation';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   Form,
   FormControl,
@@ -46,8 +47,15 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-// import { CheckboxProps } from '@/components/ui/checkbox';
 import { Checkbox } from '@/components/ui/checkbox';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
+import { 
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@/components/ui/accordion';
 import { 
   FileCheck, 
   FileText, 
@@ -61,16 +69,19 @@ import {
   Calendar, 
   User, 
   Check,
-  X
+  X,
+  Plus,
+  Clipboard,
+  ClipboardCheck,
+  Image,
+  Info,
+  PenTool,
+  Layers,
+  CheckCircle,
+  Loader2,
+  Map,
+  Users
 } from 'lucide-react';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { 
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger
-} from '@/components/ui/accordion';
 
 export default function RelatorioVistoriaPage() {
   const { toast } = useToast();
