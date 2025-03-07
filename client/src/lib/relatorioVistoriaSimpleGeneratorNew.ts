@@ -211,7 +211,7 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
               ],
             }),
             
-            // Informações básicas
+            // Informações básicas - com espaçamento reduzido para otimizar o documento
             new Paragraph({
               children: [
                 new TextRun({
@@ -224,7 +224,7 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
                   size: 24
                 })
               ],
-              spacing: { before: 240, after: 240 }
+              spacing: { before: 240, after: 120 }
             }),
             
             new Paragraph({
@@ -239,7 +239,7 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
                   size: 24
                 })
               ],
-              spacing: { after: 240 }
+              spacing: { after: 120 }
             }),
             
             new Paragraph({
@@ -254,7 +254,7 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
                   size: 24
                 })
               ],
-              spacing: { after: 240 }
+              spacing: { after: 120 }
             }),
             
             new Paragraph({
@@ -269,7 +269,7 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
                   size: 24
                 })
               ],
-              spacing: { after: 240 }
+              spacing: { after: 120 }
             }),
             
             new Paragraph({
@@ -284,7 +284,7 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
                   size: 24
                 })
               ],
-              spacing: { after: 240 }
+              spacing: { after: 120 }
             }),
             
             new Paragraph({
@@ -299,7 +299,7 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
                   size: 24
                 })
               ],
-              spacing: { after: 240 }
+              spacing: { after: 120 }
             }),
             
             new Paragraph({
@@ -314,9 +314,11 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
                   size: 24
                 })
               ],
-              spacing: { after: 240 }
+              spacing: { after: 120 }
             }),
             
+            // Informações dos responsáveis técnicos com layout compacto
+            // Disposição em duas colunas para economizar espaço
             new Paragraph({
               children: [
                 new TextRun({
@@ -327,15 +329,9 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
                 new TextRun({
                   text: relatorio.elaboradoPor || "Técnico Teste",
                   size: 24
-                })
-              ],
-              spacing: { after: 240 }
-            }),
-            
-            new Paragraph({
-              children: [
+                }),
                 new TextRun({
-                  text: "Departamento: ",
+                  text: "    |    Departamento: ",
                   bold: true,
                   size: 24
                 }),
@@ -344,7 +340,7 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
                   size: 24
                 })
               ],
-              spacing: { after: 240 }
+              spacing: { after: 120 }
             }),
             
             new Paragraph({
@@ -357,9 +353,18 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
                 new TextRun({
                   text: relatorio.unidade || "PR",
                   size: 24
+                }),
+                new TextRun({
+                  text: "    |    Regional: ",
+                  bold: true,
+                  size: 24
+                }),
+                new TextRun({
+                  text: relatorio.regional || "Sul",
+                  size: 24
                 })
               ],
-              spacing: { after: 240 }
+              spacing: { after: 120 }
             }),
             
             new Paragraph({
@@ -374,7 +379,7 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
                   size: 24
                 })
               ],
-              spacing: { after: 240 }
+              spacing: { after: 120 }
             }),
             
             new Paragraph({
@@ -389,22 +394,7 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
                   size: 24
                 })
               ],
-              spacing: { after: 240 }
-            }),
-            
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: "Regional: ",
-                  bold: true,
-                  size: 24
-                }),
-                new TextRun({
-                  text: relatorio.regional || "Sul",
-                  size: 24
-                })
-              ],
-              spacing: { after: 240 }
+              spacing: { after: 120 }
             }),
             
             // INTRODUÇÃO (com formato de seção numerada)
@@ -433,9 +423,9 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
               spacing: { after: 240 }
             }),
             
-            // Seção de especificações técnicas das telhas
+            // Seção de especificações técnicas das telhas (layout otimizado)
             new Paragraph({
-              spacing: { before: 240, after: 240 },
+              spacing: { before: 240, after: 120 },
               alignment: AlignmentType.LEFT,
               children: [
                 new TextRun({
@@ -446,28 +436,23 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
               ],
             }),
             
+            // Modelo e espessura na mesma linha
             new Paragraph({
-              spacing: { after: 180 },
+              spacing: { after: 120 },
               alignment: AlignmentType.LEFT,
               children: [
                 new TextRun({
                   text: `Modelo: ${relatorio.modeloTelha || "Ondulada"}`,
                   size: 24
                 }),
-              ],
-            }),
-            
-            new Paragraph({
-              spacing: { after: 180 },
-              alignment: AlignmentType.LEFT,
-              children: [
                 new TextRun({
-                  text: `Espessura: ${relatorio.espessura || "6"}mm`,
+                  text: `    |    Espessura: ${relatorio.espessura || "6"}mm`,
                   size: 24
                 }),
               ],
             }),
             
+            // Quantidade e área na mesma linha
             new Paragraph({
               spacing: { after: 180 },
               alignment: AlignmentType.LEFT,
@@ -476,15 +461,8 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
                   text: `Quantidade: ${relatorio.quantidade || "0"} peças`,
                   size: 24
                 }),
-              ],
-            }),
-            
-            new Paragraph({
-              spacing: { after: 240 },
-              alignment: AlignmentType.LEFT,
-              children: [
                 new TextRun({
-                  text: `Área total aproximada: ${relatorio.area || "0"}m²`,
+                  text: `    |    Área total aproximada: ${relatorio.area || "0"}m²`,
                   size: 24
                 }),
               ],
