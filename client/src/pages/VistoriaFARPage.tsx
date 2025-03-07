@@ -21,7 +21,7 @@ import {
   DialogFooter,
   DialogClose
 } from "@/components/ui/dialog";
-import { X, Camera, Image as ImageIcon, Trash2, Save, CheckCircle2 } from "lucide-react";
+import { X, Camera, Image as ImageIcon, Trash2, Save, CheckCircle2, FileDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LoadingAnimation } from "@/components/ui/loading-animation";
@@ -33,6 +33,7 @@ import {
   espessurasTelhasFAR,
   FARReport
 } from "../../../shared/farReportSchema";
+import { gerarFARReportDoc } from "../lib/farReportDocGenerator";
 
 type TelhaSpec = {
   id: string;
