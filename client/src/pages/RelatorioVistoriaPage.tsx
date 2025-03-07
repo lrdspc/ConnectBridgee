@@ -942,44 +942,9 @@ export default function RelatorioVistoriaPage() {
                           {/* Campos ocultos para manter a compatibilidade */}
                           <input type="hidden" {...form.register("introducao")} />
                           <input type="hidden" {...form.register("analiseTecnica")} />
-                          <input type="hidden" {...form.register("conclusao")}
-                          />
-                          
-                          <FormField
-                            control={form.control}
-                            name="recomendacao"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Recomendações</FormLabel>
-                                <FormControl>
-                                  <Textarea 
-                                    {...field} 
-                                    placeholder="Informe recomendações, se houver"
-                                    className="min-h-[100px]"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={form.control}
-                            name="observacoesGerais"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Observações Gerais</FormLabel>
-                                <FormControl>
-                                  <Textarea 
-                                    {...field} 
-                                    placeholder="Observações adicionais, se houver"
-                                    className="min-h-[100px]"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
+                          <input type="hidden" {...form.register("conclusao")} />
+                          <input type="hidden" {...form.register("recomendacao")} />
+                          <input type="hidden" {...form.register("observacoesGerais")} />
                         </CardContent>
                       </Card>
                       

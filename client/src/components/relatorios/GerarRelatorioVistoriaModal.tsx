@@ -520,17 +520,8 @@ export function GerarRelatorioVistoriaModal({
                 <p className="text-sm text-muted-foreground mt-2">Apenas selecione o <strong>Resultado da Reclamação</strong> acima para determinar se é procedente ou improcedente.</p>
               </div>
               
-              {/* Mantido apenas os campos opcionais de recomendação e observações */}
-              <div className="space-y-2">
-                <Label htmlFor="recomendacao">Recomendações Específicas (opcional)</Label>
-                <Input
-                  id="recomendacao"
-                  name="recomendacao"
-                  value={relatorio.recomendacao || ""}
-                  onChange={handleInputChange}
-                  placeholder="Ex: Substituição de X telhas / Refazer vedação"
-                />
-              </div>
+              {/* Campos de recomendação e observações removidos conforme instrução */}
+              <input type="hidden" name="recomendacao" value={relatorio.recomendacao || ""} />
             </TabsContent>
           </ScrollArea>
         </Tabs>
