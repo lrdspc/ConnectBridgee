@@ -439,9 +439,9 @@ conforme a legislação em vigor.`;
             new Paragraph({
               children: [
                 new TextRun({ 
-                  text: "1. INTRODUÇÃO",
+                  text: "1. INTRODUÇÃO", 
                   bold: true,
-                  size: 24 // 12pt
+                  size: 26 // 13pt
                 })
               ],
               spacing: { before: 360, after: 240 },
@@ -451,6 +451,11 @@ conforme a legislação em vigor.`;
                   size: 6,
                   space: 1,
                   style: BorderStyle.SINGLE
+                }
+                bottom: {
+                  color: "C0C0C0", // Cinza claro
+                  size: 6, // 1/2 pt
+                  space: 1
                 }
               }
             }),
@@ -461,13 +466,55 @@ conforme a legislação em vigor.`;
               spacing: { after: 240 }
             }),
             
+            // Quantidade e modelo (sem subtítulo numerado)
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Quantidade e modelo: ", bold: true })
+              ],
+              spacing: { after: 240 }
+            }),
+            
+            // Lista com marcadores para dados do produto
+            new Paragraph({
+              children: [
+                new TextRun({ text: "• " }),
+                new TextRun(`Modelo de telha: ${relatorio.modeloTelha || "Não informado"}`)
+              ],
+              indent: { left: convertInchesToTwip(0.5) },
+              spacing: { after: 240 }
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "• " }),
+                new TextRun(`Espessura: ${relatorio.espessura || "Não informada"}mm`)
+              ],
+              indent: { left: convertInchesToTwip(0.5) },
+              spacing: { after: 240 }
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "• " }),
+                new TextRun(`Quantidade: ${relatorio.quantidade ? relatorio.quantidade.toString() : "Não informada"}`)
+              ],
+              indent: { left: convertInchesToTwip(0.5) },
+              spacing: { after: 240 }
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "• " }),
+                new TextRun(`Área coberta: ${relatorio.area ? relatorio.area.toString() + "m² (aproximadamente)" : "Não informada"}`)
+              ],
+              indent: { left: convertInchesToTwip(0.5) },
+              spacing: { after: 240 }
+            }),
+            
             // ANÁLISE TÉCNICA (com formato de seção numerada)
             new Paragraph({
               children: [
                 new TextRun({ 
-                  text: "2. ANÁLISE TÉCNICA",
+                  text: "2. ANÁLISE TÉCNICA", 
                   bold: true,
-                  size: 24 // 12pt
+                  size: 26 // 13pt
                 })
               ],
               spacing: { before: 360, after: 240 },
@@ -478,6 +525,11 @@ conforme a legislação em vigor.`;
                   space: 1,
                   style: BorderStyle.SINGLE
                 }
+                bottom: {
+                  color: "C0C0C0", // Cinza claro
+                  size: 6, // 1/2 pt
+                  space: 1
+                }
               }
             }),
             
@@ -487,16 +539,16 @@ conforme a legislação em vigor.`;
               spacing: { after: 240 }
             }),
             
-            // Parágrafos das não conformidades
+            // Adicionar não conformidades
             ...naoConformidadesParagrafos,
             
             // CONCLUSÃO (com formato de seção numerada)
             new Paragraph({
               children: [
                 new TextRun({ 
-                  text: "3. CONCLUSÃO",
+                  text: "3. CONCLUSÃO", 
                   bold: true,
-                  size: 24 // 12pt
+                  size: 26 // 13pt
                 })
               ],
               spacing: { before: 360, after: 240 },
@@ -521,45 +573,61 @@ conforme a legislação em vigor.`;
             
             // Observações finais (sem título numerado)
             new Paragraph({
-              children: [
-                new TextRun({ 
-                  text: "Observações:", 
-                  bold: true 
-                })
-              ],
-              spacing: { before: 360, after: 240 },
-            }),
-            
-            new Paragraph({
-              text: relatorio.observacoesGerais || "Sem observações adicionais.",
+              text: relatorio.observacoesGerais || 
+                "Este relatório foi elaborado com base na inspeção técnica realizada no local, seguindo os procedimentos padrão da Brasilit.",
               alignment: AlignmentType.JUSTIFIED,
-              spacing: { after: 360 } // Espaçamento para assinatura
+              spacing: { after: 480 } // Duas linhas em branco
             }),
             
-            // Assinatura
+            // Assinatura final
             new Paragraph({
-              text: relatorio.elaboradoPor || "Técnico Responsável",
-              alignment: AlignmentType.CENTER,
-              spacing: { before: 720 } // Espaço para assinatura física
+              text: "Atenciosamente,",
+              spacing: { after: 480 } // Duas linhas em branco
             }),
+            
             new Paragraph({
-              text: "Assistência Técnica - Brasilit",
-              alignment: AlignmentType.CENTER,
-            })
+              text: relatorio.elaboradoPor || "Técnico Brasilit",
+              spacing: { after: 240 }
+            }),
+            
+            new Paragraph({
+              text: "Assistência Técnica Brasilit Saint-Gobain",
+              spacing: { after: 480 } // Duas linhas em branco
+            }),
+            
+            // Adicionar seção de fotos se houver fotos
+            ...(relatorio.fotos && relatorio.fotos.length > 0 ? [
+              // Título da seção de fotos
+              new Paragraph({
+                children: [
+                  new TextRun({ 
+                    text: "ANEXO: REGISTRO FOTOGRÁFICO", 
+                    bold: true
+                  })
+                ],
+                alignment: AlignmentType.CENTER,
+                spacing: { before: 480, after: 240 }
+              }),
+              
+              // Placeholder para as fotos
+              // Elas seriam inseridas aqui, mas a biblioteca docx tem limitações com imagens
+              // Por isso, usamos um texto explicativo
+              new Paragraph({
+                text: `Este relatório inclui ${relatorio.fotos.length} registro(s) fotográfico(s) que não foram impressos nesta versão. Para visualizar as fotos, consulte a versão digital completa.`,
+                alignment: AlignmentType.JUSTIFIED,
+                spacing: { after: 240 }
+              })
+            ] : [])
           ]
         }
       ]
     });
     
-    // Exportar para Blob
-    log("Finalizando a geração do documento e exportando...");
-    const buffer = await Packer.toBuffer(doc);
-    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
-    
-    log("Documento gerado com sucesso!");
-    return blob;
+    // Gerar arquivo DOCX em formato blob
+    log("Gerando arquivo DOCX...");
+    return await Packer.toBlob(doc);
   } catch (error) {
-    console.error("Erro ao gerar relatório:", error);
-    throw new Error(`Falha ao gerar o relatório: ${error}`);
+    log("Erro ao gerar relatório:", error);
+    throw new Error(`Falha ao gerar o relatório: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
