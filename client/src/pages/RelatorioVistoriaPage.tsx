@@ -1409,6 +1409,20 @@ conforme a legislação em vigor.`;
                               });
                             }}
                           />
+                          
+                          <ExportSaintGobainButtonFix
+                            relatorio={form.getValues()}
+                            label="Exportar Brasilit (Corrigido)"
+                            className="sm:w-auto w-full bg-green-600 text-white hover:bg-green-700 mt-2"
+                            fileNamePrefix={`BR-vistoria-${form.getValues().protocolo || 'novo'}`}
+                            onExportSuccess={(fileName) => {
+                              toast({
+                                title: 'Documento Brasilit Corrigido!',
+                                description: 'O relatório foi exportado no formato corrigido para a Brasilit.',
+                                variant: 'default'
+                              });
+                            }}
+                          />
                         </div>
                       </CardFooter>
                     </Card>
