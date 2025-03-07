@@ -13,9 +13,9 @@ import {
   novoRelatorioVistoria,
   gerarRelatorioAleatorio
 } from '@shared/relatorioVistoriaSchema';
-import { gerarRelatorioVistoriaMinimal } from '@/lib/relatorioVistoriaMinimalGenerator';
 import { gerarRelatorioVistoriaDoc as gerarRelatorioVistoriaDocOriginal } from '@/lib/relatorioVistoriaDocGenerator';
 import { gerarRelatorioVistoriaDoc as gerarRelatorioVistoriaDocSimples } from '@/lib/relatorioVistoriaDocGeneratorSimple';
+import { gerarRelatorioVistoriaMinimal } from '@/lib/relatorioVistoriaMinimalGenerator';
 import { aplicarTemplateIntroducao, aplicarTemplateConclusao, TEMPLATE_ANALISE_TECNICA } from '@/lib/relatorioVistoriaTemplates';
 
 import { DashboardLayoutNew } from '@/layouts/DashboardLayoutNew';
@@ -459,18 +459,84 @@ export default function RelatorioVistoriaPage() {
       // Substituir as não conformidades com as versões completas
       formData.naoConformidades = naoConformidadesSelecionadas;
       
-      // Gerar o documento usando a biblioteca docx
-      const blob = await gerarRelatorioVistoriaDoc(formData);
+      // Função auxiliar para salvar o arquivo
+      const saveDocFile = (blob: Blob, fileName: string) => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        
+        // Limpar recursos
+        setTimeout(() => {
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }, 100);
+      };
       
-      // Download do arquivo
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `relatorio-vistoria-${formData.protocolo || 'novo'}.docx`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      // Nome do arquivo com marcação ABNT
+      const fileName = `relatorio-vistoria-${formData.protocolo || 'novo'}-ABNT.docx`;
+      
+      // Tentar gerar usando várias estratégias em sequência
+      try {
+        // Estratégia 1: Gerador DOCX minimalista com formatação ABNT
+        console.log('▶️ TENTATIVA 1: Usando gerador minimalista (formatação ABNT)');
+        const blob = await gerarRelatorioVistoriaMinimal(formData);
+        saveDocFile(blob, fileName);
+        toast({
+          title: 'Documento gerado com sucesso!',
+          description: 'O relatório foi exportado no formato DOCX com formatação ABNT.',
+        });
+        return; // Sair após sucesso
+      } catch (minimalError) {
+        console.error('❌ Erro na geração minimalista:', minimalError);
+        
+        // Notificar o usuário do problema na primeira tentativa
+        toast({
+          title: 'Tentando método alternativo...',
+          description: 'O primeiro método falhou, tentando outro...',
+          variant: 'default'
+        });
+        
+        // Se falhar, tentar próxima estratégia
+        try {
+          // Estratégia 2: Gerador DOCX simples
+          console.log('▶️ TENTATIVA 2: Usando gerador simples com formatação ABNT');
+          const blob = await gerarRelatorioVistoriaDocSimples(formData);
+          saveDocFile(blob, fileName);
+          toast({
+            title: 'Documento gerado com sucesso!',
+            description: 'O relatório foi exportado no formato DOCX com formatação ABNT (usando método alternativo).',
+          });
+          return; // Sair após sucesso
+        } catch (simplesError) {
+          console.error('❌ Erro na geração simples:', simplesError);
+          
+          // Notificar o usuário da segunda falha
+          toast({
+            title: 'Tentando método de emergência...',
+            description: 'Os métodos anteriores falharam, tentando método de emergência...',
+            variant: 'default'
+          });
+          
+          // Se falhar, tentar última estratégia
+          try {
+            // Estratégia 3: Gerador DOCX original
+            console.log('▶️ TENTATIVA 3: Usando gerador original com formatação ABNT');
+            const blob = await gerarRelatorioVistoriaDocOriginal(formData);
+            saveDocFile(blob, fileName);
+            toast({
+              title: 'Documento gerado com sucesso!',
+              description: 'O relatório foi exportado no formato DOCX com formatação ABNT (usando método de emergência).',
+            });
+            return; // Sair após sucesso
+          } catch (originalError) {
+            console.error('❌ Erro na geração original:', originalError);
+            throw new Error('Não foi possível gerar o documento após múltiplas tentativas');
+          }
+        }
+      }
       
       toast({
         title: 'Documento Word gerado com sucesso!',
