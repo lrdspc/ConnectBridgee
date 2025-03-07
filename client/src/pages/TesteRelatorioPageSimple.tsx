@@ -498,7 +498,7 @@ export default function TesteRelatorioPageSimple() {
                           </Label>
                         </div>
                         <Badge variant={nc.selecionado ? "default" : "outline"}>
-                          {nc.categoria}
+                          {nc.titulo}
                         </Badge>
                       </div>
                       
@@ -510,8 +510,8 @@ export default function TesteRelatorioPageSimple() {
                           <Textarea 
                             id={`obs-${nc.id}`} 
                             placeholder="Observações específicas desta não conformidade"
-                            value={nc.observacoes || ''}
-                            onChange={(e) => updateNaoConformidade(nc.id, 'observacoes', e.target.value)}
+                            value={nc.descricao || ''}
+                            onChange={(e) => updateNaoConformidade(nc.id, 'descricao', e.target.value)}
                             disabled={!nc.selecionado}
                             className="min-h-[80px]"
                           />

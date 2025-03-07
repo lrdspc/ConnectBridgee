@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import type { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { modelosTelhas, espessurasTelhas, resultadoReclamacaoEnum } from "@shared/relatorioVistoriaSchema";
 import { gerarRelatorioSimples } from "@/lib/relatorioVistoriaSimpleGenerator";
+// Importação corretamente do gerador de relatórios
 
 // Interface estendida para compatibilidade com versões anteriores do código
 interface ExtendedRelatorioVistoria extends RelatorioVistoria {
