@@ -1,57 +1,53 @@
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FileText } from "lucide-react";
-import { GerarRelatorioVistoriaModal } from "./GerarRelatorioVistoriaModal";
-import { RelatorioVistoria } from "@/shared/relatorioVistoriaSchema";
+import { useState } from "react";
+import GerarRelatorioVistoriaModal from "./GerarRelatorioVistoriaModal";
+import { RelatorioVistoria } from "../../../shared/relatorioVistoriaSchema";
+import { useMutation } from "@tanstack/react-query";
+import { atualizarRelatorioVistoria } from "@/lib/api";
 
 interface GerarRelatorioVistoriaButtonProps {
   relatorio: RelatorioVistoria;
-  variant?: "default" | "outline" | "secondary";
-  size?: "default" | "sm" | "lg" | "icon";
-  className?: string;
+  onSave?: (relatorio: RelatorioVistoria) => void;
 }
 
-export function GerarRelatorioVistoriaButton({
+export default function GerarRelatorioVistoriaButton({
   relatorio,
-  variant = "default",
-  size = "default",
-  className = "",
+  onSave
 }: GerarRelatorioVistoriaButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const isRelatorioValido = () => {
-    // Validação básica - verificando apenas os campos essenciais
-    const camposObrigatorios = [
-      relatorio.cliente,
-      relatorio.empreendimento,
-      relatorio.dataVistoria,
-      relatorio.elaboradoPor,
-    ];
+  const salvarRelatorioMutation = useMutation({
+    mutationFn: (data: RelatorioVistoria) => atualizarRelatorioVistoria(data),
+    onSuccess: (data) => {
+      if (onSave) {
+        onSave(data);
+      }
+    },
+  });
 
-    return camposObrigatorios.every((campo) => campo && campo.trim() !== "");
+  const handleSaveRelatorio = (relatorioAtualizado: RelatorioVistoria) => {
+    salvarRelatorioMutation.mutate(relatorioAtualizado);
   };
 
   return (
     <>
       <Button
-        variant={variant}
-        size={size}
-        className={`gap-2 ${className}`}
         onClick={() => setIsModalOpen(true)}
-        disabled={!isRelatorioValido()}
+        variant="default"
+        size="sm"
+        className="gap-1"
       >
-        <FileText className="h-4 w-4" />
-        Gerar Relatório
+        <FileText size={16} /> Gerar Relatório
       </Button>
 
-      {isModalOpen && (
-        <GerarRelatorioVistoriaModal
-          relatorio={relatorio}
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
+      <GerarRelatorioVistoriaModal
+        relatorio={relatorio}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleSaveRelatorio}
+      />
     </>
   );
 }

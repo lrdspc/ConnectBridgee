@@ -1,122 +1,185 @@
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogDescription, 
+  DialogFooter, 
+  DialogHeader, 
+  DialogTitle 
 } from "@/components/ui/dialog";
-import { RelatorioVistoria } from "@/shared/relatorioVistoriaSchema";
-import { generateRelatorioVistoriaDocx } from "@/lib/relatorioVistoriaGenerator";
-import { formatDate } from "@/lib/dateUtils";
-import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { generateRelatorioVistoria } from "@/lib/relatorioVistoriaGenerator";
+import { RelatorioVistoria } from "../../../shared/relatorioVistoriaSchema";
+import { Loader2 } from "lucide-react";
+import IdentificacaoProjetoForm from "./forms/IdentificacaoProjetoForm";
+import ResponsaveisTecnicosForm from "./forms/ResponsaveisTecnicosForm";
+import DadosProdutoForm from "./forms/DadosProdutoForm";
+import AnaliseTecnicaForm from "./forms/AnaliseTecnicaForm";
+import NaoConformidadesForm from "./forms/NaoConformidadesForm";
 
 interface GerarRelatorioVistoriaModalProps {
   relatorio: RelatorioVistoria;
   isOpen: boolean;
   onClose: () => void;
+  onSave: (relatorio: RelatorioVistoria) => void;
 }
 
-export function GerarRelatorioVistoriaModal({
+export default function GerarRelatorioVistoriaModal({
   relatorio,
   isOpen,
   onClose,
+  onSave
 }: GerarRelatorioVistoriaModalProps) {
+  const [relatorioAtual, setRelatorioAtual] = useState<RelatorioVistoria>(relatorio);
   const [isGenerating, setIsGenerating] = useState(false);
-  const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState("identificacao");
 
-  const handleGenerateReport = async () => {
+  const handleSaveRelatorio = () => {
+    onSave(relatorioAtual);
+  };
+
+  const handleGenerateRelatorio = async () => {
     try {
       setIsGenerating(true);
-
-      // Gerar o documento DOCX
-      const docxBlob = await generateRelatorioVistoriaDocx(relatorio);
-
-      // Criar URL para download
-      const url = URL.createObjectURL(docxBlob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `relatorio_vistoria_${relatorio.protocolo || formatDate(relatorio.dataVistoria)}.docx`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      toast({
-        title: "Relatório gerado com sucesso",
-        description: "O download do arquivo foi iniciado.",
-      });
-
-      onClose();
+      await generateRelatorioVistoria(relatorioAtual);
+      setIsGenerating(false);
     } catch (error) {
       console.error("Erro ao gerar relatório:", error);
-      toast({
-        title: "Erro ao gerar relatório",
-        description:
-          "Ocorreu um erro ao gerar o relatório. Tente novamente.",
-        variant: "destructive",
-      });
-    } finally {
       setIsGenerating(false);
     }
   };
 
-  // Verificar se há não conformidades selecionadas
-  const naoConformidadesSelecionadas = relatorio.naoConformidades.filter(
-    (nc) => nc.selecionado
-  );
+  const updateRelatorio = (field: string, value: any) => {
+    setRelatorioAtual((prev) => ({
+      ...prev,
+      [field]: value
+    }));
+  };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+    >
+      <DialogContent className="max-w-5xl h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>Gerar Relatório de Vistoria</DialogTitle>
           <DialogDescription>
-            O relatório será gerado em formato Word (.docx) com todas as
-            informações preenchidas.
+            Preencha as informações necessárias para gerar o relatório de vistoria.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-4 py-2">
-          <div className="bg-slate-50 p-3 rounded-lg">
-            <h3 className="font-medium mb-2">O relatório incluirá:</h3>
-            <ul className="space-y-1 list-disc list-inside text-sm text-slate-700">
-              <li>Dados do cliente e da obra</li>
-              <li>Informações dos responsáveis técnicos</li>
-              <li>Especificações do produto</li>
-              {relatorio.introducao && <li>Introdução</li>}
-              {relatorio.analiseTecnica && <li>Análise técnica</li>}
-              <li>
-                Não conformidades identificadas{" "}
-                <span className="text-xs text-slate-500">
-                  ({naoConformidadesSelecionadas.length} selecionadas)
-                </span>
-              </li>
-              {relatorio.conclusao && <li>Conclusão</li>}
-              {relatorio.recomendacao && <li>Recomendações</li>}
-              {relatorio.observacoesGerais && <li>Observações gerais</li>}
-              <li>Resultado da análise</li>
-            </ul>
-          </div>
-        </div>
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="flex-1 flex flex-col overflow-hidden"
+        >
+          <TabsList className="grid grid-cols-5 gap-1">
+            <TabsTrigger value="identificacao">Identificação</TabsTrigger>
+            <TabsTrigger value="responsaveis">Responsáveis</TabsTrigger>
+            <TabsTrigger value="produto">Produto</TabsTrigger>
+            <TabsTrigger value="analise">Análise</TabsTrigger>
+            <TabsTrigger value="nao-conformidades">Não Conformidades</TabsTrigger>
+          </TabsList>
 
-        <DialogFooter className="sm:justify-end">
-          <Button
-            variant="outline"
-            onClick={onClose}
-            disabled={isGenerating}
-          >
-            Cancelar
-          </Button>
-          <Button
-            onClick={handleGenerateReport}
-            disabled={isGenerating}
-          >
-            {isGenerating ? "Gerando..." : "Gerar Relatório"}
-          </Button>
+          <ScrollArea className="flex-1 px-1">
+            <TabsContent value="identificacao" className="mt-4">
+              <IdentificacaoProjetoForm 
+                relatorio={relatorioAtual} 
+                updateRelatorio={updateRelatorio} 
+              />
+            </TabsContent>
+
+            <TabsContent value="responsaveis" className="mt-4">
+              <ResponsaveisTecnicosForm 
+                relatorio={relatorioAtual} 
+                updateRelatorio={updateRelatorio} 
+              />
+            </TabsContent>
+
+            <TabsContent value="produto" className="mt-4">
+              <DadosProdutoForm 
+                relatorio={relatorioAtual} 
+                updateRelatorio={updateRelatorio} 
+              />
+            </TabsContent>
+
+            <TabsContent value="analise" className="mt-4">
+              <AnaliseTecnicaForm 
+                relatorio={relatorioAtual} 
+                updateRelatorio={updateRelatorio} 
+              />
+            </TabsContent>
+
+            <TabsContent value="nao-conformidades" className="mt-4">
+              <NaoConformidadesForm 
+                relatorio={relatorioAtual} 
+                updateRelatorio={(naoConformidades) => {
+                  setRelatorioAtual((prev) => ({
+                    ...prev,
+                    naoConformidades
+                  }));
+                }} 
+              />
+            </TabsContent>
+          </ScrollArea>
+        </Tabs>
+
+        <DialogFooter className="flex flex-wrap sm:flex-nowrap gap-2">
+          <div className="flex w-full sm:w-auto gap-2">
+            <Button
+              variant="outline"
+              disabled={activeTab === "identificacao"}
+              onClick={() => {
+                const tabs = ["identificacao", "responsaveis", "produto", "analise", "nao-conformidades"];
+                const currentIndex = tabs.indexOf(activeTab);
+                if (currentIndex > 0) {
+                  setActiveTab(tabs[currentIndex - 1]);
+                }
+              }}
+            >
+              Anterior
+            </Button>
+
+            <Button
+              variant="outline"
+              disabled={activeTab === "nao-conformidades"}
+              onClick={() => {
+                const tabs = ["identificacao", "responsaveis", "produto", "analise", "nao-conformidades"];
+                const currentIndex = tabs.indexOf(activeTab);
+                if (currentIndex < tabs.length - 1) {
+                  setActiveTab(tabs[currentIndex + 1]);
+                }
+              }}
+            >
+              Próximo
+            </Button>
+          </div>
+
+          <div className="flex w-full sm:w-auto gap-2">
+            <Button variant="secondary" onClick={handleSaveRelatorio}>
+              Salvar
+            </Button>
+
+            <Button 
+              disabled={isGenerating} 
+              onClick={handleGenerateRelatorio}
+            >
+              {isGenerating ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Gerando...
+                </>
+              ) : (
+                "Gerar Relatório"
+              )}
+            </Button>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>
