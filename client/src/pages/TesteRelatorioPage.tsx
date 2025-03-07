@@ -6,7 +6,7 @@ import { Loader2, FileDown, File, Award, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { novoRelatorioVistoria, gerarRelatorioAleatorio } from "@shared/relatorioVistoriaSchema";
 import { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
-import { DashboardLayoutNew } from "@/layouts/DashboardLayoutNew";
+import { TestLayout } from "@/layouts/TestLayout";
 import { PageTransition } from "@/components/ui/loading-animation";
 import { gerarRelatorioSimples } from "@/lib/relatorioVistoriaSimpleGenerator";
 
@@ -83,7 +83,7 @@ export default function TesteRelatorioPage() {
 
   return (
     <PageTransition>
-      <DashboardLayoutNew>
+      <TestLayout>
         <div className="container mx-auto py-8">
           <div className="flex justify-between items-center mb-6">
             <div>
@@ -216,7 +216,7 @@ export default function TesteRelatorioPage() {
             </Card>
           </div>
         </div>
-      </DashboardLayoutNew>
+      </TestLayout>
     </PageTransition>
   );
 }
