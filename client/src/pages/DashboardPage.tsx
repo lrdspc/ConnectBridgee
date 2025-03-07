@@ -32,45 +32,95 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("visitas");
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   
-  // Configuração inicial dos widgets do dashboard
-  const [dashboardConfig, setDashboardConfig] = useState<DashboardConfig>(() => {
-    const savedConfig = localStorage.getItem('dashboard_config');
-    if (savedConfig) {
-      try {
-        return JSON.parse(savedConfig);
-      } catch (error) {
-        console.error('Erro ao carregar configuração do dashboard:', error);
-      }
-    }
+  // Definição da configuração padrão de widgets
+  const defaultConfig: DashboardConfig = {
+    visibleWidgets: {
+      'resumo': true,
+      'proxima_visita': true,
+      'acoes_rapidas': true,
+      'visitas_agendadas': true,
+      'grafico_semanal': true,
+      'rota_dia': true,
+      'clima': true,
+      'motivationWidget': true,
+      'performanceChart': true,
+    },
+    widgetOrder: [
+      'resumo',
+      'proxima_visita',
+      'acoes_rapidas',
+      'visitas_agendadas',
+      'grafico_semanal',
+      'rota_dia',
+      'clima',
+      'motivationWidget',
+      'performanceChart'
+    ],
+    layout: 'comfort' as 'compact' | 'comfort' | 'spacious',
+    columns: 2
+  };
+  
+  // Função para inicializar e verificar a configuração
+  const initializeConfig = (): DashboardConfig => {
+    console.log('Inicializando configuração do dashboard');
     
-    // Configuração padrão
-    return {
-      visibleWidgets: {
-        'resumo': true,
-        'proxima_visita': true,
-        'acoes_rapidas': true,
-        'visitas_agendadas': true,
-        'grafico_semanal': true,
-        'rota_dia': true,
-        'clima': true,
-        'motivationWidget': true,
-        'performanceChart': true,
-      },
-      widgetOrder: [
-        'resumo',
-        'proxima_visita',
-        'acoes_rapidas',
-        'visitas_agendadas',
-        'grafico_semanal',
-        'rota_dia',
-        'clima',
-        'motivationWidget',
-        'performanceChart'
-      ],
-      layout: 'comfort' as 'compact' | 'comfort' | 'spacious',
-      columns: 2
-    };
-  });
+    try {
+      // Tentar carregar do localStorage
+      const savedConfig = localStorage.getItem('dashboard_config');
+      
+      if (savedConfig) {
+        console.log('Configuração salva encontrada');
+        
+        try {
+          const parsedConfig = JSON.parse(savedConfig);
+          
+          // Verificar se a estrutura básica existe
+          if (!parsedConfig.visibleWidgets || !parsedConfig.widgetOrder) {
+            console.warn('Configuração incompleta, usando padrão');
+            return defaultConfig;
+          }
+          
+          // Verificar se todos os widgets estão representados na ordem
+          const allWidgets = Object.keys(defaultConfig.visibleWidgets);
+          const missingWidgets = allWidgets.filter(
+            widgetId => !parsedConfig.widgetOrder.includes(widgetId)
+          );
+          
+          // Se faltam widgets na ordem, restaurar para o padrão
+          if (missingWidgets.length > 0) {
+            console.warn(`Widgets faltando na ordem: ${missingWidgets.join(', ')}`);
+            
+            // Adicionar widgets faltantes no final da lista de ordem
+            const updatedConfig = {
+              ...parsedConfig,
+              widgetOrder: [...parsedConfig.widgetOrder, ...missingWidgets]
+            };
+            
+            // Atualizar localStorage com a configuração corrigida
+            localStorage.setItem('dashboard_config', JSON.stringify(updatedConfig));
+            console.log('Configuração corrigida e salva');
+            
+            return updatedConfig;
+          }
+          
+          console.log('Configuração carregada com sucesso:', parsedConfig);
+          return parsedConfig;
+        } catch (error) {
+          console.error('Erro ao analisar configuração salva:', error);
+          return defaultConfig;
+        }
+      }
+      
+      console.log('Nenhuma configuração encontrada, usando padrão');
+      return defaultConfig;
+    } catch (error) {
+      console.error('Erro ao inicializar configuração:', error);
+      return defaultConfig;
+    }
+  };
+  
+  // Configuração inicial dos widgets do dashboard
+  const [dashboardConfig, setDashboardConfig] = useState<DashboardConfig>(initializeConfig());
 
   // Processar estatísticas quando os dados de visitas mudarem
   useEffect(() => {
@@ -513,10 +563,33 @@ export default function DashboardPage() {
           </div>
 
           {/* Renderizar widgets na ordem definida pelo usuário */}
-          {dashboardConfig.widgetOrder
-            .filter(widgetId => isWidgetEnabled(widgetId))
-            .map(renderWidget)
-          }
+          {(() => {
+            // Logging no console
+            React.useEffect(() => {
+              console.log('Ordem de widgets atual:', dashboardConfig.widgetOrder);
+            }, [dashboardConfig.widgetOrder]);
+            
+            if (dashboardConfig.widgetOrder && dashboardConfig.widgetOrder.length > 0) {
+              return (
+                <>
+                  {dashboardConfig.widgetOrder
+                    .filter(widgetId => isWidgetEnabled(widgetId))
+                    .map((widgetId, index) => {
+                      // Widget component
+                      const widget = renderWidget(widgetId);
+                      // Só renderizar se retornar um componente válido
+                      return widget ? React.cloneElement(widget as React.ReactElement, { key: `widget-${widgetId}-${index}` }) : null;
+                    })}
+                </>
+              );
+            } else {
+              return (
+                <div className="p-4 border border-red-300 bg-red-50 rounded-md">
+                  <p className="text-red-700">Erro na configuração do dashboard. Por favor, reinicie as configurações.</p>
+                </div>
+              );
+            }
+          })()}
           
           {/* Conteúdo principal */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
