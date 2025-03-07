@@ -538,6 +538,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Internal server error" });
     }
   });
+  
+  // Rota auxiliar para download de documentos
+  router.post("/download-document", async (req: Request, res: Response) => {
+    try {
+      const { docBuffer, fileName, mimeType } = req.body;
+      
+      if (!docBuffer || !fileName) {
+        return res.status(400).json({ message: "Dados inválidos para download" });
+      }
+      
+      // Decodificar o documento Base64
+      const buffer = Buffer.from(docBuffer, 'base64');
+      
+      // Configurar cabeçalhos para download
+      res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+      res.setHeader('Content-Type', mimeType || 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+      res.setHeader('Content-Length', buffer.length);
+      
+      // Enviar o documento como resposta para download
+      return res.send(buffer);
+    } catch (error) {
+      console.error("Erro ao processar download:", error);
+      return res.status(500).json({ message: "Erro ao processar o download do documento" });
+    }
+  });
 
   // Mount router on /api prefix
   app.use("/api", router);

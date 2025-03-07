@@ -77,6 +77,53 @@ export async function downloadBlob(blob: Blob, fileName: string): Promise<boolea
     
     return true;
   } catch (error) {
+    console.error("[docDownloadUtils] Método de nova aba falhou:", error);
+  }
+  
+  // Método 4: Último recurso - usar o servidor como intermediário
+  try {
+    console.log("[docDownloadUtils] Método 4: Usando API do servidor");
+    
+    // Converter o blob para Base64
+    const reader = new FileReader();
+    const base64Promise = new Promise<string>((resolve, reject) => {
+      reader.onload = () => {
+        const base64 = reader.result as string;
+        // Remover o prefixo "data:application/...;base64," para obter apenas o conteúdo Base64
+        const base64Data = base64.split(',')[1];
+        resolve(base64Data);
+      };
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(blob);
+    });
+    
+    const base64 = await base64Promise;
+    
+    // Enviar para o servidor
+    const response = await fetch('/api/download-document', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        docBuffer: base64,
+        fileName,
+        mimeType: blob.type
+      }),
+    });
+    
+    if (response.ok) {
+      // Redirecionar para a URL de download
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+      
+      console.log("[docDownloadUtils] Download via servidor bem-sucedido");
+      return true;
+    } else {
+      throw new Error(`Servidor retornou: ${response.status} ${response.statusText}`);
+    }
+  } catch (error) {
     console.error("[docDownloadUtils] Todos os métodos falharam:", error);
     return false;
   }
