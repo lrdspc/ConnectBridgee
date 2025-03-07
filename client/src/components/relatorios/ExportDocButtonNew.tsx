@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { FileText, FileDown, AlertTriangle, Loader2 } from "lucide-react";
+import { FileDown, Loader2 } from "lucide-react";
 import type { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { toast } from "sonner";
 import { gerarRelatorioFixo } from "@/lib/relatorioVistoriaFixed";
@@ -21,15 +21,13 @@ interface ExportDocButtonProps {
   variant?: "default" | "outline" | "secondary" | "destructive" | "ghost" | "link";
   size?: "default" | "sm" | "lg" | "icon";
   className?: string;
-  useNewGenerator?: boolean; // Determina qual gerador usar
 }
 
-export function ExportDocButton({ 
+export function ExportDocButtonNew({ 
   relatorio,
   variant = "outline",
   size = "default",
   className = "",
-  useNewGenerator = true
 }: ExportDocButtonProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   
