@@ -14,6 +14,7 @@ import {
   gerarRelatorioAleatorio
 } from '@shared/relatorioVistoriaSchema';
 import { gerarRelatorioSimples } from '@/lib/relatorioVistoriaSimpleGenerator';
+import { RelatorioExportButton } from '@/components/relatorios/RelatorioExportButton';
 
 import { DashboardLayoutNew } from '@/layouts/DashboardLayoutNew';
 import { PageTransition } from '@/components/ui/loading-animation';
@@ -1400,22 +1401,19 @@ conforme a legislação em vigor.`;
                           >
                             <FileText className="h-4 w-4 mr-2" /> Atualizar Preview
                           </Button>
-                          <Button
-                            type="button"
-                            onClick={baixarRelatorioDocx}
-                            disabled={isGeneratingDocx}
+                          <RelatorioExportButton 
+                            relatorio={form.getValues()}
+                            label="Exportar DOCX"
+                            loadingLabel="Gerando..."
                             className="sm:w-auto w-full"
-                          >
-                            {isGeneratingDocx ? (
-                              <>
-                                <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Gerando...
-                              </>
-                            ) : (
-                              <>
-                                <Download className="h-4 w-4 mr-2" /> Exportar DOCX
-                              </>
-                            )}
-                          </Button>
+                            fileNamePrefix={`relatorio-vistoria-${form.getValues().protocolo || 'novo'}`}
+                            onExportSuccess={(fileName) => {
+                              toast({
+                                title: 'Documento Word gerado com sucesso!',
+                                description: 'O relatório foi exportado no formato DOCX com formatação ABNT.',
+                              });
+                            }}
+                          />
                         </div>
                       </CardFooter>
                     </Card>
