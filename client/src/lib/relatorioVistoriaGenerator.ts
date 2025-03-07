@@ -230,9 +230,21 @@ function generateResponsaveisTecnicos(relatorio: RelatorioVistoria): Paragraph[]
   ];
 }
 
-// Função para gerar a seção de introdução
+// Função para gerar a seção de introdução a partir do template
 function generateIntroducao(relatorio: RelatorioVistoria): Paragraph[] {
-  return [
+  // Aplicar o template com os dados do relatório
+  const textoIntroducao = aplicarTemplateIntroducao({
+    modeloTelha: relatorio.modeloTelha || "Não informado",
+    espessura: relatorio.espessura || "5",
+    protocolo: relatorio.protocolo || "Não informado",
+    anosGarantia: relatorio.anosGarantia || "5",
+    anosGarantiaSistemaCompleto: relatorio.anosGarantiaSistemaCompleto || "10"
+  });
+  
+  // Dividir o texto em parágrafos
+  const paragrafos = textoIntroducao.split('\n\n');
+  
+  const result = [
     new Paragraph({
       spacing: { before: 400, after: 200 },
       children: [
@@ -242,31 +254,27 @@ function generateIntroducao(relatorio: RelatorioVistoria): Paragraph[] {
           size: 24,
         }),
       ],
-    }),
-    new Paragraph({
-      spacing: { before: 200, after: 200 },
-      children: [
-        new TextRun({
-          text: "A Área de Assistência Técnica foi solicitada para atender uma reclamação relacionada ao surgimento de infiltrações nas telhas de fibrocimento: - Telha da marca BRASILIT modelo ONDULADA de 5mm, produzidas com tecnologia CRFS - Cimento Reforçado com Fios Sintéticos - 100% sem amianto - cuja fabricação segue a norma internacional ISO 9933, bem como as normas técnicas da ABNT: NBR-15210-1, NBR-15210-2 e NBR-15210-3.",
-        }),
-      ],
-    }),
-    new Paragraph({
-      spacing: { before: 200, after: 200 },
-      children: [
-        new TextRun({
-          text: `Em atenção a vossa solicitação, analisamos as evidências encontradas, para avaliar as manifestações patológicas reclamadas em telhas de nossa marca aplicada em sua cobertura conforme registro de reclamação protocolo FAR ${relatorio.protocolo || "[Protocolo não informado]"}.`,
-        }),
-      ],
-    }),
-    new Paragraph({
-      spacing: { before: 200, after: 200 },
-      children: [
-        new TextRun({
-          text: `O modelo de telha escolhido para a edificação foi: ${relatorio.modeloTelha || "Não informado"} ${relatorio.espessura || ""}mm. Esse modelo, como os demais, possui a necessidade de seguir rigorosamente as orientações técnicas contidas no Guia Técnico de Telhas de Fibrocimento e Acessórios para Telhado — Brasilit para o melhor desempenho do produto, assim como a garantia do produto coberta por ${relatorio.anosGarantia || "5"} anos (ou ${relatorio.anosGarantiaSistemaCompleto || "10"} anos para sistema completo).`,
-        }),
-      ],
-    }),
+    })
+  ];
+  
+  // Adicionar cada parágrafo do template
+  for (const paragrafo of paragrafos) {
+    if (paragrafo.trim()) {
+      result.push(
+        new Paragraph({
+          spacing: { before: 200, after: 200 },
+          children: [
+            new TextRun({
+              text: paragrafo.trim(),
+            }),
+          ],
+        })
+      );
+    }
+  }
+  
+  // Adicionar informações sobre quantidade e modelo
+  result.push(
     new Paragraph({
       spacing: { before: 200, after: 200 },
       children: [
@@ -299,11 +307,13 @@ function generateIntroducao(relatorio: RelatorioVistoria): Paragraph[] {
           text: "A análise do caso segue os requisitos presentes na norma ABNT NBR 7196: Telhas de fibrocimento sem amianto — Execução de coberturas e fechamentos laterais —Procedimento e Guia Técnico de Telhas de Fibrocimento e Acessórios para Telhado — Brasilit.",
         }),
       ],
-    }),
-  ];
+    })
+  );
+  
+  return result;
 }
 
-// Função para gerar a seção de análise técnica com não conformidades
+// Função para gerar a seção de análise técnica com não conformidades a partir do template
 function generateAnaliseTecnica(relatorio: RelatorioVistoria): Paragraph[] {
   const paragraphs: Paragraph[] = [
     new Paragraph({
@@ -320,7 +330,7 @@ function generateAnaliseTecnica(relatorio: RelatorioVistoria): Paragraph[] {
       spacing: { before: 200, after: 200 },
       children: [
         new TextRun({
-          text: "Durante a visita técnica realizada no local, nossa equipe conduziu uma vistoria minuciosa da cobertura, documentando e analisando as condições de instalação e o estado atual das telhas. Após criteriosa avaliação das evidências coletadas em campo, identificamos alguns desvios nos procedimentos de manuseio e instalação em relação às especificações técnicas do fabricante, os quais são detalhados a seguir:",
+          text: TEMPLATE_ANALISE_TECNICA,
         }),
       ],
     }),
@@ -356,7 +366,7 @@ function generateAnaliseTecnica(relatorio: RelatorioVistoria): Paragraph[] {
   return paragraphs;
 }
 
-// Função para gerar a seção de conclusão
+// Função para gerar a seção de conclusão a partir do template
 function generateConclusao(relatorio: RelatorioVistoria): Paragraph[] {
   const paragraphs: Paragraph[] = [
     new Paragraph({
@@ -397,33 +407,31 @@ function generateConclusao(relatorio: RelatorioVistoria): Paragraph[] {
     );
   });
 
-  // Texto de conclusão padrão
-  paragraphs.push(
-    new Paragraph({
-      spacing: { before: 300, after: 200 },
-      children: [
-        new TextRun({
-          text: `Em função das não conformidades constatadas no manuseio e instalação das chapas Brasilit, finalizamos o atendimento considerando a reclamação como ${relatorio.resultado === "PROCEDENTE" ? "PROCEDENTE" : "IMPROCEDENTE"}, onde os problemas reclamados se dão pelo ${relatorio.resultado === "PROCEDENTE" ? "defeito do material" : "incorreto manuseio e instalação das telhas e não a problemas relacionados à qualidade do material"}.`,
-        }),
-      ],
-    }),
-    new Paragraph({
-      spacing: { before: 200, after: 200 },
-      children: [
-        new TextRun({
-          text: `As telhas BRASILIT modelo FIBROCIMENTO ${relatorio.modeloTelha?.toUpperCase() || "ONDULADA"} possuem ${relatorio.anosGarantiaTotal || "dez"} anos de garantia com relação a problemas de fabricação. A garantia Brasilit está condicionada a correta aplicação do produto, seguindo rigorosamente as instruções de instalação contidas no Guia Técnico de Telhas de Fibrocimento e Acessórios para Telhado — Brasilit. Este guia técnico está sempre disponível em: http://www.brasilit.com.br.`,
-        }),
-      ],
-    }),
-    new Paragraph({
-      spacing: { before: 200, after: 200 },
-      children: [
-        new TextRun({
-          text: "Ratificamos que os produtos Brasilit atendem as Normas da Associação Brasileira de Normas Técnicas — ABNT, específicas para cada linha de produto, e cumprimos as exigências legais de garantia de produtos conforme a legislação em vigor.",
-        }),
-      ],
-    })
-  );
+  // Obter texto da conclusão do template
+  const textoConclusao = aplicarTemplateConclusao({
+    resultado: relatorio.resultado || "IMPROCEDENTE",
+    modeloTelha: relatorio.modeloTelha || "ONDULADA",
+    anosGarantiaTotal: relatorio.anosGarantiaTotal || "dez"
+  });
+  
+  // Dividir o texto em parágrafos
+  const paragrafosTemplate = textoConclusao.split('\n\n');
+  
+  // Adicionar cada parágrafo do template
+  for (const paragrafo of paragrafosTemplate) {
+    if (paragrafo.trim()) {
+      paragraphs.push(
+        new Paragraph({
+          spacing: { before: 200, after: 200 },
+          children: [
+            new TextRun({
+              text: paragrafo.trim(),
+            }),
+          ],
+        })
+      );
+    }
+  }
 
   return paragraphs;
 }
