@@ -15,7 +15,7 @@ import {
 import { Users, ClipboardList, Droplets, ChevronRight, RefreshCw } from "lucide-react";
 import { formatDate, cn } from '@/lib/utils';
 import { Link } from 'wouter';
-import { DashboardCustomizationModal, DashboardConfig, DashboardWidgetConfig } from '@/components/dashboard/DashboardCustomizationModal';
+import { DashboardCustomizationModal, DashboardConfig } from '@/components/dashboard/DashboardCustomizationModal';
 import { useToast } from '@/hooks/use-toast';
 
 export default function DashboardPage() {
@@ -45,60 +45,30 @@ export default function DashboardPage() {
     
     // Configuração padrão
     return {
-      widgets: [
-        {
-          id: 'resumo',
-          title: 'Resumo do dia',
-          description: 'Visão geral das visitas do dia',
-          enabled: true,
-          required: true,
-          order: 0
-        },
-        {
-          id: 'proxima_visita',
-          title: 'Próxima visita',
-          description: 'Detalhes da próxima visita agendada',
-          enabled: true,
-          order: 1
-        },
-        {
-          id: 'acoes_rapidas',
-          title: 'Ações rápidas',
-          description: 'Botões de acesso rápido para tarefas comuns',
-          enabled: true,
-          order: 2
-        },
-        {
-          id: 'visitas_agendadas',
-          title: 'Visitas agendadas',
-          description: 'Lista de visitas agendadas para os próximos dias',
-          enabled: true,
-          order: 3
-        },
-        {
-          id: 'grafico_semanal',
-          title: 'Gráfico semanal',
-          description: 'Desempenho da semana em visitas realizadas',
-          enabled: true,
-          order: 4
-        },
-        {
-          id: 'rota_dia',
-          title: 'Rota do dia',
-          description: 'Mapa com a rota das visitas do dia',
-          enabled: true,
-          order: 5
-        },
-        {
-          id: 'clima',
-          title: 'Previsão do tempo',
-          description: 'Condições climáticas atuais',
-          enabled: true,
-          order: 6
-        }
+      visibleWidgets: {
+        'resumo': true,
+        'proxima_visita': true,
+        'acoes_rapidas': true,
+        'visitas_agendadas': true,
+        'grafico_semanal': true,
+        'rota_dia': true,
+        'clima': true,
+        'motivationWidget': true,
+        'performanceChart': true,
+      },
+      widgetOrder: [
+        'resumo',
+        'proxima_visita',
+        'acoes_rapidas',
+        'visitas_agendadas',
+        'grafico_semanal',
+        'rota_dia',
+        'clima',
+        'motivationWidget',
+        'performanceChart'
       ],
-      layout: 'grid',
-      compactMode: false
+      layout: 'comfort' as 'compact' | 'comfort' | 'spacious',
+      columns: 2
     };
   });
 
@@ -181,7 +151,8 @@ export default function DashboardPage() {
   // Função para salvar configurações
   const handleConfigChange = (newConfig: DashboardConfig) => {
     setDashboardConfig(newConfig);
-    setViewMode(newConfig.layout);
+    // Manter o viewMode independente do layout para não conflitar tipos
+    // Podemos usar o layout para ajustar espaçamento, mas não alterar visualização grid/list
     
     // Salvar no localStorage
     localStorage.setItem('dashboard_config', JSON.stringify(newConfig));
@@ -194,8 +165,7 @@ export default function DashboardPage() {
 
   // Verifica se um widget está habilitado
   const isWidgetEnabled = (widgetId: string): boolean => {
-    const widget = dashboardConfig.widgets.find(w => w.id === widgetId);
-    return widget ? widget.enabled : false;
+    return !!dashboardConfig.visibleWidgets[widgetId];
   };
 
   if (isLoading) {
@@ -213,7 +183,7 @@ export default function DashboardPage() {
       <DashboardLayoutNew>
         <div className={cn(
           "space-y-6",
-          dashboardConfig.compactMode && "space-y-3"
+          dashboardConfig.layout === 'compact' && "space-y-3"
         )}>
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold tracking-tight hidden sm:block">Dashboard</h1>

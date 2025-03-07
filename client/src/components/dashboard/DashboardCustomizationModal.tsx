@@ -3,296 +3,382 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Settings, Check, X, ArrowDown, ArrowUp, Eye, EyeOff, RefreshCw } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
+import {
+  AlertCircle,
+  AreaChart,
+  Calendar,
+  CheckSquare,
+  Clock,
+  FileText,
+  MapPin,
+  MessageSquare,
+  Smile,
+  Users,
+  Zap,
+  Save,
+  RotateCcw,
+  Info
+} from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-export interface DashboardWidgetConfig {
-  id: string;
-  title: string;
-  description: string;
-  enabled: boolean;
-  required?: boolean;
-  order: number;
+// Tipos para configuração de widgets
+export interface DashboardConfig {
+  visibleWidgets: Record<string, boolean>;
+  widgetOrder: string[];
+  layout: 'compact' | 'comfort' | 'spacious';
+  columns: 1 | 2 | 3 | 4;
 }
 
-export interface DashboardConfig {
-  widgets: DashboardWidgetConfig[];
-  layout: 'grid' | 'list';
-  compactMode: boolean;
+interface WidgetInfo {
+  id: string;
+  name: string;
+  description: string;
+  icon: React.ReactNode;
+  defaultEnabled: boolean;
 }
 
 interface DashboardCustomizationModalProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   config: DashboardConfig;
   onConfigChange: (config: DashboardConfig) => void;
   children?: React.ReactNode;
 }
 
 export function DashboardCustomizationModal({
+  open,
+  onOpenChange,
   config,
   onConfigChange,
   children
 }: DashboardCustomizationModalProps) {
-  const [open, setOpen] = useState(false);
-  const [localConfig, setLocalConfig] = useState<DashboardConfig>(config);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  
+  const handleOpenChange = (open: boolean) => {
+    setIsDialogOpen(open);
+    onOpenChange?.(open);
+  };
   const { toast } = useToast();
-
-  // Atualizar localConfig quando config mudar (por exemplo, ao abrir o modal)
-  useEffect(() => {
-    setLocalConfig(config);
-  }, [config, open]);
-
-  // Alternar visibilidade de um widget
-  const toggleWidget = (id: string) => {
-    setLocalConfig(prev => ({
-      ...prev,
-      widgets: prev.widgets.map(widget => 
-        widget.id === id ? { ...widget, enabled: !widget.enabled } : widget
-      )
-    }));
-  };
-
-  // Mover widget para cima ou para baixo
-  const moveWidget = (id: string, direction: 'up' | 'down') => {
-    const widgets = [...localConfig.widgets];
-    const index = widgets.findIndex(w => w.id === id);
-    
-    if (direction === 'up' && index > 0) {
-      // Trocar com o widget acima
-      [widgets[index], widgets[index - 1]] = [widgets[index - 1], widgets[index]];
-    } else if (direction === 'down' && index < widgets.length - 1) {
-      // Trocar com o widget abaixo
-      [widgets[index], widgets[index + 1]] = [widgets[index + 1], widgets[index]];
+  
+  // Cópia local da configuração para edição
+  const [localConfig, setLocalConfig] = useState<DashboardConfig>({
+    visibleWidgets: {},
+    widgetOrder: [],
+    layout: 'comfort',
+    columns: 2
+  });
+  
+  // Lista de widgets disponíveis
+  const availableWidgets: WidgetInfo[] = [
+    {
+      id: 'visitsOverview',
+      name: 'Visitas Agendadas',
+      description: 'Resumo das próximas visitas programadas',
+      icon: <Calendar className="h-4 w-4 text-blue-500" />,
+      defaultEnabled: true
+    },
+    {
+      id: 'performanceChart',
+      name: 'Desempenho Semanal',
+      description: 'Gráfico com estatísticas de produtividade',
+      icon: <AreaChart className="h-4 w-4 text-green-500" />,
+      defaultEnabled: true
+    },
+    {
+      id: 'tasksWidget',
+      name: 'Tarefas Pendentes',
+      description: 'Lista de tarefas e afazeres do dia',
+      icon: <CheckSquare className="h-4 w-4 text-amber-500" />,
+      defaultEnabled: true
+    },
+    {
+      id: 'mapWidget',
+      name: 'Mapa de Roteiros',
+      description: 'Visualização da rota do dia',
+      icon: <MapPin className="h-4 w-4 text-red-500" />,
+      defaultEnabled: true
+    },
+    {
+      id: 'weatherWidget',
+      name: 'Previsão do Tempo',
+      description: 'Condições climáticas para visitas',
+      icon: <AlertCircle className="h-4 w-4 text-blue-400" />,
+      defaultEnabled: false
+    },
+    {
+      id: 'timeTrackingWidget',
+      name: 'Controle de Tempo',
+      description: 'Tempo gasto em cada atividade',
+      icon: <Clock className="h-4 w-4 text-purple-500" />,
+      defaultEnabled: false
+    },
+    {
+      id: 'reportsWidget',
+      name: 'Relatórios Recentes',
+      description: 'Últimos relatórios gerados',
+      icon: <FileText className="h-4 w-4 text-indigo-500" />,
+      defaultEnabled: true
+    },
+    {
+      id: 'teamWidget',
+      name: 'Equipe Online',
+      description: 'Membros da equipe disponíveis',
+      icon: <Users className="h-4 w-4 text-cyan-500" />,
+      defaultEnabled: false
+    },
+    {
+      id: 'notesWidget',
+      name: 'Bloco de Notas',
+      description: 'Anotações rápidas e lembretes',
+      icon: <MessageSquare className="h-4 w-4 text-yellow-500" />,
+      defaultEnabled: false
+    },
+    {
+      id: 'motivationWidget',
+      name: 'Motivação Diária',
+      description: 'Frases e dicas motivacionais',
+      icon: <Smile className="h-4 w-4 text-yellow-600" />,
+      defaultEnabled: true
+    },
+    {
+      id: 'tipsWidget',
+      name: 'Dicas e Sugestões',
+      description: 'Recomendações para melhorar produtividade',
+      icon: <Zap className="h-4 w-4 text-amber-600" />,
+      defaultEnabled: false
     }
-    
-    // Atualizar ordem
-    const updatedWidgets = widgets.map((widget, i) => ({
-      ...widget,
-      order: i
-    }));
-    
+  ];
+  
+  // Inicializar com configuração atual ao abrir o modal
+  useEffect(() => {
+    if (open) {
+      setLocalConfig({...config});
+    }
+  }, [open, config]);
+  
+  // Manipulador para alternar visibilidade do widget
+  const toggleWidget = (widgetId: string) => {
     setLocalConfig(prev => ({
       ...prev,
-      widgets: updatedWidgets
+      visibleWidgets: {
+        ...prev.visibleWidgets,
+        [widgetId]: !prev.visibleWidgets[widgetId]
+      }
     }));
   };
-
-  // Alternar entre layout grid ou lista
-  const toggleLayout = () => {
+  
+  // Manipulador para alternar o layout
+  const setLayout = (layout: 'compact' | 'comfort' | 'spacious') => {
     setLocalConfig(prev => ({
       ...prev,
-      layout: prev.layout === 'grid' ? 'list' : 'grid'
+      layout
     }));
   };
-
-  // Alternar modo compacto
-  const toggleCompactMode = () => {
+  
+  // Manipulador para alternar número de colunas
+  const setColumns = (columns: 1 | 2 | 3 | 4) => {
     setLocalConfig(prev => ({
       ...prev,
-      compactMode: !prev.compactMode
+      columns
     }));
   };
-
-  // Resetar para configurações padrão
+  
+  // Restabelecer configurações padrão
   const resetToDefaults = () => {
-    const defaultWidgets = config.widgets.map(widget => ({
-      ...widget,
-      enabled: true,
-      order: widget.order
-    }));
+    const defaultConfig: DashboardConfig = {
+      visibleWidgets: Object.fromEntries(
+        availableWidgets.map(widget => [widget.id, widget.defaultEnabled])
+      ),
+      widgetOrder: availableWidgets.map(widget => widget.id),
+      layout: 'comfort',
+      columns: 2
+    };
     
-    setLocalConfig({
-      widgets: defaultWidgets,
-      layout: 'grid',
-      compactMode: false
-    });
+    setLocalConfig(defaultConfig);
     
     toast({
-      title: "Configurações resetadas",
-      description: "O dashboard voltou para as configurações padrão",
+      title: "Configurações padrão restauradas",
+      description: "O dashboard foi redefinido para o formato original.",
     });
   };
-
-  // Salvar alterações
-  const saveChanges = () => {
+  
+  // Salvar configurações
+  const saveConfig = () => {
     onConfigChange(localConfig);
-    setOpen(false);
     
     toast({
-      title: "Dashboard personalizado",
-      description: "Suas configurações foram salvas com sucesso",
+      title: "Personalização salva",
+      description: "Seu dashboard foi atualizado com sucesso.",
     });
+    
+    handleOpenChange(false);
   };
-
+  
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {children || (
-          <Button variant="outline" size="sm" className="gap-2">
-            <Settings className="h-4 w-4" />
-            Personalizar
-          </Button>
-        )}
-      </DialogTrigger>
+    <>
+      {/* Botão de Trigger */}
+      <div onClick={() => handleOpenChange(true)}>
+        {children}
+      </div>
       
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle>Personalizar Dashboard</DialogTitle>
-          <DialogDescription>
-            Configure quais informações deseja visualizar e a disposição do seu dashboard
-          </DialogDescription>
-        </DialogHeader>
-        
-        <div className="py-4 space-y-4 max-h-[60vh] overflow-y-auto pr-2">
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold">Layout e Aparência</h3>
-            
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="layout-toggle">Modo de Visualização</Label>
-                <p className="text-xs text-muted-foreground">
-                  {localConfig.layout === 'grid' 
-                    ? "Grade: Widgets organizados em cartões" 
-                    : "Lista: Widgets empilhados verticalmente"}
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs">Lista</span>
-                <Switch 
-                  id="layout-toggle" 
-                  checked={localConfig.layout === 'grid'}
-                  onCheckedChange={toggleLayout}
-                />
-                <span className="text-xs">Grade</span>
-              </div>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="compact-toggle">Modo Compacto</Label>
-                <p className="text-xs text-muted-foreground">
-                  Reduz o espaçamento entre componentes para exibir mais conteúdo
-                </p>
-              </div>
-              <Switch 
-                id="compact-toggle" 
-                checked={localConfig.compactMode}
-                onCheckedChange={toggleCompactMode}
-              />
-            </div>
-          </div>
+      {/* Modal de Customização */}
+      <Dialog open={open || isDialogOpen} onOpenChange={handleOpenChange}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Personalizar Dashboard</DialogTitle>
+            <DialogDescription>
+              Escolha quais widgets deseja exibir e como eles devem ser organizados.
+            </DialogDescription>
+          </DialogHeader>
           
-          <Separator />
-          
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold">Widgets Visíveis</h3>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={resetToDefaults}
-                className="h-8 gap-1 text-xs"
-              >
-                <RefreshCw className="h-3 w-3" />
-                Restaurar padrão
-              </Button>
-            </div>
-            
-            {localConfig.widgets.map((widget) => (
-              <div 
-                key={widget.id}
-                className={cn(
-                  "flex items-start justify-between p-3 rounded-lg border",
-                  widget.enabled 
-                    ? "bg-card border-muted" 
-                    : "bg-muted/30 border-dashed border-muted-foreground/30"
-                )}
-              >
-                <div className="space-y-1 flex-1">
-                  <div className="flex items-center">
-                    <h4 className={cn(
-                      "text-sm font-medium",
-                      !widget.enabled && "text-muted-foreground"
-                    )}>
-                      {widget.title}
-                    </h4>
-                    {widget.required && (
-                      <span className="ml-2 text-[10px] bg-primary/10 text-primary rounded-sm px-1 py-0.5">
-                        Obrigatório
-                      </span>
-                    )}
+          <div className="space-y-6 pt-4">
+            <div className="space-y-3">
+              <div className="flex items-start justify-between">
+                <div className="space-y-1">
+                  <h3 className="text-sm font-medium">Layout e Apresentação</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Defina como o dashboard deve ser organizado
+                  </p>
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={resetToDefaults}
+                >
+                  <RotateCcw className="mr-2 h-3 w-3" />
+                  Restaurar padrão
+                </Button>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4 py-2">
+                <div className="space-y-1.5">
+                  <Label htmlFor="layout-select">Densidade</Label>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant={localConfig.layout === 'compact' ? 'default' : 'outline'}
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => setLayout('compact')}
+                    >
+                      Compacto
+                    </Button>
+                    <Button 
+                      variant={localConfig.layout === 'comfort' ? 'default' : 'outline'}
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => setLayout('comfort')}
+                    >
+                      Médio
+                    </Button>
+                    <Button 
+                      variant={localConfig.layout === 'spacious' ? 'default' : 'outline'}
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => setLayout('spacious')}
+                    >
+                      Espaçoso
+                    </Button>
                   </div>
-                  <p className="text-xs text-muted-foreground">{widget.description}</p>
                 </div>
                 
-                <div className="flex items-center gap-1">
-                  <div className="flex flex-col">
+                <div className="space-y-1.5">
+                  <Label htmlFor="columns-select">Número de colunas</Label>
+                  <div className="flex gap-2">
                     <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-7 w-7"
-                      onClick={() => moveWidget(widget.id, 'up')}
-                      disabled={widget.order === 0 || !widget.enabled}
+                      variant={localConfig.columns === 1 ? 'default' : 'outline'}
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => setColumns(1)}
                     >
-                      <ArrowUp className="h-4 w-4" />
+                      1
                     </Button>
                     <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-7 w-7"
-                      onClick={() => moveWidget(widget.id, 'down')}
-                      disabled={widget.order === localConfig.widgets.length - 1 || !widget.enabled}
+                      variant={localConfig.columns === 2 ? 'default' : 'outline'}
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => setColumns(2)}
                     >
-                      <ArrowDown className="h-4 w-4" />
+                      2
+                    </Button>
+                    <Button 
+                      variant={localConfig.columns === 3 ? 'default' : 'outline'}
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => setColumns(3)}
+                    >
+                      3
+                    </Button>
+                    <Button 
+                      variant={localConfig.columns === 4 ? 'default' : 'outline'}
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => setColumns(4)}
+                    >
+                      4
                     </Button>
                   </div>
-                  
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className={cn(
-                      "gap-1",
-                      widget.enabled ? "text-primary" : "text-muted-foreground"
-                    )}
-                    onClick={() => toggleWidget(widget.id)}
-                    disabled={widget.required}
-                  >
-                    {widget.enabled ? (
-                      <>
-                        <Eye className="h-3.5 w-3.5" />
-                        <span className="sr-only">Ocultar</span>
-                      </>
-                    ) : (
-                      <>
-                        <EyeOff className="h-3.5 w-3.5" />
-                        <span className="sr-only">Mostrar</span>
-                      </>
-                    )}
-                  </Button>
                 </div>
               </div>
-            ))}
+            </div>
+            
+            <Separator />
+            
+            <div className="space-y-3">
+              <h3 className="text-sm font-medium">Widgets Disponíveis</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {availableWidgets.map((widget) => (
+                  <div 
+                    key={widget.id} 
+                    className="flex items-center justify-between space-x-2 rounded-md border p-4"
+                  >
+                    <div className="flex items-center space-x-4">
+                      <div className="h-8 w-8 rounded-md border bg-muted flex items-center justify-center">
+                        {widget.icon}
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="text-sm font-medium">{widget.name}</h4>
+                        <p className="text-xs text-muted-foreground">{widget.description}</p>
+                      </div>
+                    </div>
+                    <Switch
+                      checked={!!localConfig.visibleWidgets[widget.id]}
+                      onCheckedChange={() => toggleWidget(widget.id)}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="bg-muted/50 p-4 rounded-md flex items-start space-x-4">
+              <Info className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
+              <div className="text-sm">
+                <h4 className="font-medium">Dica de personalização</h4>
+                <p className="text-muted-foreground">
+                  Você pode arrastar e reordenar os widgets diretamente no dashboard mantendo o botão do mouse pressionado sobre a barra de título de qualquer widget.
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-        
-        <DialogFooter className="gap-2 sm:gap-0">
-          <Button variant="outline" onClick={() => setOpen(false)}>
-            Cancelar
-          </Button>
-          <Button onClick={saveChanges}>
-            Salvar alterações
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => handleOpenChange(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={saveConfig}>
+              <Save className="mr-2 h-4 w-4" />
+              Salvar Alterações
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
