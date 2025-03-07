@@ -2,11 +2,11 @@ import {
   Document, Paragraph, TextRun, HeadingLevel, AlignmentType, 
   BorderStyle, Tab, TabStopPosition, TabStopType, NumberFormat, LevelFormat,
   convertInchesToTwip, PageOrientation, WidthType, Table, TableRow, TableCell,
-  SectionType, Header, Footer, PageNumber, BorderOptions, ShadingType,
-  UnderlineType, Media, ParagraphStyle, ExternalHyperlink, Pict, PageBreak,
-  HyperlinkRef, SimpleField, FieldOptions, ImageRun, FileChild
+  SectionType, Header, Footer, PageNumber, IBorderOptions as BorderOptions, ShadingType,
+  UnderlineType, Media, ExternalHyperlink, PageBreak,
+  SimpleField, ImageRun, FileChild
 } from "docx";
-import { RelatorioVistoria, NaoConformidade } from "../../shared/relatorioVistoriaSchema";
+import { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 
 // Configurações de estilo para manter consistência com a especificação
 const FONTE_PRINCIPAL = "Times New Roman";

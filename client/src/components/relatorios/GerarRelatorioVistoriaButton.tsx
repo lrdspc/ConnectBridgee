@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { FileText } from "lucide-react";
 import { GerarRelatorioVistoriaModal } from "./GerarRelatorioVistoriaModal";
-import { RelatorioVistoria, novoRelatorioVistoria } from "../../../shared/relatorioVistoriaSchema";
+import { RelatorioVistoria, novoRelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { toast } from "sonner";
 
 interface GerarRelatorioVistoriaButtonProps {

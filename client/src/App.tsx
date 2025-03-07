@@ -15,12 +15,13 @@ const VisitListPage = lazy(() => import('./pages/VisitListPage'));
 const NewVisitPage = lazy(() => import('./pages/NewVisitPage'));
 const VisitDetailsPage = lazy(() => import('./pages/VisitDetailsPage'));
 
-// Novas páginas para o fluxo revisado
+// Páginas de clientes
 const ClientesPage = lazy(() => import('./pages/ClientesPage'));
 const ClienteDetalhesPage = lazy(() => import('./pages/ClienteDetalhesPage'));
-const RelatorioVistoriaPage = lazy(() => import('./pages/RelatorioVistoriaPage'));
+
+// Páginas principais de relatórios - reduzidas e consolidadas
 const RelatoriosPage = lazy(() => import('./pages/RelatoriosPage'));
-const VistoriaFARPage = lazy(() => import('./pages/VistoriaFARPage'));
+const RelatorioVistoriaPage = lazy(() => import('./pages/RelatorioVistoriaPage'));
 
 // Componente de loading para mostrar durante o carregamento das páginas
 const PageLoading = () => (
@@ -53,7 +54,14 @@ function App() {
             {/* Relatórios e Vistorias */}
             <Route path="/relatorios" component={RelatoriosPage} />
             <Route path="/nova-vistoria" component={RelatorioVistoriaPage} />
-            <Route path="/vistoria-far" component={VistoriaFARPage} />
+            
+            {/* Redirecionar antiga rota FAR para a nova página consolidada */}
+            <Route path="/vistoria-far">
+              {() => {
+                window.location.href = "/nova-vistoria";
+                return null;
+              }}
+            </Route>
             
             {/* Fallback para rota não encontrada */}
             <Route component={NotFound} />

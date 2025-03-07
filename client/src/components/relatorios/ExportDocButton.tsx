@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { FileText, FileDown } from "lucide-react";
-import type { RelatorioVistoria } from "@/../shared/relatorioVistoriaSchema";
+import type { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { toast } from "sonner";
 import { generateRelatorioVistoriaBrasil } from "@/lib/relatorioVistoriaBrasilGenerator";
 import { gerarRelatorioVistoriaDoc } from "@/lib/relatorioVistoriaDocGenerator";
