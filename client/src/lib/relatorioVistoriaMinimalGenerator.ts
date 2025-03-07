@@ -3,7 +3,16 @@
  * Usa a biblioteca docx diretamente, sem dependências complexas
  */
 
-import { Document, Packer, Paragraph, TextRun, AlignmentType, HeadingLevel, BorderStyle } from "docx";
+// Importação explícita com nomes diferentes para evitar conflitos
+import { 
+  Document as DocxDocument, 
+  Packer as DocxPacker, 
+  Paragraph as DocxParagraph, 
+  TextRun as DocxTextRun, 
+  AlignmentType, 
+  HeadingLevel, 
+  BorderStyle 
+} from "docx";
 import { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { naoConformidadesDisponiveis } from "@shared/relatorioVistoriaSchema";
 import { TEMPLATE_ANALISE_TECNICA } from '@/lib/relatorioVistoriaTemplates';
@@ -30,7 +39,7 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
     console.log('✅ Usando gerador minimalista para DOCX com formatação ABNT [ATIVO]');
     
     // Preparar não conformidades
-    let naoConformidadesParags: Paragraph[] = [];
+    let naoConformidadesParags: DocxParagraph[] = [];
     
     if (relatorio.naoConformidades && relatorio.naoConformidades.length > 0) {
       // Filtrar apenas as selecionadas
@@ -50,9 +59,9 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
         // Adicionar cada uma como um parágrafo separado
         naoConformidadesSelecionadas.forEach((nc: any, index: number) => {
           naoConformidadesParags.push(
-            new Paragraph({
+            new DocxParagraph({
               children: [
-                new TextRun({
+                new DocxTextRun({
                   text: `${index + 1}. ${nc.titulo}`,
                   bold: true,
                   font: "Arial"
@@ -63,9 +72,9 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
           );
           
           naoConformidadesParags.push(
-            new Paragraph({
+            new DocxParagraph({
               children: [
-                new TextRun({
+                new DocxTextRun({
                   text: nc.descricao,
                   font: "Arial"
                 })
@@ -77,9 +86,9 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
         });
       } else {
         naoConformidadesParags.push(
-          new Paragraph({
+          new DocxParagraph({
             children: [
-              new TextRun({
+              new DocxTextRun({
                 text: "Não foram identificadas não conformidades.",
                 font: "Arial"
               })
@@ -90,9 +99,9 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
       }
     } else {
       naoConformidadesParags.push(
-        new Paragraph({
+        new DocxParagraph({
           children: [
-            new TextRun({
+            new DocxTextRun({
               text: "Não foram identificadas não conformidades.",
               font: "Arial"
             })
@@ -120,7 +129,7 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
     
     // Criar um documento seguindo as normas ABNT e usar fonte Arial
     // Com espaçamento reduzido para caber mais informações na primeira página
-    const doc = new Document({
+    const doc = new DocxDocument({
       // Configurações globais do documento de acordo com ABNT
       creator: "Brasilit Assistência Técnica",
       title: `Relatório de Vistoria Técnica - ${relatorio.cliente || ""}`,
@@ -589,7 +598,7 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
     });
     
     // Gerar o documento como blob
-    const blob = await Packer.toBlob(doc);
+    const blob = await DocxPacker.toBlob(doc);
     console.log('Documento DOCX gerado com sucesso!');
     return blob;
     

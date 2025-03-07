@@ -15,7 +15,7 @@ import {
 } from '@shared/relatorioVistoriaSchema';
 import { gerarRelatorioVistoriaDoc as gerarRelatorioVistoriaDocOriginal } from '@/lib/relatorioVistoriaDocGenerator';
 import { gerarRelatorioVistoriaDoc as gerarRelatorioVistoriaDocSimples } from '@/lib/relatorioVistoriaDocGeneratorSimple';
-import { gerarRelatorioVistoriaMinimal } from '@/lib/relatorioVistoriaMinimalGenerator';
+import { gerarRelatorioVistoriaMinimal } from '@/lib/relatorioVistoriaEssentialGenerator';
 import { aplicarTemplateIntroducao, aplicarTemplateConclusao, TEMPLATE_ANALISE_TECNICA } from '@/lib/relatorioVistoriaTemplates';
 
 import { DashboardLayoutNew } from '@/layouts/DashboardLayoutNew';
