@@ -88,35 +88,53 @@ export function RelatorioExportButton({
 }: RelatorioExportButtonProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   
-  // Função para salvar o arquivo DOCX a partir de um blob usando FileSaver
+  // Função para salvar o arquivo DOCX a partir de um blob
   const saveDocFile = (blob: Blob, fileName: string) => {
-    log("Iniciando download com FileSaver:", fileName);
+    log("Tentando download de arquivo:", fileName);
     
     try {
-      // Usar FileSaver.js que funciona em mais navegadores
+      // Método 1: Usar FileSaver.js
+      log("Método 1: FileSaver");
       saveAs(blob, fileName);
-      log("Download iniciado para arquivo:", fileName);
     } catch (error) {
-      console.error("Erro ao usar saveAs:", error);
+      console.error("Erro em FileSaver:", error);
+      toast.error("Erro no FileSaver, tentando método alternativo");
       
-      // Fallback para método nativo (apenas como garantia)
       try {
+        // Método 2: Método nativo
+        log("Método 2: URL.createObjectURL");
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
         link.download = fileName;
+        link.style.display = 'none';
         document.body.appendChild(link);
         link.click();
-        log("Download via método alternativo:", fileName);
         
         // Limpar recursos
         setTimeout(() => {
           document.body.removeChild(link);
           URL.revokeObjectURL(url);
         }, 100);
-      } catch (fallbackError) {
-        console.error("Erro no método alternativo:", fallbackError);
-        toast.error("Não foi possível iniciar o download do arquivo");
+      } catch (alternativeError) {
+        console.error("Erro no método alternativo:", alternativeError);
+        
+        try {
+          // Método 3: Abrir em nova aba
+          log("Método 3: Nova aba");
+          const url = URL.createObjectURL(blob);
+          window.open(url, '_blank');
+          
+          toast.info("O arquivo foi aberto em uma nova aba. Por favor, salve-o manualmente.");
+          
+          // Limpar recursos
+          setTimeout(() => {
+            URL.revokeObjectURL(url);
+          }, 100);
+        } catch (finalError) {
+          console.error("Todos os métodos falharam:", finalError);
+          toast.error("Não foi possível fazer o download do arquivo por nenhum método");
+        }
       }
     }
   };

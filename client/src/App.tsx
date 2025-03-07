@@ -23,6 +23,7 @@ const ClienteDetalhesPage = lazy(() => import('./pages/ClienteDetalhesPage'));
 const RelatoriosPage = lazy(() => import('./pages/RelatoriosPage'));
 const RelatorioVistoriaPage = lazy(() => import('./pages/RelatorioVistoriaPage'));
 const VistoriaFARPage = lazy(() => import('./pages/VistoriaFARPage'));
+const TestDownloadPage = lazy(() => import('./pages/TestDownloadPage'));
 
 // Páginas de configurações e inspeções
 const ConfiguracoesPage = lazy(() => import('./pages/ConfiguracoesPage'));
@@ -62,6 +63,7 @@ function App() {
             {/* Relatórios e Vistorias */}
             <Route path="/relatorios" component={RelatoriosPage} />
             <Route path="/relatorio-vistoria" component={RelatorioVistoriaPage} />
+            <Route path="/teste-download" component={TestDownloadPage} />
             
             {/* Inspeções */}
             <Route path="/inspecoes" component={InspecoesPage} />
