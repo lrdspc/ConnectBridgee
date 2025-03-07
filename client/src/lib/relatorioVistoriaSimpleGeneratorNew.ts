@@ -433,32 +433,6 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
               spacing: { after: 240 }
             }),
             
-            // ANÁLISE TÉCNICA (com formato de seção numerada)
-            new Paragraph({
-              children: [
-                new TextRun({ 
-                  text: "2. ANÁLISE TÉCNICA",
-                  bold: true,
-                  size: 24 // 12pt
-                })
-              ],
-              spacing: { before: 360, after: 240 },
-              border: {
-                bottom: {
-                  color: "000000",
-                  size: 6,
-                  space: 1,
-                  style: BorderStyle.SINGLE
-                }
-              }
-            }),
-            
-            new Paragraph({
-              text: analiseTecnicaTexto,
-              alignment: AlignmentType.JUSTIFIED,
-              spacing: { after: 240 }
-            }),
-            
             // Seção de especificações técnicas das telhas
             new Paragraph({
               spacing: { before: 240, after: 240 },
@@ -514,6 +488,32 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
                   size: 24
                 }),
               ],
+            }),
+            
+            // ANÁLISE TÉCNICA (com formato de seção numerada)
+            new Paragraph({
+              children: [
+                new TextRun({ 
+                  text: "2. ANÁLISE TÉCNICA",
+                  bold: true,
+                  size: 24 // 12pt
+                })
+              ],
+              spacing: { before: 360, after: 240 },
+              border: {
+                bottom: {
+                  color: "000000",
+                  size: 6,
+                  space: 1,
+                  style: BorderStyle.SINGLE
+                }
+              }
+            }),
+            
+            new Paragraph({
+              text: analiseTecnicaTexto,
+              alignment: AlignmentType.JUSTIFIED,
+              spacing: { after: 240 }
             }),
             
             // Parágrafos das não conformidades
