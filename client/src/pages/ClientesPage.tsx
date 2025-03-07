@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { DashboardLayoutNew } from '../layouts/DashboardLayoutNew';
 import { PageTransition } from '@/components/ui/loading-animation';
 import { Button } from '@/components/ui/button';
