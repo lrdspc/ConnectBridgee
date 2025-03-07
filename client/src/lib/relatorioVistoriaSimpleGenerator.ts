@@ -1,14 +1,15 @@
 /**
- * Gerador SIMPLIFICADO de Relatórios DOCX com formatação ABNT
+ * Gerador SIMPLIFICADO de Relatórios DOCX com formatação exata conforme PDF de referência
  * 
- * Esta versão foi desenvolvida para resolver problemas com a biblioteca docx
- * Implementação limpa e direta, sem dependências desnecessárias
+ * Esta versão foi desenvolvida para atender exatamente a formatação solicitada
+ * de acordo com o documento PDF de referência fornecido.
  * 
  * Características:
- * - Importações corretas e diretas da biblioteca docx
- * - Sem herança de classes problemática
- * - Código mais claro e manutenível
- * - Formatação ABNT conforme requisitos
+ * - Formatação Times New Roman 12pt
+ * - Espaçamento entre linhas 1,5
+ * - Margens ABNT (superior, inferior e direita: 2,5cm; esquerda: 3,0cm)
+ * - Espaçamento exato entre parágrafos conforme o modelo
+ * - Formatação de não conformidades conforme especificado
  */
 
 import { 
@@ -16,11 +17,11 @@ import {
   Packer, 
   Paragraph, 
   TextRun, 
-  HeadingLevel,
-  AlignmentType, 
-  BorderStyle,
-  Header,
-  Footer
+  AlignmentType,
+  ListLevel,
+  convertInchesToTwip,
+  LevelFormat,
+  UnderlineType
 } from "docx";
 
 import { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
@@ -36,18 +37,22 @@ function log(...args: any[]) {
 
 /**
  * Gera um documento DOCX para o relatório de vistoria técnica
+ * Formatação exata conforme PDF de referência
  * 
  * @param relatorio Dados do relatório de vistoria
  * @returns Blob do documento DOCX gerado
  */
 export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promise<Blob> {
   try {
-    log("Iniciando geração de relatório simples");
+    log("Iniciando geração de relatório conforme PDF de referência");
     
     // === PREPARAÇÃO DOS TEXTOS ===
     
     // Converter não conformidades em parágrafos
     const naoConformidadesParagrafos: Paragraph[] = [];
+    
+    // Lista de não conformidades para a conclusão (apenas títulos)
+    const naoConformidadesListaConclusao: Paragraph[] = [];
     
     if (relatorio.naoConformidades && relatorio.naoConformidades.length > 0) {
       // Filtrar apenas as selecionadas
@@ -64,21 +69,38 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
         });
       
       if (naoConformidadesSelecionadas.length > 0) {
-        // Adicionar cada uma como um parágrafo separado
+        // Adicionar cada não conformidade com a formatação exata conforme especificação
         naoConformidadesSelecionadas.forEach((nc, index) => {
+          // Título da não conformidade em negrito
           naoConformidadesParagrafos.push(
             new Paragraph({
-              text: `${index + 1}. ${nc.titulo}`,
-              spacing: { after: 200 },
-              heading: HeadingLevel.HEADING_4
+              children: [
+                new TextRun({ 
+                  text: `${index + 1}. ${nc.titulo}`,
+                  bold: true
+                })
+              ],
+              spacing: { after: 240 } // 8pt = linha em branco após título
             })
           );
           
+          // Texto completo da não conformidade (sem negrito, justificado)
           naoConformidadesParagrafos.push(
             new Paragraph({
               text: nc.descricao,
-              spacing: { after: 300 },
-              alignment: AlignmentType.JUSTIFIED
+              alignment: AlignmentType.JUSTIFIED,
+              spacing: { after: 240 } // 8pt = linha em branco após texto
+            })
+          );
+          
+          // Adicionar à lista de não conformidades para a conclusão (apenas títulos)
+          naoConformidadesListaConclusao.push(
+            new Paragraph({
+              text: `${index + 1}. ${nc.titulo}`,
+              spacing: { after: 240 }, // 8pt = linha em branco após item
+              bullet: {
+                level: 0
+              }
             })
           );
         });
@@ -86,7 +108,14 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
         naoConformidadesParagrafos.push(
           new Paragraph({
             text: "Não foram identificadas não conformidades.",
-            spacing: { after: 300 }
+            spacing: { after: 240 }
+          })
+        );
+        
+        naoConformidadesListaConclusao.push(
+          new Paragraph({
+            text: "Não foram identificadas não conformidades.",
+            spacing: { after: 240 }
           })
         );
       }
@@ -94,7 +123,14 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
       naoConformidadesParagrafos.push(
         new Paragraph({
           text: "Não foram identificadas não conformidades.",
-          spacing: { after: 300 }
+          spacing: { after: 240 }
+        })
+      );
+      
+      naoConformidadesListaConclusao.push(
+        new Paragraph({
+          text: "Não foram identificadas não conformidades.",
+          spacing: { after: 240 }
         })
       );
     }
@@ -116,28 +152,8 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
     });
     
     // === CRIAÇÃO DO DOCUMENTO ===
-
-    // Cabeçalho simplificado
-    const header = new Header({
-      children: [
-        new Paragraph({
-          text: "BRASILIT SAINT-GOBAIN",
-          alignment: AlignmentType.RIGHT
-        })
-      ]
-    });
-
-    // Rodapé simplificado (sem numeração de páginas para evitar erros)
-    const footer = new Footer({
-      children: [
-        new Paragraph({
-          text: "Brasilit Saint-Gobain - Relatório de Vistoria Técnica",
-          alignment: AlignmentType.CENTER
-        })
-      ]
-    });
     
-    // Criar o documento com configurações ABNT
+    // Criar o documento com configurações ABNT exatas
     const doc = new Document({
       creator: "Brasilit Assistência Técnica",
       title: `Relatório de Vistoria Técnica - ${relatorio.cliente || ""}`,
@@ -148,114 +164,42 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
             id: "Normal",
             name: "Normal",
             run: {
-              font: "Arial",
+              font: "Times New Roman", // Alterado para Times New Roman conforme especificação
               size: 24 // 12pt
             },
             paragraph: {
               spacing: {
                 line: 360, // 1.5 de espaçamento (padrão ABNT)
                 before: 0,
-                after: 200 // 10pt de espaçamento após parágrafo
-              }
-            }
-          },
-          {
-            id: "Heading1",
-            name: "Heading 1",
-            basedOn: "Normal",
-            next: "Normal",
-            run: {
-              font: "Arial",
-              size: 28, // 14pt
-              bold: true
-            },
-            paragraph: {
-              spacing: {
-                before: 240, // 12pt
-                after: 120 // 6pt
+                after: 240 // 8pt de espaçamento após parágrafo (padrão especificado)
               },
-              alignment: AlignmentType.CENTER
+              alignment: AlignmentType.JUSTIFIED
             }
-          },
+          }
+        ]
+      },
+      numbering: {
+        config: [
           {
-            id: "Heading2",
-            name: "Heading 2",
-            basedOn: "Normal",
-            next: "Normal",
-            run: {
-              font: "Arial",
-              size: 26, // 13pt
-              bold: true
-            },
-            paragraph: {
-              spacing: {
-                before: 240, // 12pt
-                after: 120 // 6pt
+            reference: "naoConformidadesLista",
+            levels: [
+              {
+                level: 0,
+                format: LevelFormat.DECIMAL,
+                text: "%1.",
+                alignment: AlignmentType.LEFT,
+                style: {
+                  paragraph: {
+                    indent: { left: convertInchesToTwip(0.5), hanging: convertInchesToTwip(0.25) }
+                  }
+                }
               }
-            }
-          },
-          {
-            id: "Heading3",
-            name: "Heading 3",
-            basedOn: "Normal",
-            next: "Normal",
-            run: {
-              font: "Arial",
-              size: 24, // 12pt
-              bold: true
-            },
-            paragraph: {
-              spacing: {
-                before: 200, // 10pt
-                after: 100 // 5pt
-              }
-            }
-          },
-          {
-            id: "Heading4",
-            name: "Heading 4",
-            basedOn: "Normal",
-            next: "Normal",
-            run: {
-              font: "Arial",
-              size: 24, // 12pt
-              bold: true
-            },
-            paragraph: {
-              spacing: {
-                before: 160, // 8pt
-                after: 80 // 4pt
-              }
-            }
-          },
-          {
-            id: "Title",
-            name: "Title",
-            basedOn: "Normal",
-            next: "Normal",
-            run: {
-              font: "Arial",
-              size: 32, // 16pt
-              bold: true
-            },
-            paragraph: {
-              spacing: {
-                before: 240, // 12pt
-                after: 240 // 12pt
-              },
-              alignment: AlignmentType.CENTER
-            }
+            ]
           }
         ]
       },
       sections: [
         {
-          headers: {
-            default: header
-          },
-          footers: {
-            default: footer
-          },
           properties: {
             page: {
               margin: {
@@ -269,223 +213,237 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
           children: [
             // Título principal
             new Paragraph({
-              text: "RELATÓRIO DE VISTORIA TÉCNICA",
-              style: "Title",
-              border: {
-                bottom: {
-                  color: "000000",
-                  space: 1,
-                  style: BorderStyle.SINGLE,
-                  size: 6
-                }
-              }
+              children: [
+                new TextRun({ 
+                  text: "RELATÓRIO DE VISTORIA TÉCNICA",
+                  bold: true,
+                  size: 24 // 12pt - mesmo tamanho do texto principal conforme especificação
+                })
+              ],
+              alignment: AlignmentType.CENTER,
+              spacing: { after: 480 } // Duas linhas em branco após o título
             }),
             
-            // 1. IDENTIFICAÇÃO DO PROJETO
-            new Paragraph({
-              text: "1. IDENTIFICAÇÃO DO PROJETO",
-              heading: HeadingLevel.HEADING_1,
-              pageBreakBefore: false
-            }),
+            // INFORMAÇÕES GERAIS (sem título numerado)
             
             // Dados do projeto
             new Paragraph({
               children: [
-                new TextRun({ text: "Protocolo/FAR: ", bold: true }),
-                new TextRun(relatorio.protocolo || "")
-              ]
-            }),
-            new Paragraph({
-              children: [
                 new TextRun({ text: "Data de vistoria: ", bold: true }),
                 new TextRun(relatorio.dataVistoria || "")
-              ]
+              ],
+              spacing: { after: 240 } // 8pt = linha em branco após parágrafo
             }),
             new Paragraph({
               children: [
                 new TextRun({ text: "Cliente: ", bold: true }),
                 new TextRun(relatorio.cliente || "")
-              ]
+              ],
+              spacing: { after: 240 }
             }),
             new Paragraph({
               children: [
                 new TextRun({ text: "Empreendimento: ", bold: true }),
                 new TextRun(relatorio.empreendimento || "")
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: "Endereço: ", bold: true }),
-                new TextRun(relatorio.endereco || "")
-              ]
+              ],
+              spacing: { after: 240 }
             }),
             new Paragraph({
               children: [
                 new TextRun({ text: "Cidade/UF: ", bold: true }),
                 new TextRun(`${relatorio.cidade || ""} - ${relatorio.uf || ""}`)
-              ]
+              ],
+              spacing: { after: 240 }
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Endereço: ", bold: true }),
+                new TextRun(relatorio.endereco || "")
+              ],
+              spacing: { after: 240 }
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Protocolo/FAR: ", bold: true }),
+                new TextRun(relatorio.protocolo || "")
+              ],
+              spacing: { after: 240 }
             }),
             new Paragraph({
               children: [
                 new TextRun({ text: "Assunto: ", bold: true }),
                 new TextRun(relatorio.assunto || "")
-              ]
+              ],
+              spacing: { after: 480 } // Duas linhas em branco após as informações básicas
             }),
             
-            // 2. RESPONSÁVEIS TÉCNICOS
-            new Paragraph({
-              text: "2. RESPONSÁVEIS TÉCNICOS",
-              heading: HeadingLevel.HEADING_1,
-              pageBreakBefore: false
-            }),
+            // RESPONSÁVEIS TÉCNICOS (sem numeração)
             
             // Dados dos responsáveis
             new Paragraph({
               children: [
                 new TextRun({ text: "Elaborado por: ", bold: true }),
                 new TextRun(relatorio.elaboradoPor || "")
-              ]
+              ],
+              spacing: { after: 240 }
             }),
             new Paragraph({
               children: [
                 new TextRun({ text: "Departamento: ", bold: true }),
                 new TextRun(relatorio.departamento || "")
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: "Unidade: ", bold: true }),
-                new TextRun(relatorio.unidade || "")
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: "Coordenador: ", bold: true }),
-                new TextRun(relatorio.coordenador || "")
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: "Gerente: ", bold: true }),
-                new TextRun(relatorio.gerente || "")
-              ]
+              ],
+              spacing: { after: 240 }
             }),
             new Paragraph({
               children: [
                 new TextRun({ text: "Regional: ", bold: true }),
                 new TextRun(relatorio.regional || "")
-              ]
+              ],
+              spacing: { after: 240 }
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Unidade: ", bold: true }),
+                new TextRun(relatorio.unidade || "")
+              ],
+              spacing: { after: 240 }
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Coordenador: ", bold: true }),
+                new TextRun(relatorio.coordenador || "")
+              ],
+              spacing: { after: 240 }
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "Gerente: ", bold: true }),
+                new TextRun(relatorio.gerente || "")
+              ],
+              spacing: { after: 480 } // Duas linhas em branco após responsáveis técnicos
             }),
             
-            // 3. INTRODUÇÃO
+            // INTRODUÇÃO (sem numeração)
             new Paragraph({
-              text: "3. INTRODUÇÃO",
-              heading: HeadingLevel.HEADING_1,
-              pageBreakBefore: false
+              children: [
+                new TextRun({ 
+                  text: "Introdução", 
+                  bold: true
+                })
+              ],
+              spacing: { before: 240, after: 240 }
             }),
             
             new Paragraph({
               text: introducaoTexto,
-              alignment: AlignmentType.JUSTIFIED
+              alignment: AlignmentType.JUSTIFIED,
+              spacing: { after: 240 }
             }),
             
-            // 3.1 DADOS DO PRODUTO
+            // Quantidade e modelo (sem subtítulo numerado)
             new Paragraph({
-              text: "3.1 DADOS DO PRODUTO",
-              heading: HeadingLevel.HEADING_2
+              children: [
+                new TextRun({ text: "Quantidade e modelo: ", bold: true })
+              ],
+              spacing: { after: 240 }
             }),
             
-            // Dados do produto
+            // Lista com marcadores para dados do produto
             new Paragraph({
               children: [
-                new TextRun({ text: "Quantidade: ", bold: true }),
-                new TextRun(relatorio.quantidade ? relatorio.quantidade.toString() : "Não informada")
-              ]
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ text: "Modelo de telha: ", bold: true }),
-                new TextRun(relatorio.modeloTelha ? 
-                  `${relatorio.modeloTelha} ${relatorio.espessura}mm CRFS` : 
-                  "Não informado")
-              ]
+                new TextRun({ text: "• " }),
+                new TextRun(`Modelo de telha: ${relatorio.modeloTelha || "Não informado"}`)
+              ],
+              indent: { left: convertInchesToTwip(0.5) },
+              spacing: { after: 240 }
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Área coberta: ", bold: true }),
-                new TextRun(relatorio.area ? 
-                  `${relatorio.area.toString()}m² (aproximadamente)` : 
-                  "Não informada")
-              ]
+                new TextRun({ text: "• " }),
+                new TextRun(`Espessura: ${relatorio.espessura || "Não informada"}mm`)
+              ],
+              indent: { left: convertInchesToTwip(0.5) },
+              spacing: { after: 240 }
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "• " }),
+                new TextRun(`Quantidade: ${relatorio.quantidade ? relatorio.quantidade.toString() : "Não informada"}`)
+              ],
+              indent: { left: convertInchesToTwip(0.5) },
+              spacing: { after: 240 }
+            }),
+            new Paragraph({
+              children: [
+                new TextRun({ text: "• " }),
+                new TextRun(`Área coberta: ${relatorio.area ? relatorio.area.toString() + "m² (aproximadamente)" : "Não informada"}`)
+              ],
+              indent: { left: convertInchesToTwip(0.5) },
+              spacing: { after: 240 }
             }),
             
-            // 4. ANÁLISE TÉCNICA
+            // ANÁLISE TÉCNICA (sem numeração)
             new Paragraph({
-              text: "4. ANÁLISE TÉCNICA",
-              heading: HeadingLevel.HEADING_1,
-              pageBreakBefore: false
+              children: [
+                new TextRun({ 
+                  text: "Análise Técnica", 
+                  bold: true
+                })
+              ],
+              spacing: { before: 240, after: 240 }
             }),
             
             new Paragraph({
               text: TEMPLATE_ANALISE_TECNICA,
-              alignment: AlignmentType.JUSTIFIED
-            }),
-            
-            // 4.1 NÃO CONFORMIDADES
-            new Paragraph({
-              text: "4.1 NÃO CONFORMIDADES IDENTIFICADAS",
-              heading: HeadingLevel.HEADING_2
+              alignment: AlignmentType.JUSTIFIED,
+              spacing: { after: 240 }
             }),
             
             // Adicionar não conformidades
             ...naoConformidadesParagrafos,
             
-            // 5. CONCLUSÃO
+            // CONCLUSÃO (sem numeração)
             new Paragraph({
-              text: "5. CONCLUSÃO",
-              heading: HeadingLevel.HEADING_1,
-              pageBreakBefore: false
+              children: [
+                new TextRun({ 
+                  text: "Conclusão", 
+                  bold: true
+                })
+              ],
+              spacing: { before: 240, after: 240 }
             }),
+            
+            // Lista numerada de não conformidades (apenas títulos)
+            ...naoConformidadesListaConclusao,
             
             new Paragraph({
               text: conclusaoTexto,
-              alignment: AlignmentType.JUSTIFIED
+              alignment: AlignmentType.JUSTIFIED,
+              spacing: { after: 240 }
             }),
             
-            // 6. OBSERVAÇÕES FINAIS
-            new Paragraph({
-              text: "6. OBSERVAÇÕES FINAIS",
-              heading: HeadingLevel.HEADING_1,
-              pageBreakBefore: false
-            }),
-            
+            // Observações finais (sem título numerado)
             new Paragraph({
               text: relatorio.observacoesGerais || 
                 "Este relatório foi elaborado com base na inspeção técnica realizada no local, seguindo os procedimentos padrão da Brasilit.",
-              alignment: AlignmentType.JUSTIFIED
+              alignment: AlignmentType.JUSTIFIED,
+              spacing: { after: 480 } // Duas linhas em branco
             }),
             
-            // Assinatura
+            // Assinatura final
             new Paragraph({
-              text: "Responsável Técnico",
-              alignment: AlignmentType.CENTER,
-              spacing: { before: 480, after: 240 }
+              text: "Atenciosamente,",
+              spacing: { after: 480 } // Duas linhas em branco
             }),
             
             new Paragraph({
               text: relatorio.elaboradoPor || "Técnico Brasilit",
-              alignment: AlignmentType.CENTER,
               spacing: { after: 240 }
             }),
             
             new Paragraph({
-              children: [
-                new TextRun({ 
-                  text: "Brasilit Saint-Gobain",
-                  bold: true
-                })
-              ],
-              alignment: AlignmentType.CENTER
+              text: "Assistência Técnica Brasilit Saint-Gobain",
+              spacing: { after: 240 }
             })
           ]
         }
