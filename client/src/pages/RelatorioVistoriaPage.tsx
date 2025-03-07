@@ -74,7 +74,6 @@ import {
 
 export default function RelatorioVistoriaPage() {
   // Estados
-  const [isGeneratingDocx, setIsGeneratingDocx] = useState(false);
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('informacoes-basicas');
   const [fotos, setFotos] = useState<{ id: string; dataUrl: string; descricao?: string; timestamp: string }[]>([]);
