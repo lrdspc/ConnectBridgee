@@ -85,17 +85,35 @@ function generateTitulo(): Paragraph {
 function generateInformacoesBasicas(relatorio: RelatorioVistoria): Paragraph[] {
   const paragraphs: Paragraph[] = [];
 
+  // Título da seção (Informações Gerais)
+  paragraphs.push(
+    new Paragraph({
+      spacing: { before: 240, after: 240 }, // Uma linha em branco antes e depois
+      alignment: AlignmentType.LEFT,
+      children: [
+        new TextRun({
+          text: "Informações Gerais",
+          bold: true,
+          size: 24, // 12pt
+          font: "Times New Roman",
+        }),
+      ],
+    })
+  );
+
   // Data de vistoria
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 200, after: 100 },
+      spacing: { before: 120, after: 120 },
       children: [
         new TextRun({
           text: "Data de vistoria: ",
           bold: true,
+          font: "Times New Roman",
         }),
         new TextRun({
           text: relatorio.dataVistoria || "",
+          font: "Times New Roman",
         }),
       ],
     })
@@ -104,14 +122,16 @@ function generateInformacoesBasicas(relatorio: RelatorioVistoria): Paragraph[] {
   // Cliente
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 100, after: 100 },
+      spacing: { before: 120, after: 120 },
       children: [
         new TextRun({
           text: "Cliente: ",
           bold: true,
+          font: "Times New Roman",
         }),
         new TextRun({
           text: relatorio.cliente || "",
+          font: "Times New Roman",
         }),
       ],
     })
@@ -120,14 +140,16 @@ function generateInformacoesBasicas(relatorio: RelatorioVistoria): Paragraph[] {
   // Empreendimento
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 100, after: 100 },
+      spacing: { before: 120, after: 120 },
       children: [
         new TextRun({
           text: "Empreendimento: ",
           bold: true,
+          font: "Times New Roman",
         }),
         new TextRun({
           text: relatorio.empreendimento || "",
+          font: "Times New Roman",
         }),
       ],
     })
@@ -136,14 +158,16 @@ function generateInformacoesBasicas(relatorio: RelatorioVistoria): Paragraph[] {
   // Cidade
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 100, after: 100 },
+      spacing: { before: 120, after: 120 },
       children: [
         new TextRun({
           text: "Cidade: ",
           bold: true,
+          font: "Times New Roman",
         }),
         new TextRun({
           text: `${relatorio.cidade || ""} - ${relatorio.uf || ""}`,
+          font: "Times New Roman",
         }),
       ],
     })
@@ -152,14 +176,16 @@ function generateInformacoesBasicas(relatorio: RelatorioVistoria): Paragraph[] {
   // Endereço
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 100, after: 100 },
+      spacing: { before: 120, after: 120 },
       children: [
         new TextRun({
           text: "Endereço: ",
           bold: true,
+          font: "Times New Roman",
         }),
         new TextRun({
           text: relatorio.endereco || "",
+          font: "Times New Roman",
         }),
       ],
     })
@@ -168,14 +194,16 @@ function generateInformacoesBasicas(relatorio: RelatorioVistoria): Paragraph[] {
   // FAR/Protocolo
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 100, after: 100 },
+      spacing: { before: 120, after: 120 },
       children: [
         new TextRun({
           text: "FAR/Protocolo: ",
           bold: true,
+          font: "Times New Roman",
         }),
         new TextRun({
           text: relatorio.protocolo || "",
+          font: "Times New Roman",
         }),
       ],
     })
@@ -184,14 +212,16 @@ function generateInformacoesBasicas(relatorio: RelatorioVistoria): Paragraph[] {
   // Assunto
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 100, after: 100 },
+      spacing: { before: 120, after: 120 },
       children: [
         new TextRun({
           text: "Assunto: ",
           bold: true,
+          font: "Times New Roman",
         }),
         new TextRun({
           text: relatorio.assunto || "",
+          font: "Times New Roman",
         }),
       ],
     })
@@ -204,17 +234,35 @@ function generateInformacoesBasicas(relatorio: RelatorioVistoria): Paragraph[] {
 function generateResponsaveisTecnicos(relatorio: RelatorioVistoria): Paragraph[] {
   const paragraphs: Paragraph[] = [];
 
+  // Título da seção
+  paragraphs.push(
+    new Paragraph({
+      spacing: { before: 240, after: 240 }, // Uma linha em branco antes e depois
+      alignment: AlignmentType.LEFT,
+      children: [
+        new TextRun({
+          text: "Responsáveis Técnicos",
+          bold: true,
+          size: 24, // 12pt
+          font: "Times New Roman",
+        }),
+      ],
+    })
+  );
+
   // Elaborado por
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 100, after: 100 },
+      spacing: { before: 120, after: 120 },
       children: [
         new TextRun({
           text: "Elaborado por: ",
           bold: true,
+          font: "Times New Roman",
         }),
         new TextRun({
           text: relatorio.elaboradoPor || "",
+          font: "Times New Roman",
         }),
       ],
     })
@@ -223,14 +271,16 @@ function generateResponsaveisTecnicos(relatorio: RelatorioVistoria): Paragraph[]
   // Departamento
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 100, after: 100 },
+      spacing: { before: 120, after: 120 },
       children: [
         new TextRun({
           text: "Departamento: ",
           bold: true,
+          font: "Times New Roman",
         }),
         new TextRun({
           text: relatorio.departamento || "",
+          font: "Times New Roman",
         }),
       ],
     })
@@ -239,14 +289,16 @@ function generateResponsaveisTecnicos(relatorio: RelatorioVistoria): Paragraph[]
   // Unidade
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 100, after: 100 },
+      spacing: { before: 120, after: 120 },
       children: [
         new TextRun({
           text: "Unidade: ",
           bold: true,
+          font: "Times New Roman",
         }),
         new TextRun({
           text: relatorio.unidade || "",
+          font: "Times New Roman",
         }),
       ],
     })
@@ -255,14 +307,16 @@ function generateResponsaveisTecnicos(relatorio: RelatorioVistoria): Paragraph[]
   // Coordenador Responsável
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 100, after: 100 },
+      spacing: { before: 120, after: 120 },
       children: [
         new TextRun({
           text: "Coordenador Responsável: ",
           bold: true,
+          font: "Times New Roman",
         }),
         new TextRun({
           text: relatorio.coordenador || "",
+          font: "Times New Roman",
         }),
       ],
     })
@@ -271,14 +325,16 @@ function generateResponsaveisTecnicos(relatorio: RelatorioVistoria): Paragraph[]
   // Gerente Responsável
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 100, after: 100 },
+      spacing: { before: 120, after: 120 },
       children: [
         new TextRun({
           text: "Gerente Responsável: ",
           bold: true,
+          font: "Times New Roman",
         }),
         new TextRun({
           text: relatorio.gerente || "",
+          font: "Times New Roman",
         }),
       ],
     })
@@ -287,14 +343,16 @@ function generateResponsaveisTecnicos(relatorio: RelatorioVistoria): Paragraph[]
   // Regional
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 100, after: 100 },
+      spacing: { before: 120, after: 120 },
       children: [
         new TextRun({
           text: "Regional: ",
           bold: true,
+          font: "Times New Roman",
         }),
         new TextRun({
           text: relatorio.regional || "",
+          font: "Times New Roman",
         }),
       ],
     })
@@ -326,10 +384,12 @@ function generateIntroducao(relatorio: RelatorioVistoria): Paragraph[] {
   // Primeiro parágrafo da introdução - completo
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 200, after: 200 },
+      spacing: { before: 120, after: 120 },
+      alignment: AlignmentType.JUSTIFIED,
       children: [
         new TextRun({
           text: "A Área de Assistência Técnica foi solicitada para atender uma reclamação relacionada ao surgimento de infiltrações nas telhas de fibrocimento: - Telha da marca BRASILIT modelo ONDULADA de 5mm, produzidas com tecnologia CRFS - Cimento Reforçado com Fios Sintéticos - 100% sem amianto - cuja fabricação segue a norma internacional ISO 9933, bem como as normas técnicas da ABNT: NBR-15210-1, NBR-15210-2 e NBR-15210-3.",
+          font: "Times New Roman",
         }),
       ],
     })
@@ -338,10 +398,12 @@ function generateIntroducao(relatorio: RelatorioVistoria): Paragraph[] {
   // Segundo parágrafo - detalhes do protocolo
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 100, after: 200 },
+      spacing: { before: 120, after: 120 },
+      alignment: AlignmentType.JUSTIFIED,
       children: [
         new TextRun({
           text: `Em atenção a vossa solicitação, analisamos as evidências encontradas, para avaliar as manifestações patológicas reclamadas em telhas de nossa marca aplicada em sua cobertura conforme registro de reclamação protocolo FAR ${relatorio.protocolo}.`,
+          font: "Times New Roman",
         }),
       ],
     })
@@ -350,10 +412,12 @@ function generateIntroducao(relatorio: RelatorioVistoria): Paragraph[] {
   // Terceiro parágrafo - detalhes técnicos da telha
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 100, after: 200 },
+      spacing: { before: 120, after: 120 },
+      alignment: AlignmentType.JUSTIFIED,
       children: [
         new TextRun({
           text: `O modelo de telha escolhido para a edificação foi: ${relatorio.modeloTelha} ${relatorio.espessura}mm CRFS. Esse modelo, como os demais, possui a necessidade de seguir rigorosamente as orientações técnicas contidas no Guia Técnico de Telhas de Fibrocimento e Acessórios para Telhado --- Brasilit para o melhor desempenho do produto, assim como a garantia do produto coberta por ${relatorio.anosGarantia} anos (ou ${relatorio.anosGarantiaSistemaCompleto} anos para sistema completo).`,
+          font: "Times New Roman",
         }),
       ],
     })
@@ -362,11 +426,12 @@ function generateIntroducao(relatorio: RelatorioVistoria): Paragraph[] {
   // Seção de quantidade e modelo
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 200, after: 100 },
+      spacing: { before: 180, after: 120 },
       children: [
         new TextRun({
           text: "Quantidade e modelo:",
           bold: true,
+          font: "Times New Roman",
         }),
       ],
     })
@@ -375,10 +440,12 @@ function generateIntroducao(relatorio: RelatorioVistoria): Paragraph[] {
   // Item quantidade de telhas
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 100, after: 100 },
+      spacing: { before: 120, after: 120 },
+      indent: { left: 360 }, // Indentação para itens de lista
       children: [
         new TextRun({
           text: `• ${relatorio.quantidade}: ${relatorio.modeloTelha} ${relatorio.espessura}mm CRFS.`,
+          font: "Times New Roman",
         }),
       ],
     })
@@ -387,10 +454,12 @@ function generateIntroducao(relatorio: RelatorioVistoria): Paragraph[] {
   // Item área coberta
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 100, after: 200 },
+      spacing: { before: 120, after: 120 },
+      indent: { left: 360 }, // Indentação para itens de lista
       children: [
         new TextRun({
           text: `• Área coberta: ${relatorio.area}m² aproximadamente.`,
+          font: "Times New Roman",
         }),
       ],
     })
@@ -399,10 +468,12 @@ function generateIntroducao(relatorio: RelatorioVistoria): Paragraph[] {
   // Parágrafo final - referência à norma técnica
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 100, after: 300 },
+      spacing: { before: 120, after: 200 },
+      alignment: AlignmentType.JUSTIFIED,
       children: [
         new TextRun({
           text: "A análise do caso segue os requisitos presentes na norma ABNT NBR 7196: Telhas de fibrocimento sem amianto --- Execução de coberturas e fechamentos laterais ---Procedimento e Guia Técnico de Telhas de Fibrocimento e Acessórios para Telhado --- Brasilit.",
+          font: "Times New Roman",
         }),
       ],
     })
@@ -434,10 +505,12 @@ function generateAnaliseTecnica(relatorio: RelatorioVistoria): Paragraph[] {
   // Texto introdutório da análise técnica
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 200, after: 200 },
+      spacing: { before: 120, after: 120 },
+      alignment: AlignmentType.JUSTIFIED,
       children: [
         new TextRun({
           text: "Durante a visita técnica realizada no local, nossa equipe conduziu uma vistoria minuciosa da cobertura, documentando e analisando as condições de instalação e o estado atual das telhas. Após criteriosa avaliação das evidências coletadas em campo, identificamos alguns desvios nos procedimentos de manuseio e instalação em relação às especificações técnicas do fabricante, os quais são detalhados a seguir:",
+          font: "Times New Roman",
         }),
       ],
     })
@@ -449,11 +522,12 @@ function generateAnaliseTecnica(relatorio: RelatorioVistoria): Paragraph[] {
     // Título da não conformidade
     paragraphs.push(
       new Paragraph({
-        spacing: { before: 300, after: 100 },
+        spacing: { before: 180, after: 120 },
         children: [
           new TextRun({
             text: `${index+1}. ${nc.titulo}`,
             bold: true,
+            font: "Times New Roman",
           }),
         ],
       })
@@ -471,10 +545,13 @@ function generateAnaliseTecnica(relatorio: RelatorioVistoria): Paragraph[] {
           const chunk = descricao.slice(0, Math.min(maxLength, descricao.length));
           paragraphs.push(
             new Paragraph({
-              spacing: { before: 100, after: 100 },
+              spacing: { before: 120, after: 120 },
+              alignment: AlignmentType.JUSTIFIED,
+              indent: { left: 360 }, // Indentação para descrição de não conformidade
               children: [
                 new TextRun({
                   text: chunk,
+                  font: "Times New Roman",
                 }),
               ],
             })
@@ -485,10 +562,13 @@ function generateAnaliseTecnica(relatorio: RelatorioVistoria): Paragraph[] {
         // Descrição normal em um único parágrafo
         paragraphs.push(
           new Paragraph({
-            spacing: { before: 100, after: 200 },
+            spacing: { before: 120, after: 120 },
+            alignment: AlignmentType.JUSTIFIED,
+            indent: { left: 360 }, // Indentação para descrição de não conformidade
             children: [
               new TextRun({
                 text: nc.descricao,
+                font: "Times New Roman",
               }),
             ],
           })
@@ -523,10 +603,12 @@ function generateConclusao(relatorio: RelatorioVistoria): Paragraph[] {
   // Texto introdutório da conclusão
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 200, after: 200 },
+      spacing: { before: 120, after: 120 },
+      alignment: AlignmentType.JUSTIFIED,
       children: [
         new TextRun({
           text: "Com base na análise técnica realizada, foram identificadas as seguintes não conformidades:",
+          font: "Times New Roman",
         }),
       ],
     })
@@ -537,11 +619,12 @@ function generateConclusao(relatorio: RelatorioVistoria): Paragraph[] {
   naoConformidadesSelecionadas.forEach((nc: any, index: number) => {
     paragraphs.push(
       new Paragraph({
-        spacing: { before: 100, after: 100 },
+        spacing: { before: 120, after: 120 },
         indent: { left: 360 }, // Indentação para melhor formatação da lista
         children: [
           new TextRun({
             text: `${index+1}. ${nc.titulo}`,
+            font: "Times New Roman",
           }),
         ],
       })
@@ -551,10 +634,12 @@ function generateConclusao(relatorio: RelatorioVistoria): Paragraph[] {
   // Resultado da reclamação
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 300, after: 200 },
+      spacing: { before: 180, after: 120 },
+      alignment: AlignmentType.JUSTIFIED,
       children: [
         new TextRun({
           text: `Em função das não conformidades constatadas no manuseio e instalação das chapas Brasilit, finalizamos o atendimento considerando a reclamação como ${relatorio.resultado}, onde os problemas reclamados se dão pelo incorreto manuseio e instalação das telhas e não a problemas relacionados à qualidade do material.`,
+          font: "Times New Roman",
         }),
       ],
     })
@@ -563,10 +648,12 @@ function generateConclusao(relatorio: RelatorioVistoria): Paragraph[] {
   // Informação sobre garantia
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 200, after: 200 },
+      spacing: { before: 120, after: 120 },
+      alignment: AlignmentType.JUSTIFIED,
       children: [
         new TextRun({
           text: `As telhas BRASILIT modelo FIBROCIMENTO ONDULADA possuem ${relatorio.anosGarantiaTotal} anos de garantia com relação a problemas de fabricação. A garantia Brasilit está condicionada a correta aplicação do produto, seguindo rigorosamente as instruções de instalação contidas no Guia Técnico de Telhas de Fibrocimento e Acessórios para Telhado --- Brasilit. Este guia técnico está sempre disponível em: http://www.brasilit.com.br.`,
+          font: "Times New Roman",
         }),
       ],
     })
@@ -575,10 +662,12 @@ function generateConclusao(relatorio: RelatorioVistoria): Paragraph[] {
   // Normas ABNT
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 200, after: 200 },
+      spacing: { before: 120, after: 120 },
+      alignment: AlignmentType.JUSTIFIED,
       children: [
         new TextRun({
           text: "Ratificamos que os produtos Brasilit atendem as Normas da Associação Brasileira de Normas Técnicas --- ABNT, específicas para cada linha de produto, e cumprimos as exigências legais de garantia de produtos conforme a legislação em vigor.",
+          font: "Times New Roman",
         }),
       ],
     })
@@ -587,10 +676,12 @@ function generateConclusao(relatorio: RelatorioVistoria): Paragraph[] {
   // Agradecimento
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 200, after: 300 },
+      spacing: { before: 120, after: 200 },
+      alignment: AlignmentType.JUSTIFIED,
       children: [
         new TextRun({
           text: "Desde já, agradecemos e nos colocamos à disposição para quaisquer esclarecimentos que se fizerem necessário.",
+          font: "Times New Roman",
         }),
       ],
     })
@@ -599,10 +690,12 @@ function generateConclusao(relatorio: RelatorioVistoria): Paragraph[] {
   // Atenciosamente
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 200, after: 100 },
+      spacing: { before: 120, after: 120 },
+      alignment: AlignmentType.RIGHT,
       children: [
         new TextRun({
           text: "Atenciosamente,",
+          font: "Times New Roman",
         }),
       ],
     })
@@ -643,11 +736,12 @@ async function generateFotosSection(relatorio: RelatorioVistoria): Promise<Parag
         // Adicionar a foto
         paragraphs.push(
           new Paragraph({
-            spacing: { before: 200, after: 100 },
+            spacing: { before: 180, after: 120 },
             children: [
               new TextRun({
                 text: `Foto ${i+1}: ${foto.descricao || "Registro fotográfico da vistoria"}`,
                 bold: true,
+                font: "Times New Roman",
               }),
             ],
           })
@@ -656,7 +750,7 @@ async function generateFotosSection(relatorio: RelatorioVistoria): Promise<Parag
         // Adicionar a imagem
         paragraphs.push(
           new Paragraph({
-            spacing: { before: 100, after: 200 },
+            spacing: { before: 120, after: 180 },
             alignment: AlignmentType.CENTER,
             children: [
               new ImageRun({
@@ -697,11 +791,12 @@ function generateAssinatura(relatorio: RelatorioVistoria): Paragraph[] {
 
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 500, after: 100 },
+      spacing: { before: 500, after: 120 },
       alignment: AlignmentType.CENTER,
       children: [
         new TextRun({
           text: "______________________________",
+          font: "Times New Roman",
         }),
       ],
     })
@@ -709,12 +804,13 @@ function generateAssinatura(relatorio: RelatorioVistoria): Paragraph[] {
 
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 100, after: 100 },
+      spacing: { before: 120, after: 120 },
       alignment: AlignmentType.CENTER,
       children: [
         new TextRun({
           text: relatorio.elaboradoPor || "Técnico Responsável",
           bold: true,
+          font: "Times New Roman",
         }),
       ],
     })
@@ -722,11 +818,12 @@ function generateAssinatura(relatorio: RelatorioVistoria): Paragraph[] {
 
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 100, after: 100 },
+      spacing: { before: 120, after: 120 },
       alignment: AlignmentType.CENTER,
       children: [
         new TextRun({
           text: relatorio.departamento || "Departamento",
+          font: "Times New Roman",
         }),
       ],
     })
