@@ -46,10 +46,23 @@ function log(...args: any[]) {
 export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promise<Blob> {
   log("Iniciando geração do relatório para", relatorio.cliente);
 
-  // Aplicar os templates de texto
-  const introducaoTexto = aplicarTemplateIntroducao(relatorio);
+  // Aplicar os templates de texto com as substituições de variáveis
+  const dadosTemplate = {
+    modeloTelha: relatorio.modeloTelha || "Ondulada",
+    espessura: relatorio.espessura || "6",
+    protocolo: relatorio.protocolo || "(Número do protocolo)",
+    anosGarantia: relatorio.anosGarantia || "5",
+    anosGarantiaSistemaCompleto: relatorio.anosGarantiaSistemaCompleto || "10",
+    anosGarantiaTotal: relatorio.anosGarantiaTotal || "10",
+    resultado: relatorio.resultado || "IMPROCEDENTE"
+  };
+  
+  // Usar as funções de template para garantir a substituição correta das variáveis
+  const introducaoTexto = aplicarTemplateIntroducao(dadosTemplate);
   const analiseTecnicaTexto = TEMPLATE_ANALISE_TECNICA;
-  const conclusaoTexto = aplicarTemplateConclusao(relatorio);
+  const conclusaoTexto = aplicarTemplateConclusao(dadosTemplate);
+  
+  log("Templates de texto aplicados com os seguintes dados:", dadosTemplate);
 
   // Preparar parágrafos para não conformidades selecionadas
   const naoConformidadesParagrafos: Paragraph[] = [];
@@ -444,6 +457,63 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
               text: analiseTecnicaTexto,
               alignment: AlignmentType.JUSTIFIED,
               spacing: { after: 240 }
+            }),
+            
+            // Seção de especificações técnicas das telhas
+            new Paragraph({
+              spacing: { before: 240, after: 240 },
+              alignment: AlignmentType.LEFT,
+              children: [
+                new TextRun({
+                  text: "Especificações técnicas das telhas:",
+                  bold: true,
+                  size: 24 // 12pt
+                }),
+              ],
+            }),
+            
+            new Paragraph({
+              spacing: { after: 180 },
+              alignment: AlignmentType.LEFT,
+              children: [
+                new TextRun({
+                  text: `Modelo: ${relatorio.modeloTelha || "Ondulada"}`,
+                  size: 24
+                }),
+              ],
+            }),
+            
+            new Paragraph({
+              spacing: { after: 180 },
+              alignment: AlignmentType.LEFT,
+              children: [
+                new TextRun({
+                  text: `Espessura: ${relatorio.espessura || "6"}mm`,
+                  size: 24
+                }),
+              ],
+            }),
+            
+            new Paragraph({
+              spacing: { after: 180 },
+              alignment: AlignmentType.LEFT,
+              children: [
+                new TextRun({
+                  text: `Quantidade: ${relatorio.quantidade || "0"} peças`,
+                  size: 24
+                }),
+              ],
+            }),
+            
+            new Paragraph({
+              spacing: { after: 240 },
+              alignment: AlignmentType.LEFT,
+              children: [
+                new TextRun({
+                  text: `Área total aproximada: ${relatorio.area || "0"}m²`,
+                  size: 24
+                }),
+              ],
             }),
             
             // Parágrafos das não conformidades
