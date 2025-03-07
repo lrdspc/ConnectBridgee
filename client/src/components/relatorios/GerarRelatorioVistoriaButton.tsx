@@ -6,9 +6,14 @@ import { GerarRelatorioVistoriaModal } from "./GerarRelatorioVistoriaModal";
 import { RelatorioVistoria, novoRelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { toast } from "sonner";
 
+// Interface estendida para compatibilidade com versões anteriores do código
+interface ExtendedRelatorioVistoria extends RelatorioVistoria {
+  [key: string]: any; // Para permitir propriedades adicionais
+}
+
 interface GerarRelatorioVistoriaButtonProps {
-  relatorio?: RelatorioVistoria;
-  onSave?: (relatorio: RelatorioVistoria) => void;
+  relatorio?: ExtendedRelatorioVistoria;
+  onSave?: (relatorio: ExtendedRelatorioVistoria) => void;
   variant?: "default" | "outline" | "secondary" | "destructive" | "ghost" | "link";
   size?: "default" | "sm" | "lg" | "icon";
   className?: string;
@@ -27,7 +32,7 @@ export function GerarRelatorioVistoriaButton({
     setOpen(isOpen);
   };
   
-  const handleSave = (savedRelatorio: RelatorioVistoria) => {
+  const handleSave = (savedRelatorio: ExtendedRelatorioVistoria) => {
     if (onSave) {
       onSave(savedRelatorio);
     } else {

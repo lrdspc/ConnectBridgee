@@ -18,11 +18,16 @@ import { modelosTelhas, espessurasTelhas, resultadoReclamacaoEnum } from "@share
 import { generateRelatorioVistoria } from "@/lib/relatorioVistoriaGenerator";
 import { generateRelatorioVistoriaBrasil } from "@/lib/relatorioVistoriaBrasilGenerator";
 
+// Interface estendida para compatibilidade com versões anteriores do código
+interface ExtendedRelatorioVistoria extends RelatorioVistoria {
+  [key: string]: any; // Para permitir propriedades adicionais
+}
+
 interface GerarRelatorioVistoriaModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  relatorio: RelatorioVistoria;
-  onSave: (relatorio: RelatorioVistoria) => void;
+  relatorio: ExtendedRelatorioVistoria;
+  onSave: (relatorio: ExtendedRelatorioVistoria) => void;
 }
 
 export function GerarRelatorioVistoriaModal({ 

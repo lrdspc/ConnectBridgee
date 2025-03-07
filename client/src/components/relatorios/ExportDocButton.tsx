@@ -6,8 +6,13 @@ import { toast } from "sonner";
 import { generateRelatorioVistoriaBrasil } from "@/lib/relatorioVistoriaBrasilGenerator";
 import { gerarRelatorioVistoriaDoc } from "@/lib/relatorioVistoriaDocGenerator";
 
+// Interface estendida para compatibilidade com versões anteriores do código
+interface ExtendedRelatorioVistoria extends RelatorioVistoria {
+  [key: string]: any; // Para permitir propriedades adicionais
+}
+
 interface ExportDocButtonProps {
-  relatorio: RelatorioVistoria;
+  relatorio: ExtendedRelatorioVistoria;
   variant?: "default" | "outline" | "secondary" | "destructive" | "ghost" | "link";
   size?: "default" | "sm" | "lg" | "icon";
   className?: string;

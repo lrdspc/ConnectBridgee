@@ -192,7 +192,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: ExtendedRelatorioVist
           bold: true
         }),
         new TextRun({
-          text: relatorio.tecnico || "",
+          text: relatorio.elaboradoPor || "",
           font: FONTE_PRINCIPAL,
           size: TAMANHO_FONTE
         })
