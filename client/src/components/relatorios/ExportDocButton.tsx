@@ -78,14 +78,14 @@ export function ExportDocButton({
       
       // Tentar gerar o documento usando várias estratégias em sequência
       try {
-        // Estratégia 1: Gerador DOCX minimalista com formatação ABNT
-        log("▶️ TENTATIVA 1: Usando gerador minimalista (formatação ABNT)");
+        // Estratégia 1: Gerador DOCX essencial com formatação ABNT
+        log("▶️ TENTATIVA 1: Usando gerador essencial otimizado (formatação ABNT)");
         const blob = await gerarRelatorioVistoriaMinimal(relatorioPreparado);
         saveDocFile(blob, fileName);
         toast.success("Relatório ABNT exportado com sucesso!");
         return; // Sair da função após sucesso
       } catch (minimalError) {
-        console.error("❌ Erro na geração minimalista:", minimalError);
+        console.error("❌ Erro na geração essencial:", minimalError);
         
         // Notificar o usuário do problema na primeira tentativa
         toast.warning("Tentando método alternativo...", {duration: 2000});
