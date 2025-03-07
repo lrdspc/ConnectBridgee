@@ -4,7 +4,7 @@ import {
   convertInchesToTwip, PageOrientation, WidthType, Table, TableRow, TableCell,
   SectionType, Header, Footer, PageNumber, IBorderOptions as BorderOptions, ShadingType,
   UnderlineType, Media, ExternalHyperlink, PageBreak,
-  SimpleField, ImageRun, FileChild
+  SimpleField, ImageRun, FileChild, Packer
 } from "docx";
 import { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 

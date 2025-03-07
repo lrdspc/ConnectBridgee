@@ -7,6 +7,14 @@ import htmlToDocx from 'html-to-docx';
 import { RelatorioVistoria } from '@shared/relatorioVistoriaSchema';
 import { aplicarTemplateIntroducao, aplicarTemplateConclusao, TEMPLATE_ANALISE_TECNICA } from './relatorioVistoriaTemplates';
 
+// Adicionar logs para debugging
+const DEBUG = true;
+const logDebug = (...args: any[]) => {
+  if (DEBUG) {
+    console.log('[DEBUG GeneratorSimple]', ...args);
+  }
+};
+
 // Interface estendida para compatibilidade
 interface ExtendedRelatorioVistoria extends RelatorioVistoria {
   [key: string]: any; // Para permitir propriedades adicionais
@@ -33,10 +41,18 @@ async function dataUrlToArrayBuffer(dataUrl: string): Promise<ArrayBuffer> {
  */
 export async function gerarRelatorioVistoriaDoc(relatorio: ExtendedRelatorioVistoria): Promise<Blob> {
   try {
+    logDebug('Iniciando geração de documento com html-to-docx');
     // Preparar dados para o template
     
     // Garantir que o resultado é sempre IMPROCEDENTE
     relatorio.resultado = "IMPROCEDENTE";
+    
+    logDebug('Dados do relatório:', {
+      protocolo: relatorio.protocolo,
+      cliente: relatorio.cliente,
+      empreendimento: relatorio.empreendimento,
+      naoConformidades: relatorio.naoConformidades?.length || 0
+    });
     
     // Gerar textos a partir dos templates
     const introducaoTexto = aplicarTemplateIntroducao({
@@ -272,10 +288,29 @@ export async function gerarRelatorioVistoriaDoc(relatorio: ExtendedRelatorioVist
     };
     
     // Gerar o documento Word a partir do HTML
-    const buffer = await htmlToDocx(html, options);
+    logDebug('Chamando htmlToDocx com opções:', options);
     
-    // Converter o buffer para Blob
-    return new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+    // Implementação à prova de falhas - tentativa sem imagens primeiro
+    try {
+      const buffer = await htmlToDocx(html, options);
+      logDebug('Documento gerado com sucesso, tamanho do buffer:', buffer?.length || 0);
+      
+      // Converter o buffer para Blob
+      return new Blob([buffer], { 
+        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+      });
+    } catch (innerError) {
+      logDebug('Erro ao gerar com imagens, tentando sem imagens:', innerError);
+      
+      // Remover imagens e tentar novamente
+      const htmlSemImagens = html.replace(/<img[^>]*>/g, '<!-- Imagem removida -->');
+      const bufferSemImagens = await htmlToDocx(htmlSemImagens, options);
+      
+      // Converter o buffer para Blob
+      return new Blob([bufferSemImagens], { 
+        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+      });
+    }
     
   } catch (error) {
     console.error('Erro ao gerar documento Word:', error);
