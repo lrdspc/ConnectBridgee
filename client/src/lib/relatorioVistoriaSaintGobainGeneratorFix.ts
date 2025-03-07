@@ -1,16 +1,15 @@
 /**
- * Gerador de Relatórios DOCX com formatação exata conforme modelo Brasilit
+ * Gerador de Relatórios DOCX com formatação exata conforme modelo Saint-Gobain Brasilit
  * 
  * Esta versão foi desenvolvida para atender exatamente a formatação solicitada
  * de acordo com o documento de referência fornecido.
  * 
  * Características:
- * - Formatação Times New Roman 12pt
- * - Espaçamento entre linhas 1,5
- * - Margens ABNT (superior, inferior e direita: 2,5cm, esquerda: 3,0cm)
- * - Layout em tabelas adequado para documentos formais
+ * - Formatação Arial 10pt
+ * - Layout em tabelas conforme modelo original
+ * - Cabeçalho com logo da Saint-Gobain
+ * - Rodapé com logotipos das marcas
  * - Formatação de não conformidades conforme especificado
- * - Texto corrigido e estruturado de acordo com o modelo Brasilit
  */
 
 import { 
@@ -721,21 +720,21 @@ export async function gerarRelatorioSaintGobainFix(relatorio: RelatorioVistoria 
       ],
     });
     
-    // Criação do documento final com formatação ABNT
+    // Criação do documento final
     const doc = new Document({
       title: "Relatório de Vistoria Técnica",
       description: "Relatório de Vistoria Técnica gerado pelo sistema Brasilit",
-      creator: "Brasilit",
+      creator: "Saint-Gobain Brasil",
       styles: {
         default: {
           document: {
             run: {
-              font: "Times New Roman",
-              size: 24 // 12pt
+              font: "Arial",
+              size: 20 // 10pt
             },
             paragraph: {
               spacing: {
-                line: 360, // 1.5x line spacing (360 twips = 1.5 x 240 twips)
+                line: 276, // 1.15x line spacing
               }
             }
           }
@@ -746,21 +745,21 @@ export async function gerarRelatorioSaintGobainFix(relatorio: RelatorioVistoria 
           properties: {
             page: {
               margin: {
-                top: 1417, // 2.5cm em twips (2,5cm = ~1417 twips)
-                right: 1417, // 2.5cm em twips
-                bottom: 1417, // 2.5cm em twips
-                left: 1701 // 3.0cm em twips (3,0cm = ~1701 twips)
+                top: 567, // 1cm em twips
+                right: 567, // 1cm em twips
+                bottom: 567, // 1cm em twips
+                left: 567 // 1cm em twips
               }
             }
           },
           children: [
-            // Cabeçalho com logo Brasilit
+            // Cabeçalho com logo Saint-Gobain
             new Paragraph({
               alignment: AlignmentType.CENTER,
               spacing: { after: 120 },
               children: [
                 new TextRun({
-                  text: "BRASILIT",
+                  text: "SAINT-GOBAIN",
                   bold: true,
                   size: 24, // 12pt
                   color: "ff0000" // vermelho para simular o logo
@@ -773,7 +772,7 @@ export async function gerarRelatorioSaintGobainFix(relatorio: RelatorioVistoria 
               spacing: { after: 240 },
               children: [
                 new TextRun({
-                  text: "SOLUÇÕES PARA COBERTURAS",
+                  text: "PRODUTOS PARA CONSTRUÇÃO",
                   size: 20, 
                   color: "0070c0" // azul para simular a descrição sob o logo
                 })
@@ -815,40 +814,15 @@ export async function gerarRelatorioSaintGobainFix(relatorio: RelatorioVistoria 
             // Tabela de conclusão
             tabelaConclusao,
             
-            // Rodapé com informações da Brasilit
+            // Rodapé com logos
             new Paragraph({
               alignment: AlignmentType.CENTER,
               spacing: { before: 360 },
               children: [
                 new TextRun({
-                  text: "BRASILIT - DIVISÃO DE PRODUTOS PARA CONSTRUÇÃO",
+                  text: "[Logos das marcas Saint-Gobain]",
                   size: 16,
-                  bold: true,
-                  color: "404040"
-                })
-              ]
-            }),
-            
-            new Paragraph({
-              alignment: AlignmentType.CENTER,
-              spacing: { before: 120 },
-              children: [
-                new TextRun({
-                  text: "Av. Santa Marina, 482 - Água Branca - CEP 05036-903 - São Paulo - SP",
-                  size: 16,
-                  color: "404040"
-                })
-              ]
-            }),
-            
-            new Paragraph({
-              alignment: AlignmentType.CENTER,
-              spacing: { before: 120 },
-              children: [
-                new TextRun({
-                  text: "www.brasilit.com.br | 0800 011 6299",
-                  size: 16,
-                  color: "404040"
+                  color: "808080"
                 })
               ]
             }),
