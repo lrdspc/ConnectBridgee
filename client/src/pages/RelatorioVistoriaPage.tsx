@@ -51,6 +51,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import {
   AlertTriangle,
   Calendar,
+  Camera,
   Check,
   Clipboard,
   Download,
@@ -1082,20 +1083,41 @@ export default function RelatorioVistoriaPage() {
                 
                 {/* Tab 3: Não Conformidades */}
                 <TabsContent value="nao-conformidades">
-                  <div className="max-w-3xl mx-auto">
+                  <div className="max-w-4xl mx-auto">
                     <Card>
-                      <CardHeader>
-                        <CardTitle>Não Conformidades</CardTitle>
+                      <CardHeader className="border-b">
+                        <CardTitle className="flex items-center gap-2">
+                          <AlertTriangle className="h-5 w-5 text-yellow-600" />
+                          Checklist de Verificação (14 Pontos)
+                        </CardTitle>
                         <CardDescription>
-                          Selecione as não conformidades identificadas na vistoria
+                          Marque os problemas identificados durante a inspeção do telhado com vazamento
                         </CardDescription>
                       </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="space-y-4">
-                          {watchNaoConformidades.map((nc) => {
+                      
+                      {/* Instrução para técnicos */}
+                      <div className="bg-amber-50 border-b border-amber-200 p-4">
+                        <h3 className="text-amber-800 font-semibold flex items-center mb-2">
+                          <Info className="h-4 w-4 mr-2" />
+                          Guia de Inspeção
+                        </h3>
+                        <p className="text-amber-700 text-sm">
+                          Este checklist contém os 14 pontos técnicos que devem ser verificados em toda inspeção de telhado com vazamento.
+                          Marque apenas os problemas encontrados e capture fotos das não conformidades como evidência.
+                        </p>
+                      </div>
+                      
+                      <CardContent className="pt-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {watchNaoConformidades.map((nc, index) => {
                             const naoConformidadeCompleta = naoConformidadesDisponiveis.find(item => item.id === nc.id);
                             return (
-                              <div key={nc.id} className="flex items-start space-x-3 p-3 border rounded-md hover:bg-accent/50 transition-colors">
+                              <div 
+                                key={nc.id} 
+                                className={`flex items-start space-x-3 p-4 border rounded-md transition-all ${
+                                  nc.selecionado ? 'bg-red-50 border-red-200' : 'hover:border-gray-300'
+                                }`}
+                              >
                                 <Checkbox 
                                   id={`nc-${nc.id}`} 
                                   checked={nc.selecionado}
@@ -1105,14 +1127,36 @@ export default function RelatorioVistoriaPage() {
                                 <div>
                                   <label 
                                     htmlFor={`nc-${nc.id}`}
-                                    className="font-medium cursor-pointer"
+                                    className={`font-medium cursor-pointer ${nc.selecionado ? 'text-red-700' : ''}`}
                                   >
-                                    {naoConformidadeCompleta?.titulo}
+                                    {index + 1}. {naoConformidadeCompleta?.titulo}
                                   </label>
-                                  {nc.selecionado && (
-                                    <p className="text-sm text-muted-foreground mt-1">
+                                  
+                                  <details className="text-sm mt-1">
+                                    <summary className="cursor-pointer text-primary-600 hover:text-primary">
+                                      Ver descrição detalhada
+                                    </summary>
+                                    <p className="text-sm text-muted-foreground mt-2 p-2 bg-gray-50 rounded-md">
                                       {naoConformidadeCompleta?.descricao}
                                     </p>
+                                  </details>
+                                  
+                                  {nc.selecionado && (
+                                    <div className="mt-3">
+                                      <Button 
+                                        type="button" 
+                                        variant="outline" 
+                                        size="sm"
+                                        className="w-full text-sm"
+                                        onClick={() => {
+                                          const input = document.getElementById('foto-upload');
+                                          if (input) input.click();
+                                        }}
+                                      >
+                                        <Camera className="h-3.5 w-3.5 mr-1" />
+                                        Adicionar Foto da Evidência
+                                      </Button>
+                                    </div>
                                   )}
                                 </div>
                               </div>
@@ -1144,18 +1188,57 @@ export default function RelatorioVistoriaPage() {
                 <TabsContent value="fotos">
                   <div className="max-w-3xl mx-auto">
                     <Card>
-                      <CardHeader>
-                        <CardTitle>Registro Fotográfico</CardTitle>
+                      <CardHeader className="border-b">
+                        <CardTitle className="flex items-center gap-2">
+                          <Camera className="h-5 w-5 text-primary" />
+                          Registro Fotográfico
+                        </CardTitle>
                         <CardDescription>
-                          Adicione fotos da vistoria para o relatório
+                          Adicione fotos das não conformidades identificadas
                         </CardDescription>
                       </CardHeader>
-                      <CardContent className="space-y-6">
-                        <div className="flex justify-center p-6 border-2 border-dashed rounded-md">
+                      
+                      {/* Instrução para documentação fotográfica */}
+                      <div className="bg-blue-50 border-b border-blue-200 p-4">
+                        <h3 className="text-blue-800 font-semibold flex items-center mb-2">
+                          <Info className="h-4 w-4 mr-2" />
+                          Documentação de Evidências
+                        </h3>
+                        <p className="text-blue-700 text-sm">
+                          Para cada problema identificado no checklist, adicione pelo menos uma foto clara que evidencie a não conformidade.
+                          Fotos bem documentadas são essenciais para justificar as conclusões do relatório técnico.
+                        </p>
+                      </div>
+                      
+                      <CardContent className="space-y-6 pt-6">
+                        {/* Lista de não conformidades selecionadas */}
+                        {watchNaoConformidades.filter(nc => nc.selecionado).length > 0 && (
+                          <div className="space-y-4 mb-6">
+                            <h3 className="font-medium flex items-center">
+                              <AlertTriangle className="h-4 w-4 text-amber-500 mr-2" />
+                              Problemas identificados ({watchNaoConformidades.filter(nc => nc.selecionado).length})
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                              {watchNaoConformidades
+                                .filter(nc => nc.selecionado)
+                                .map((nc, index) => {
+                                  const naoConformidadeCompleta = naoConformidadesDisponiveis.find(item => item.id === nc.id);
+                                  return (
+                                    <div key={nc.id} className="flex items-center p-3 rounded-md bg-amber-50 border border-amber-200">
+                                      <Check className="h-4 w-4 text-amber-500 mr-2 flex-shrink-0" />
+                                      <span className="text-sm">{naoConformidadeCompleta?.titulo}</span>
+                                    </div>
+                                  );
+                              })}
+                            </div>
+                          </div>
+                        )}
+                      
+                        <div className="flex justify-center p-6 border-2 border-dashed rounded-md relative overflow-hidden">
                           <div className="text-center">
-                            <Image className="h-12 w-12 mx-auto text-muted-foreground" />
+                            <Camera className="h-12 w-12 mx-auto text-muted-foreground" />
                             <p className="mt-2 font-medium">Arraste as imagens ou clique para selecionar</p>
-                            <p className="text-sm text-muted-foreground">As imagens serão incluídas ao final do relatório</p>
+                            <p className="text-sm text-muted-foreground">Cada foto deve estar relacionada a um problema identificado</p>
                             <Button
                               type="button"
                               variant="secondary"
@@ -1165,12 +1248,13 @@ export default function RelatorioVistoriaPage() {
                                 if (input) input.click();
                               }}
                             >
-                              Selecionar Fotos
+                              Adicionar Fotos
                             </Button>
                             <Input
                               type="file"
                               id="foto-upload"
                               accept="image/*"
+                              capture="environment"
                               multiple
                               onChange={handleFotoUpload}
                               className="hidden"
