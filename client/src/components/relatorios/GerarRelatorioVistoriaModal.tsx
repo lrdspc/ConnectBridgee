@@ -36,7 +36,7 @@ export function GerarRelatorioVistoriaModal({
   relatorio: initialRelatorio,
   onSave
 }: GerarRelatorioVistoriaModalProps) {
-  const [relatorio, setRelatorio] = useState<RelatorioVistoria>(initialRelatorio);
+  const [relatorio, setRelatorio] = useState<ExtendedRelatorioVistoria>(initialRelatorio);
   const [isGenerating, setIsGenerating] = useState(false);
   const [activeTab, setActiveTab] = useState("informacoes-basicas");
   
@@ -46,7 +46,7 @@ export function GerarRelatorioVistoriaModal({
   // Handler para atualizar os campos básicos
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setRelatorio((prev: RelatorioVistoria) => ({
+    setRelatorio((prev: ExtendedRelatorioVistoria) => ({
       ...prev,
       [name]: value
     }));
@@ -54,7 +54,7 @@ export function GerarRelatorioVistoriaModal({
   
   // Handler para selecionar/deselecionar não conformidades
   const handleNaoConformidadeToggle = (id: number) => {
-    setRelatorio((prev: RelatorioVistoria) => {
+    setRelatorio((prev: ExtendedRelatorioVistoria) => {
       const updatedNaoConformidades = prev.naoConformidades.map((nc: {id: number, titulo: string, descricao?: string, selecionado: boolean}) => 
         nc.id === id ? { ...nc, selecionado: !nc.selecionado } : nc
       );
@@ -68,7 +68,7 @@ export function GerarRelatorioVistoriaModal({
   // Handler para atualizar o resultado
   const handleResultadoChange = (value: string) => {
     if (value === "PROCEDENTE" || value === "IMPROCEDENTE") {
-      setRelatorio((prev: RelatorioVistoria) => ({
+      setRelatorio((prev: ExtendedRelatorioVistoria) => ({
         ...prev,
         resultado: value as "PROCEDENTE" | "IMPROCEDENTE"
       }));
@@ -77,7 +77,7 @@ export function GerarRelatorioVistoriaModal({
   
   // Handler para atualizar modelo de telha
   const handleModeloTelhaChange = (value: string) => {
-    setRelatorio((prev: RelatorioVistoria) => ({
+    setRelatorio((prev: ExtendedRelatorioVistoria) => ({
       ...prev,
       modeloTelha: value as typeof modelosTelhas[number]
     }));
@@ -85,7 +85,7 @@ export function GerarRelatorioVistoriaModal({
   
   // Handler para atualizar espessura da telha
   const handleEspessuraTelhaChange = (value: string) => {
-    setRelatorio((prev: RelatorioVistoria) => ({
+    setRelatorio((prev: ExtendedRelatorioVistoria) => ({
       ...prev,
       espessura: value as typeof espessurasTelhas[number]
     }));
