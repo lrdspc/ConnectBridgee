@@ -27,6 +27,16 @@ import {
 import { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { naoConformidadesDisponiveis } from "@shared/relatorioVistoriaSchema";
 
+// Adicionar método toBlob ao Packer se ele não existir
+if (Packer && !("toBlob" in Packer)) {
+  (Packer as any).toBlob = async function(doc: Document): Promise<Blob> {
+    const buffer = await Packer.toBuffer(doc);
+    return new Blob([buffer], { 
+      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" 
+    });
+  };
+}
+
 // Ativação de logs detalhados para diagnóstico
 const DEBUG = true;
 function log(...args: any[]) {
@@ -529,11 +539,28 @@ conforme a legislação em vigor.`;
     
     // Exportar para Blob
     log("Finalizando a geração do documento e exportando...");
-    const buffer = await Packer.toBuffer(doc);
-    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
-    
-    log("Documento gerado com sucesso!");
-    return blob;
+    try {
+      // Método 1: Usar o Packer.toBuffer diretamente
+      const buffer = await Packer.toBuffer(doc);
+      const blob = new Blob([buffer], { 
+        type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" 
+      });
+      
+      log("Documento gerado com sucesso!");
+      return blob;
+    } catch (bufferError) {
+      // Se falhar, tentar método alternativo (Packer.toBlob)
+      console.error("Erro no método toBuffer, tentando método alternativo:", bufferError);
+      try {
+        // Método 2: Usar o Packer diretamente para criar um Blob
+        const blob = await Packer.toBlob(doc);
+        log("Documento gerado com sucesso (método alternativo)!");
+        return blob;
+      } catch (blobError) {
+        console.error("Ambos os métodos falharam:", blobError);
+        throw new Error(`Falha ao gerar blob do documento: ${blobError}`);
+      }
+    }
   } catch (error) {
     console.error("Erro ao gerar relatório:", error);
     throw new Error(`Falha ao gerar o relatório: ${error}`);
