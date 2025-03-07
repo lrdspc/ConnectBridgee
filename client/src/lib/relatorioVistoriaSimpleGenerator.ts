@@ -21,21 +21,12 @@ import {
   convertInchesToTwip,
   LevelFormat,
   UnderlineType,
-  BorderStyle
+  BorderStyle,
+  HeadingLevel
 } from "docx";
 
 import { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { naoConformidadesDisponiveis } from "@shared/relatorioVistoriaSchema";
-
-// Adicionar método toBlob ao Packer se ele não existir
-if (Packer && !("toBlob" in Packer)) {
-  (Packer as any).toBlob = async function(doc: Document): Promise<Blob> {
-    const buffer = await Packer.toBuffer(doc);
-    return new Blob([buffer], { 
-      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" 
-    });
-  };
-}
 
 // Ativação de logs detalhados para diagnóstico
 const DEBUG = true;
@@ -537,29 +528,23 @@ conforme a legislação em vigor.`;
       ]
     });
     
-    // Exportar para Blob
+    // Exportar para Blob - Versão simplificada e mais confiável
     log("Finalizando a geração do documento e exportando...");
+    
     try {
-      // Método 1: Usar o Packer.toBuffer diretamente
+      // Usar a biblioteca docx diretamente para criar um buffer
       const buffer = await Packer.toBuffer(doc);
+      
+      // Converter o buffer para Blob com o tipo MIME correto
       const blob = new Blob([buffer], { 
         type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" 
       });
       
-      log("Documento gerado com sucesso!");
+      log("Documento DOCX gerado com sucesso!");
       return blob;
-    } catch (bufferError) {
-      // Se falhar, tentar método alternativo (Packer.toBlob)
-      console.error("Erro no método toBuffer, tentando método alternativo:", bufferError);
-      try {
-        // Método 2: Usar o Packer diretamente para criar um Blob
-        const blob = await Packer.toBlob(doc);
-        log("Documento gerado com sucesso (método alternativo)!");
-        return blob;
-      } catch (blobError) {
-        console.error("Ambos os métodos falharam:", blobError);
-        throw new Error(`Falha ao gerar blob do documento: ${blobError}`);
-      }
+    } catch (error) {
+      console.error("Erro ao gerar documento DOCX:", error);
+      throw new Error(`Falha ao gerar documento DOCX: ${error}`);
     }
   } catch (error) {
     console.error("Erro ao gerar relatório:", error);
