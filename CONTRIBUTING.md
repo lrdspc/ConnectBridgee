@@ -1,74 +1,50 @@
-# Contribuindo para o BrasilitAI
 
-Obrigado pelo seu interesse em contribuir para o BrasilitAI! Este documento fornece diretrizes e instruções para contribuir com o projeto.
+# Guia de Contribuição
 
-## Processo de Contribuição
+Obrigado pelo interesse em contribuir com o projeto Brasilit Visit! Aqui estão algumas diretrizes para ajudar a garantir que suas contribuições sejam aceitas.
 
-1. Faça um fork do repositório
-2. Clone o fork para sua máquina local
-3. Crie um branch para sua contribuição (`git checkout -b feature/nova-funcionalidade`)
-4. Faça suas alterações
-5. Execute os testes para garantir que tudo está funcionando
-6. Commit suas alterações (`git commit -m 'Adiciona nova funcionalidade'`)
-7. Push para o branch (`git push origin feature/nova-funcionalidade`)
-8. Abra um Pull Request
+## Processo de Desenvolvimento
 
-## Diretrizes de Código
+1. Escolha uma issue para trabalhar ou crie uma nova
+2. Discuta a mudança que você deseja fazer via issue antes de começar
+3. Faça um fork do repositório
+4. Crie uma branch a partir da branch `main` (`git checkout -b feature/descricao-da-feature`)
+5. Implemente suas mudanças
+6. Execute os testes e certifique-se de que passam
+7. Atualize a documentação conforme necessário
+8. Faça commit das suas alterações (`git commit -m 'Implementa X'`)
+9. Push para a branch (`git push origin feature/descricao-da-feature`)
+10. Abra um Pull Request
 
-### Estilo de Código
+## Padrões de Código
 
 - Use TypeScript para todo o código
-- Siga o estilo de código existente no projeto
-- Use camelCase para nomes de variáveis e funções
-- Use PascalCase para componentes React e tipos/interfaces
-- Adicione comentários explicativos quando necessário
+- Siga as convenções de nome existentes
+- Mantenha componentes pequenos e focados
+- Documente APIs e funções complexas
+- Escreva testes para novas funcionalidades
 
-### Testes
+## Commits
+
+- Use mensagens de commit claras e descritivas
+- Referencie issues e pull requests quando relevante
+- Mantenha commits focados em uma única mudança
+
+## Pull Requests
+
+- Preencha o template de PR completamente
+- Inclua capturas de tela para mudanças de UI
+- Mantenha PRs pequenos e focados em uma única feature
+- Mantenha a discussão técnica e respeitosa
+
+## Testes
 
 - Adicione testes para novas funcionalidades
-- Garanta que todos os testes existentes continuem passando
-- Teste em diferentes dispositivos/navegadores quando aplicável
+- Garanta que todos os testes passem antes de submeter um PR
+- Considere casos extremos e erros no seu código
 
-## Estrutura do Projeto
+## Documentação
 
-Antes de contribuir, familiarize-se com a estrutura do projeto:
-
-- `client/`: Frontend da aplicação
-- `server/`: Backend da aplicação
-- `shared/`: Código compartilhado entre frontend e backend
-
-## Relatando Bugs
-
-Se você encontrar um bug, por favor reporte-o criando uma issue no GitHub com as seguintes informações:
-
-- Descrição clara e concisa do bug
-- Passos para reproduzir o problema
-- Comportamento esperado vs. comportamento atual
-- Screenshots (se aplicável)
-- Informações de ambiente (sistema operacional, navegador, etc.)
-
-## Sugerindo Novas Funcionalidades
-
-Para sugerir novas funcionalidades:
-
-1. Verifique se a funcionalidade já não está nas issues abertas
-2. Crie uma nova issue descrevendo a funcionalidade
-3. Explique por que essa funcionalidade seria útil para o projeto
-4. Discuta possíveis implementações
-
-## Code Review
-
-- Todo código precisa ser revisado antes de ser integrado
-- Os revisores verificarão:
-  - Funcionalidade
-  - Qualidade do código
-  - Aderência aos padrões do projeto
-  - Presença de testes adequados
-
-## Licença
-
-Ao contribuir, você concorda que suas contribuições estarão sob a mesma licença do projeto.
-
----
-
-Agradecemos suas contribuições para tornar o BrasilitAI melhor!
+- Atualize o README.md quando adicionar novas funcionalidades
+- Documente novas APIs no código
+- Mantenha a documentação atualizada com as mudanças de código

@@ -1,14 +1,13 @@
+node_modules
+dist
+.DS_Store
+server/public
+vite.config.ts.*
+*.tar.gz
 # Dependências
-node_modules/
+/node_modules
 /.pnp
 .pnp.js
-
-# Produção
-/build
-/dist
-
-# Testes
-/coverage
 
 # Ambiente
 .env
@@ -16,50 +15,53 @@ node_modules/
 .env.development.local
 .env.test.local
 .env.production.local
+.env.production
+
+# Builds
+/dist
+/build
+/client/dist
+/.next/
+/out/
+
+# Cache e arquivos temporários
+.DS_Store
+.cache
+.project
+.settings
+.tmproj
+*.esproj
+nbproject
+*.sublime-project
+*.sublime-workspace
+.idea
+*.swp
+*.swo
+.vscode
 
 # Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+debug.log
+logs
 *.log
 
-# Sistema operacional
-.DS_Store
-Thumbs.db
+# Coverage e testes
+/coverage
+/.nyc_output
+/cypress/screenshots
+/cypress/videos
 
-# IDEs e editores
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+# Arquivos específicos do Replit
+.replit
+.nix
+replit.nix
+.config
+.bashrc
+.bash_aliases
+.profile
+.local
 
-# Banco de dados
-*.sqlite
-*.db
-
-# Arquivos temporários
-*.tmp
-*.temp
-.cache/
-
-# Arquivos gerados pelo banco de dados
-/prisma/migrations
-
-# Arquivos de certificados e chaves
-*.pem
-*.key
-*.cert
-
-# Pastas de debug
-debug/
-
-# Arquivos específicos do projeto
-.vercel
+# Arquivos gerados pelo sistema
+generated-icon.png

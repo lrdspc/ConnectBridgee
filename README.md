@@ -1,83 +1,78 @@
-# BrasilitAI - Plataforma de Documentação Inteligente
 
-## Visão Geral
+# Brasilit Visit - Sistema de Relatórios de Vistoria Técnica
 
-BrasilitAI é uma plataforma avançada de geração de documentação que transforma fluxos de trabalho complexos em soluções de relatórios inteligentes e adaptáveis, com foco na experiência do usuário simplificada e geração automatizada de conteúdo.
+Este projeto é uma aplicação web para criação, gerenciamento e geração de relatórios de vistoria técnica para telhas Brasilit. O sistema permite aos técnicos documentar vistorias, identificar não conformidades, adicionar fotos e gerar documentos padronizados em formato Word.
 
-## Características Principais
+## Características
 
-- **Geração Inteligente de Relatórios**: Transforme dados brutos em relatórios profissionais com formatação inteligente
-- **Suporte Offline**: Trabalhe sem conexão com internet e sincronize quando estiver online
-- **UI Responsiva**: Interface adaptável para desktops, tablets e dispositivos móveis
-- **Gestão de Visitas Técnicas**: Acompanhe, agende e documente visitas técnicas
-- **Visualização Avançada**: Mapas interativos e gráficos para análise de dados
-- **Modelos Personalizáveis**: Crie modelos de documentos padronizados para sua empresa
+- Cadastro e gerenciamento de relatórios de vistoria técnica
+- Interface intuitiva para preenchimento de formulários
+- Seleção de não conformidades técnicas com descrições detalhadas
+- Upload e gerenciamento de fotos da vistoria
+- Geração de documentos Word formatados conforme padrão
+- Armazenamento offline para trabalho em campo sem internet
+- Sincronização automática quando a conexão é reestabelecida
 
-## Tecnologias
+## Tecnologias Utilizadas
 
-- **Frontend**: React, TypeScript, TanStack Query v5, Shadcn UI
-- **Backend**: Express, Node.js
-- **Mapeamento**: Leaflet, React Leaflet
-- **Relatórios**: DOCX, PDF
-- **Armazenamento**: Dexie.js para offline, PostgreSQL/Neon para nuvem
-- **Roteamento**: Wouter
-- **Visualização de Dados**: Recharts
+- **Frontend**: React, TypeScript, TailwindCSS, Shadcn/UI
+- **Backend**: Node.js, Express
+- **Banco de Dados**: PostgreSQL (via Neon Serverless)
+- **Documentos**: biblioteca docx para geração de arquivos Word
+- **Geolocalização**: React Leaflet para mapas interativos
+- **Armazenamento Local**: Dexie.js para IndexedDB
 
 ## Instalação
 
 ```bash
-# Clone o repositório
-git clone https://github.com/seu-usuario/brasilitai.git
-
-# Instale as dependências
+# Instalar dependências
 npm install
 
-# Inicie a aplicação
+# Iniciar servidor de desenvolvimento
 npm run dev
+
+# Build para produção
+npm run build
+
+# Iniciar em modo produção
+npm run start
 ```
 
 ## Estrutura do Projeto
 
 ```
-.
-├── client/               # Frontend da aplicação
-│   ├── src/
-│   │   ├── components/   # Componentes React
-│   │   ├── hooks/        # Custom hooks
-│   │   ├── layouts/      # Componentes de layout
-│   │   ├── lib/          # Funções utilitárias 
-│   │   ├── pages/        # Páginas da aplicação
-│   │   └── shared/       # Tipos e schemas
-│   └── public/           # Assets estáticos
-├── server/               # Backend da aplicação
-│   ├── routes.ts         # Rotas da API
-│   ├── storage.ts        # Interface de armazenamento
-│   └── index.ts          # Ponto de entrada do servidor
-└── shared/               # Código compartilhado entre frontend e backend
-    └── schema.ts         # Esquemas de dados e tipos
+├── client/              # Frontend da aplicação
+│   ├── public/          # Arquivos estáticos
+│   ├── src/             # Código fonte React
+│       ├── components/  # Componentes reutilizáveis
+│       ├── lib/         # Funções utilitárias
+│       ├── pages/       # Páginas da aplicação
+│       └── layouts/     # Layouts e templates
+├── server/              # Backend da aplicação
+│   ├── index.ts         # Ponto de entrada do servidor
+│   ├── routes.ts        # Rotas da API
+│   └── storage.ts       # Gerenciamento de armazenamento
+└── shared/              # Código compartilhado
+    └── relatorioVistoriaSchema.ts  # Esquemas de validação
 ```
 
-## Funcionalidades Principais
+## Fluxo de Trabalho
 
-- Gerenciamento de Visitas Técnicas
-- Geração de Relatórios (Vistorias, FAR, Inspeções)
-- Mapeamento e Otimização de Rotas
-- Sincronização Offline-Primeiro
-- Dashboard Analítico
-- Gestão de Usuários e Permissões
+1. O técnico cria um novo relatório de vistoria
+2. Preenche informações gerais (cliente, empreendimento, endereço)
+3. Seleciona as não conformidades identificadas na vistoria
+4. Adiciona fotos documentando a situação
+5. Preenche análise técnica e conclusão
+6. Gera o documento Word formatado para impressão/envio
 
-## Roadmap
+## Contribuindo
 
-- [ ] Integração com serviços em nuvem adicionais
-- [ ] Aplicativo móvel nativo
-- [ ] Recursos de IA avançados para análise de dados
-- [ ] Suporte para múltiplos idiomas
-- [ ] Integração com sistemas ERP
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/nova-funcionalidade`)
+3. Commit suas mudanças (`git commit -m 'Adiciona nova funcionalidade'`)
+4. Push para a branch (`git push origin feature/nova-funcionalidade`)
+5. Abra um Pull Request
 
 ## Licença
 
-Este projeto está licenciado sob a [Licença MIT](LICENSE).
-
-## Contato
-
-Para mais informações, entre em contato com a equipe do BrasilitAI.
+MIT
