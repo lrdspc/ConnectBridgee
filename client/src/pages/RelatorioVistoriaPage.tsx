@@ -441,75 +441,7 @@ conforme a legislação em vigor.`;
     }
   };
   
-  // Função para baixar o relatório em DOCX
-  const baixarRelatorioDocx = async () => {
-    try {
-      setIsGeneratingDocx(true);
-      
-      // Clonar os dados do formulário para não afetar o estado
-      const formData = {...form.getValues()};
-      
-      // Forçar resultado como IMPROCEDENTE
-      formData.resultado = "IMPROCEDENTE";
-      
-      // Os textos fixos serão inseridos diretamente no gerador
-      // Não precisamos mais preencher os campos de texto, pois eles serão gerados no gerador de relatório
-      
-      // Filtrar não conformidades selecionadas e usar as versões completas
-      const naoConformidadesSelecionadas = formData.naoConformidades
-        .filter(nc => nc.selecionado)
-        .map(nc => {
-          const completa = naoConformidadesDisponiveis.find(item => item.id === nc.id);
-          return {
-            id: nc.id,
-            titulo: completa?.titulo || '',
-            descricao: completa?.descricao || '',
-            selecionado: true
-          };
-        });
-      
-      // Substituir as não conformidades com as versões completas
-      formData.naoConformidades = naoConformidadesSelecionadas;
-      
-      // Função auxiliar para salvar o arquivo
-      const saveDocFile = (blob: Blob, fileName: string) => {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        
-        // Limpar recursos
-        setTimeout(() => {
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-        }, 100);
-      };
-      
-      // Nome do arquivo com marcação ABNT
-      const fileName = `relatorio-vistoria-${formData.protocolo || 'novo'}-ABNT.docx`;
-      
-      // Usar o gerador simplificado que funciona corretamente com formatação ABNT
-      console.log('▶️ Gerando relatório usando o gerador simplificado (formatação ABNT)');
-      const blob = await gerarRelatorioSimples(formData);
-      saveDocFile(blob, fileName);
-      
-      toast({
-        title: 'Documento Word gerado com sucesso!',
-        description: 'O relatório foi exportado no formato DOCX com formatação ABNT.',
-      });
-    } catch (error) {
-      console.error('Erro ao gerar documento Word:', error);
-      toast({
-        title: 'Erro ao gerar documento Word',
-        description: 'Não foi possível gerar o documento. Tente novamente.',
-        variant: 'destructive'
-      });
-    } finally {
-      setIsGeneratingDocx(false);
-    }
-  };
+  // A função de exportação DOCX foi movida para o componente RelatorioExportButton
   
   // Define resultado como IMPROCEDENTE sempre
   useEffect(() => {
