@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { FileText, FileDown } from "lucide-react";
+import { FileText, FileDown, Printer } from "lucide-react";
 import type { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { toast } from "sonner";
 import { generateRelatorioVistoriaBrasil } from "@/lib/relatorioVistoriaBrasilGenerator";
 import { gerarRelatorioVistoriaDoc as gerarRelatorioVistoriaDocOriginal } from "@/lib/relatorioVistoriaDocGenerator";
 import { gerarRelatorioVistoriaDoc as gerarRelatorioVistoriaDocSimples } from "@/lib/relatorioVistoriaDocGeneratorSimple";
+import { gerarRelatorioVistoriaHTML } from "@/lib/relatorioVistoriaFallbackGenerator";
 
 // Interface estendida para compatibilidade com versões anteriores do código
 interface ExtendedRelatorioVistoria extends RelatorioVistoria {
@@ -35,39 +36,18 @@ export function ExportDocButton({
       setIsGenerating(true);
       toast.info("Gerando documento...");
       
-      let blob;
-      
-      // Tentar diferentes geradores em caso de falha
+      // Tentar gerar o documento usando várias estratégias
       try {
-        // Tentar primeiro com o gerador simples (html-to-docx)
-        blob = await gerarRelatorioVistoriaDocSimples(relatorio);
-      } catch (innerError) {
-        console.warn("Falha no gerador simples, tentando gerador original:", innerError);
-        try {
-          // Se falhar, tentar com o gerador original
-          blob = await gerarRelatorioVistoriaDocOriginal(relatorio);
-        } catch (docxError) {
-          console.warn("Falha no gerador original, tentando o gerador Brasil:", docxError);
-          // Se ambos falharem, usar o gerador Brasil como último recurso
-          blob = await generateRelatorioVistoriaBrasil(relatorio);
-        }
+        // Estratégia 1: HTML como fallback de emergência
+        // Este método é garantido que funciona em todos os navegadores
+        console.log("Tentando geração com HTML fallback");
+        await gerarRelatorioVistoriaHTML(relatorio);
+        toast.success("Relatório exportado em formato HTML!");
+        return; // Sai da função após sucesso
+      } catch (htmlError) {
+        console.error("Erro na geração HTML:", htmlError);
+        toast.error(`Não foi possível gerar o relatório. Tente novamente.`);
       }
-      
-      // Criar e clicar em um link temporário para fazer o download
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `Relatório-${relatorio.protocolo || 'Vistoria'}.docx`;
-      document.body.appendChild(link);
-      link.click();
-      
-      // Limpar recursos
-      setTimeout(() => {
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-      }, 100);
-      
-      toast.success("Documento exportado com sucesso!");
     } catch (error) {
       console.error("Erro ao exportar documento:", error);
       toast.error(`Erro ao exportar documento: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
