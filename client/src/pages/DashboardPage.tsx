@@ -121,6 +121,11 @@ export default function DashboardPage() {
   
   // Configuração inicial dos widgets do dashboard
   const [dashboardConfig, setDashboardConfig] = useState<DashboardConfig>(initializeConfig());
+  
+  // Effect para logging da ordem dos widgets
+  useEffect(() => {
+    console.log('Ordem de widgets atual:', dashboardConfig.widgetOrder);
+  }, [dashboardConfig.widgetOrder]);
 
   // Processar estatísticas quando os dados de visitas mudarem
   useEffect(() => {
@@ -563,33 +568,22 @@ export default function DashboardPage() {
           </div>
 
           {/* Renderizar widgets na ordem definida pelo usuário */}
-          {(() => {
-            // Logging no console
-            React.useEffect(() => {
-              console.log('Ordem de widgets atual:', dashboardConfig.widgetOrder);
-            }, [dashboardConfig.widgetOrder]);
-            
-            if (dashboardConfig.widgetOrder && dashboardConfig.widgetOrder.length > 0) {
-              return (
-                <>
-                  {dashboardConfig.widgetOrder
-                    .filter(widgetId => isWidgetEnabled(widgetId))
-                    .map((widgetId, index) => {
-                      // Widget component
-                      const widget = renderWidget(widgetId);
-                      // Só renderizar se retornar um componente válido
-                      return widget ? React.cloneElement(widget as React.ReactElement, { key: `widget-${widgetId}-${index}` }) : null;
-                    })}
-                </>
-              );
-            } else {
-              return (
-                <div className="p-4 border border-red-300 bg-red-50 rounded-md">
-                  <p className="text-red-700">Erro na configuração do dashboard. Por favor, reinicie as configurações.</p>
-                </div>
-              );
-            }
-          })()}
+          {dashboardConfig.widgetOrder && dashboardConfig.widgetOrder.length > 0 ? (
+            <>
+              {dashboardConfig.widgetOrder
+                .filter(widgetId => isWidgetEnabled(widgetId))
+                .map((widgetId, index) => {
+                  // Widget component
+                  const widget = renderWidget(widgetId);
+                  // Só renderizar se retornar um componente válido
+                  return widget ? React.cloneElement(widget as React.ReactElement, { key: `widget-${widgetId}-${index}` }) : null;
+                })}
+            </>
+          ) : (
+            <div className="p-4 border border-red-300 bg-red-50 rounded-md">
+              <p className="text-red-700">Erro na configuração do dashboard. Por favor, reinicie as configurações.</p>
+            </div>
+          )}
           
           {/* Conteúdo principal */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
