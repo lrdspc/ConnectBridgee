@@ -6,7 +6,7 @@ import {
   UnderlineType, Media, ParagraphStyle, ExternalHyperlink, Pict, PageBreak,
   HyperlinkRef, SimpleField, FieldOptions, ImageRun, FileChild
 } from "docx";
-import { RelatorioVistoria, NaoConformidade } from "../../shared/relatorioVistoriaSchema";
+import { RelatorioVistoria } from "../../shared/relatorioVistoriaSchema";
 
 // Configurações de estilo para manter consistência com a especificação
 const FONTE_PRINCIPAL = "Times New Roman";
@@ -107,7 +107,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
           bold: true
         }),
         new TextRun({
-          text: `${relatorio.cidade || ""} - ${relatorio.estado || ""}`,
+          text: `${relatorio.cidade || ""} - ${relatorio.uf || ""}`,
           font: FONTE_PRINCIPAL,
           size: TAMANHO_FONTE
         })
