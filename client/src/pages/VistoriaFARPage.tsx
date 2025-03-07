@@ -21,7 +21,7 @@ import {
   DialogFooter,
   DialogClose
 } from "@/components/ui/dialog";
-import { X, Camera, Image as ImageIcon, Trash2, Save, CheckCircle2, FileDown } from "lucide-react";
+import { X, Camera, Image as ImageIcon, Trash2, Save, CheckCircle2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LoadingAnimation } from "@/components/ui/loading-animation";
@@ -33,7 +33,6 @@ import {
   espessurasTelhasFAR,
   FARReport
 } from "../../../shared/farReportSchema";
-import { gerarFARReportDoc } from "../lib/farReportDocGenerator";
 
 type TelhaSpec = {
   id: string;
@@ -128,7 +127,6 @@ const VistoriaFARPage = () => {
   const queryClient = useQueryClient();
   
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isGeneratingDoc, setIsGeneratingDoc] = useState(false);
   const [activeTab, setActiveTab] = useState('dados');
   const [formErrors, setFormErrors] = useState<Partial<Record<keyof FormData, string>>>({});
   
@@ -558,63 +556,6 @@ const VistoriaFARPage = () => {
     return Object.keys(errors).length === 0;
   };
   
-  // Função para gerar e baixar o documento Word
-  const handleDownloadDoc = async () => {
-    if (!validateForm()) {
-      toast({
-        title: "Formulário incompleto",
-        description: "Por favor, preencha todos os campos obrigatórios antes de gerar o relatório.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    setIsGeneratingDoc(true);
-    try {
-      // Criar o objeto de relatório no formato esperado pelo gerador, incluindo todos os campos obrigatórios
-      const farReport: FARReport = {
-        ...formData,
-        id: `FAR-${formData.farProtocolo || new Date().getTime()}`,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        status: "completed",
-        assinadoPor: formData.elaboradoPor,
-        assinadoEm: new Date().toISOString()
-      };
-      
-      // Gerar o documento Word
-      const docBlob = await gerarFARReportDoc(farReport);
-      
-      // Criar URL para download
-      const url = URL.createObjectURL(docBlob);
-      
-      // Criar link de download e simular clique
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `relatorio-FAR-${formData.farProtocolo || formData.cliente.replace(/\s+/g, '-')}.docx`;
-      document.body.appendChild(a);
-      a.click();
-      
-      // Limpar
-      URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-      
-      toast({
-        title: "Documento gerado com sucesso",
-        description: "O relatório FAR foi gerado e baixado.",
-      });
-    } catch (error) {
-      console.error("Erro ao gerar documento:", error);
-      toast({
-        title: "Erro ao gerar documento",
-        description: "Não foi possível gerar o documento. Tente novamente.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsGeneratingDoc(false);
-    }
-  };
-
   // Função para o envio do formulário
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -671,9 +612,6 @@ const VistoriaFARPage = () => {
         contactInfo: "",
         notes: `Relatório de vistoria técnica FAR realizado em ${formData.dataVistoria}. Elaborado por: ${formData.elaboradoPor}. ${formData.problemas.filter(p => p.selecionado).length} problemas identificados.`,
       };
-      
-      // Gerar documento automaticamente após salvar
-      await handleDownloadDoc();
       
       // Simulação de criação de visita
       toast({
@@ -1542,26 +1480,6 @@ const VistoriaFARPage = () => {
                     onClick={() => setActiveTab("problemas")}
                   >
                     <span className="mr-2">&larr;</span> Voltar: Problemas
-                  </Button>
-                  
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="w-full md:w-auto"
-                    onClick={handleDownloadDoc}
-                    disabled={isGeneratingDoc || isSubmitting}
-                  >
-                    {isGeneratingDoc ? (
-                      <>
-                        <LoadingAnimation size="sm" className="mr-2" />
-                        Gerando documento...
-                      </>
-                    ) : (
-                      <>
-                        <FileDown className="mr-2 h-4 w-4" />
-                        Baixar Documento
-                      </>
-                    )}
                   </Button>
                   
                   <Button
