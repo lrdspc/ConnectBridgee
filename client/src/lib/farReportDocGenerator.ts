@@ -476,21 +476,44 @@ export async function gerarFARReportDoc(relatorio: FARReport): Promise<Blob> {
   mainContent.push(...gerarListaProblemasSimples(relatorio));
   
   // Texto da conclusão com resultado integrado (conforme modelo)
-  let resultadoTexto = "";
   if (relatorio.resultado === "PROCEDENTE") {
-    resultadoTexto = "Em função das não conformidades constatadas na fabricação das chapas Brasilit, finalizamos o atendimento considerando a reclamação como PROCEDENTE, onde os problemas reclamados se dão por problemas relacionados à qualidade do material.";
+    mainContent.push(
+      new Paragraph({
+        children: [
+          new TextRun({ 
+            text: "Em função das não conformidades constatadas na fabricação das chapas Brasilit, finalizamos o atendimento considerando a reclamação como ",
+          }),
+          new TextRun({ 
+            text: "PROCEDENTE",
+            bold: true,
+            color: "FF0000" // vermelho para destacar
+          }),
+          new TextRun({ 
+            text: ", onde os problemas reclamados se dão por problemas relacionados à qualidade do material."
+          })
+        ],
+        spacing: { after: 200 }
+      })
+    );
   } else {
-    resultadoTexto = "Em função das não conformidades constatadas no manuseio e instalação das chapas Brasilit, finalizamos o atendimento considerando a reclamação como IMPROCEDENTE, onde os problemas reclamados se dão pelo incorreto manuseio e instalação das telhas e não a problemas relacionados à qualidade do material.";
+    mainContent.push(
+      new Paragraph({
+        children: [
+          new TextRun({ 
+            text: "Em função das não conformidades constatadas no manuseio e instalação das chapas Brasilit, finalizamos o atendimento considerando a reclamação como "
+          }),
+          new TextRun({ 
+            text: "IMPROCEDENTE",
+            bold: true
+          }),
+          new TextRun({ 
+            text: ", onde os problemas reclamados se dão pelo incorreto manuseio e instalação das telhas e não a problemas relacionados à qualidade do material."
+          })
+        ],
+        spacing: { after: 200 }
+      })
+    );
   }
-
-  mainContent.push(
-    new Paragraph({
-      children: [
-        new TextRun({ text: resultadoTexto })
-      ],
-      spacing: { after: 200 }
-    })
-  );
   
   // Texto sobre a garantia
   mainContent.push(
