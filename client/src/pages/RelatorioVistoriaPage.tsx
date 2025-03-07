@@ -14,6 +14,7 @@ import {
   gerarRelatorioAleatorio
 } from '@shared/relatorioVistoriaSchema';
 import { gerarRelatorioVistoriaDoc } from '@/lib/relatorioVistoriaDocGenerator';
+import { aplicarTemplateIntroducao, aplicarTemplateConclusao, TEMPLATE_ANALISE_TECNICA } from '@/lib/relatorioVistoriaTemplates';
 
 import { DashboardLayoutNew } from '@/layouts/DashboardLayoutNew';
 import { PageTransition } from '@/components/ui/loading-animation';
@@ -184,6 +185,23 @@ export default function RelatorioVistoriaPage() {
     try {
       const formData = form.getValues();
       
+      // Gerar textos a partir dos templates
+      // Introdução
+      const introducaoTexto = aplicarTemplateIntroducao({
+        modeloTelha: formData.modeloTelha,
+        espessura: formData.espessura,
+        protocolo: formData.protocolo,
+        anosGarantia: formData.anosGarantia,
+        anosGarantiaSistemaCompleto: formData.anosGarantiaSistemaCompleto
+      });
+      
+      // Conclusão
+      const conclusaoTexto = aplicarTemplateConclusao({
+        resultado: formData.resultado,
+        modeloTelha: formData.modeloTelha,
+        anosGarantiaTotal: formData.anosGarantiaTotal
+      });
+      
       // Filtrar não conformidades selecionadas
       const naoConformidadesSelecionadas = formData.naoConformidades
         .filter(nc => nc.selecionado)
@@ -283,7 +301,7 @@ export default function RelatorioVistoriaPage() {
           
           <div style="margin-top: 20px;">
             <h2>1. INTRODUÇÃO</h2>
-            <p>${formData.introducao || 'Não informado.'}</p>
+            <p>${introducaoTexto}</p>
             
             <h3>1.1 DADOS DO PRODUTO</h3>
             <table style="width: 100%; border-collapse: collapse;">
@@ -304,7 +322,7 @@ export default function RelatorioVistoriaPage() {
           
           <div style="margin-top: 20px;">
             <h2>2. ANÁLISE TÉCNICA</h2>
-            <p>${formData.analiseTecnica || 'Não informado.'}</p>
+            <p>${TEMPLATE_ANALISE_TECNICA}</p>
             
             <h3>2.1 NÃO CONFORMIDADES IDENTIFICADAS</h3>
             ${listaNaoConformidades}
@@ -314,21 +332,7 @@ export default function RelatorioVistoriaPage() {
             <h2>3. CONCLUSÃO</h2>
             <p>Com base na análise técnica realizada, foram identificadas as seguintes não conformidades:</p>
             ${listaNaoConformidadesTitulos}
-            <p>${formData.conclusao || ''}</p>
-            <p>Em função das não conformidades constatadas no manuseio e instalação das chapas Brasilit, 
-            finalizamos o atendimento considerando a reclamação como <strong>${formData.resultado}</strong>, 
-            onde os problemas reclamados se dão pelo incorreto manuseio e instalação das telhas e não a 
-            problemas relacionados à qualidade do material.</p>
-            
-            <p>As telhas BRASILIT modelo FIBROCIMENTO ${formData.modeloTelha.toUpperCase()} possuem ${formData.anosGarantiaTotal} 
-            anos de garantia com relação a problemas de fabricação. A garantia Brasilit está condicionada a 
-            correta aplicação do produto, seguindo rigorosamente as instruções de instalação contidas no 
-            Guia Técnico de Telhas de Fibrocimento e Acessórios para Telhado — Brasilit. Este guia técnico 
-            está sempre disponível em: http://www.brasilit.com.br.</p>
-            
-            <p>Ratificamos que os produtos Brasilit atendem as Normas da Associação Brasileira de Normas Técnicas — ABNT, 
-            específicas para cada linha de produto, e cumprimos as exigências legais de garantia de produtos conforme a 
-            legislação em vigor.</p>
+            <p>${conclusaoTexto}</p>
             
             <p>${formData.recomendacao || ''}</p>
             
@@ -412,6 +416,23 @@ export default function RelatorioVistoriaPage() {
     try {
       setIsGeneratingDocx(true);
       const formData = form.getValues();
+      
+      // Aplicar os templates para os textos fixos antes de gerar o documento
+      formData.introducao = aplicarTemplateIntroducao({
+        modeloTelha: formData.modeloTelha,
+        espessura: formData.espessura,
+        protocolo: formData.protocolo,
+        anosGarantia: formData.anosGarantia,
+        anosGarantiaSistemaCompleto: formData.anosGarantiaSistemaCompleto
+      });
+      
+      formData.analiseTecnica = TEMPLATE_ANALISE_TECNICA;
+      
+      formData.conclusao = aplicarTemplateConclusao({
+        resultado: formData.resultado,
+        modeloTelha: formData.modeloTelha,
+        anosGarantiaTotal: formData.anosGarantiaTotal
+      });
       
       // Gerar o documento usando a biblioteca docx
       const blob = await gerarRelatorioVistoriaDoc(formData);
@@ -938,13 +959,9 @@ export default function RelatorioVistoriaPage() {
                               </p>
                             </div>
                           </div>
-
-                          {/* Campos ocultos para manter a compatibilidade */}
-                          <input type="hidden" {...form.register("introducao")} />
-                          <input type="hidden" {...form.register("analiseTecnica")} />
-                          <input type="hidden" {...form.register("conclusao")} />
-                          <input type="hidden" {...form.register("recomendacao")} />
-                          <input type="hidden" {...form.register("observacoesGerais")} />
+                          
+                          {/* Os campos de texto fixo (introducao, analiseTecnica, conclusao) foram removidos
+                              pois agora são gerados automaticamente pelos templates */}
                         </CardContent>
                       </Card>
                       
