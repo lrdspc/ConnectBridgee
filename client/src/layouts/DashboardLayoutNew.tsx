@@ -361,7 +361,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
         {/* Conteúdo principal */}
         <main 
           ref={mainRef}
-          className="flex-1 overflow-auto bg-gray-50 pb-24"
+          className="flex-1 overflow-auto bg-gray-50 pb-28"
         >
           {/* Espaçador para compensar o cabeçalho fixo em mobile */}
           {isMobile && <div className="h-16" />}
