@@ -40,7 +40,7 @@ export default function MobileMenu({ open, setOpen }: MobileMenuProps) {
     { name: 'Início', path: '/', icon: <Home className="h-5 w-5" /> },
     { name: 'Clientes', path: '/clientes', icon: <Users className="h-5 w-5" /> },
     { name: 'Visitas', path: '/visitas', icon: <ClipboardCheck className="h-5 w-5" /> },
-    { name: 'Nova Vistoria', path: '/nova-vistoria', icon: <PlusCircle className="h-5 w-5" />, highlight: true },
+    { name: 'Nova Vistoria', path: '/relatorio-vistoria', icon: <PlusCircle className="h-5 w-5" />, highlight: true },
     { name: 'Relatórios', path: '/relatorios', icon: <FileText className="h-5 w-5" /> },
     { name: 'Perfil', path: '/perfil', icon: <User className="h-5 w-5" /> },
     { name: 'Configurações', path: '/configuracoes', icon: <Settings className="h-5 w-5" /> },

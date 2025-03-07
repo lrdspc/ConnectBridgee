@@ -62,7 +62,7 @@ export default function FloatingActionButton() {
             <span className="bg-white/90 text-primary font-medium px-3 py-1 rounded-full mr-2 shadow text-sm">
               Nova Vistoria
             </span>
-            <Link href="/nova-vistoria">
+            <Link href="/relatorio-vistoria">
               <a 
                 className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center shadow-md"
                 onClick={() => setShowMenu(false)}

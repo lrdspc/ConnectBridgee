@@ -51,15 +51,9 @@ function App() {
             <Route path="/clientes" component={ClientesPage} />
             <Route path="/clientes/:id" component={ClienteDetalhesPage} />
             
-            {/* Relatórios e Vistorias - todas páginas consolidadas em uma única rota */}
+            {/* Relatórios e Vistorias - apenas uma página de relatório */}
             <Route path="/relatorios" component={RelatoriosPage} />
             <Route path="/relatorio-vistoria" component={RelatorioVistoriaPage} />
-            <Route path="/nova-vistoria" component={RelatorioVistoriaPage} />
-            <Route path="/teste-relatorio" component={RelatorioVistoriaPage} />
-            <Route path="/teste-relatorio-simple" component={RelatorioVistoriaPage} />
-            <Route path="/vistoria-far" component={RelatorioVistoriaPage} />
-            <Route path="/vistoria" component={RelatorioVistoriaPage} />
-            <Route path="/vistoria-tecnica" component={RelatorioVistoriaPage} />
             
             {/* Fallback para rota não encontrada */}
             <Route component={NotFound} />
