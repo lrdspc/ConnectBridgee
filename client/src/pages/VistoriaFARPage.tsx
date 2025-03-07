@@ -628,7 +628,12 @@ const VistoriaFARPage = () => {
         anosGarantiaSistemaCompleto: formData.anosGarantiaSistemaCompleto,
         anosGarantiaTotal: formData.anosGarantiaTotal,
         
-        resultado: formData.resultado
+        resultado: formData.resultado,
+        
+        // Campos adicionais obrigatórios
+        status: "completed",
+        assinadoPor: formData.elaboradoPor,
+        assinadoEm: formData.dataVistoria
       };
       
       toast({
