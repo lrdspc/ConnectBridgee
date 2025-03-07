@@ -149,7 +149,7 @@ export function ExportDocButton({
       ) : (
         <>
           <FileDown className="h-4 w-4" />
-          Exportar DOC
+          Exportar DOC (ABNT)
         </>
       )}
     </Button>
