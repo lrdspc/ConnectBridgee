@@ -50,7 +50,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
     { name: 'Dashboard', path: '/', icon: <Home className="w-5 h-5" />, badge: null },
     { name: 'Clientes', path: '/clientes', icon: <Users className="w-5 h-5" />, badge: null },
     { name: 'Visitas', path: '/visitas', icon: <MapPin className="w-5 h-5" />, badge: null },
-    { name: 'Nova Vistoria', path: '/relatorio-vistoria', icon: <ClipboardCheck className="w-5 h-5" />, badge: "Novo", highlight: true },
+    { name: 'Nova Vistoria', path: '/relatorio-vistoria', icon: <ClipboardCheck className="w-5 h-5" />, badge: null, highlight: true },
     { name: 'Relatórios', path: '/relatorios', icon: <BarChart2 className="w-5 h-5" />, badge: null },
     { name: 'Meu Perfil', path: '/perfil', icon: <User className="w-5 h-5" />, badge: null },
   ];
@@ -120,14 +120,11 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
         {/* Ações e perfil do usuário */}
         <div className="flex items-center gap-2">
           <TooltipProvider>
-            {/* Botão de notificações */}
+            {/* Botão de notificações - sem número de notificações */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="ghost" size="icon" className="relative">
                   <Bell className="h-5 w-5" />
-                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-white">
-                    2
-                  </span>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Notificações</TooltipContent>
