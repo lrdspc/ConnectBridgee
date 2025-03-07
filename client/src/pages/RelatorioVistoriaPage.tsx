@@ -463,6 +463,12 @@ export default function RelatorioVistoriaPage() {
     }
   };
   
+  // Define resultado como IMPROCEDENTE sempre
+  useEffect(() => {
+    // Definir o resultado como IMPROCEDENTE ao montar o componente
+    form.setValue("resultado", "IMPROCEDENTE");
+  }, []);
+
   return (
     <PageTransition>
       <DashboardLayoutNew>
@@ -499,8 +505,9 @@ export default function RelatorioVistoriaPage() {
               className="gap-2" 
               onClick={() => {
                 const dadosAleatorios = gerarRelatorioAleatorio();
+                // Sempre definir como IMPROCEDENTE
+                dadosAleatorios.resultado = "IMPROCEDENTE";
                 form.reset(dadosAleatorios);
-                setFotos(dadosAleatorios.fotos || []);
                 toast({
                   title: "Dados gerados com sucesso",
                   description: "O formulário foi preenchido com dados de teste aleatórios.",
@@ -514,7 +521,7 @@ export default function RelatorioVistoriaPage() {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                {/* Informações do Cliente e Produto */}
+                {/* Informações do Cliente e Produto - COLUNA 1 */}
                 <div className="space-y-6">
                   <Card>
                     <CardHeader>
@@ -793,8 +800,8 @@ export default function RelatorioVistoriaPage() {
                   </Card>
                 </div>
 
-                {/* Responsáveis e Resultados */}
-                <div className="space-y-6">
+                {/* Responsáveis - COLUNA 2 */}
+                <div>
                   <Card>
                     <CardHeader>
                       <CardTitle>Responsáveis Técnicos</CardTitle>
@@ -904,82 +911,6 @@ export default function RelatorioVistoriaPage() {
                       />
                     </CardContent>
                   </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Resultado da Análise</CardTitle>
-                      <CardDescription>
-                        Avaliação final da reclamação
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <FormField
-                        control={form.control}
-                        name="resultado"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Resultado</FormLabel>
-                            <div className="flex gap-4">
-                              <div 
-                                className={`flex-1 border rounded-md p-4 cursor-pointer ${field.value === 'PROCEDENTE' ? 'border-primary bg-primary/10' : 'border-gray-200'}`}
-                                onClick={() => field.onChange('PROCEDENTE')}
-                              >
-                                <div className="flex items-center gap-2">
-                                  <Check className={`h-5 w-5 ${field.value === 'PROCEDENTE' ? 'text-primary' : 'text-gray-400'}`} />
-                                  <div className="font-medium">PROCEDENTE</div>
-                                </div>
-                                <div className="text-sm text-muted-foreground mt-2">
-                                  A reclamação procede. Garantia aplicável.
-                                </div>
-                              </div>
-                              
-                              <div 
-                                className={`flex-1 border rounded-md p-4 cursor-pointer ${field.value === 'IMPROCEDENTE' ? 'border-primary bg-primary/10' : 'border-gray-200'}`}
-                                onClick={() => field.onChange('IMPROCEDENTE')}
-                              >
-                                <div className="flex items-center gap-2">
-                                  <X className={`h-5 w-5 ${field.value === 'IMPROCEDENTE' ? 'text-primary' : 'text-gray-400'}`} />
-                                  <div className="font-medium">IMPROCEDENTE</div>
-                                </div>
-                                <div className="text-sm text-muted-foreground mt-2">
-                                  A reclamação não procede. Garantia não aplicável.
-                                </div>
-                              </div>
-                            </div>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Textos Automáticos</CardTitle>
-                      <CardDescription>
-                        Informações sobre os textos gerados automaticamente
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="bg-muted p-4 rounded-md space-y-3">
-                        <h3 className="font-medium text-lg flex items-center">
-                          <FileText className="mr-2 h-4 w-4" /> 
-                          Textos do relatório
-                        </h3>
-                        <p className="text-sm text-muted-foreground">
-                          Os textos de <strong>Introdução</strong>, <strong>Análise Técnica</strong> e <strong>Conclusão</strong> são gerados automaticamente a partir 
-                          dos dados inseridos no formulário usando templates padronizados.
-                        </p>
-                        <div className="bg-background p-3 rounded-md border text-sm">
-                          <p className="font-medium mb-1">Exemplo de texto gerado:</p>
-                          <p className="text-xs text-muted-foreground">
-                            "A Área de Assistência Técnica foi solicitada para atender uma reclamação
-                            relacionada a infiltrações nas telhas..."
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
                 </div>
               </div>
 
@@ -1028,72 +959,6 @@ export default function RelatorioVistoriaPage() {
                 </CardContent>
               </Card>
 
-              {/* Fotos */}
-              <Card className="mb-6">
-                <CardHeader>
-                  <CardTitle>Fotos da Vistoria</CardTitle>
-                  <CardDescription>
-                    Adicione fotos para documentar a vistoria
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button
-                    variant="outline"
-                    className="w-full mb-4 p-6 h-auto flex-col"
-                    onClick={() => document.getElementById('foto-upload')?.click()}
-                  >
-                    <Camera className="h-8 w-8 text-muted-foreground mb-3" />
-                    <p className="text-sm text-muted-foreground">
-                      Clique para adicionar fotos
-                    </p>
-                    <input
-                      id="foto-upload"
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={handleFotoUpload}
-                      className="hidden"
-                    />
-                  </Button>
-                  
-                  {fotos.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      {fotos.map((foto) => (
-                        <Card key={foto.id} className="overflow-hidden">
-                          <img 
-                            src={foto.dataUrl} 
-                            alt="Foto da vistoria" 
-                            className="h-40 w-full object-cover"
-                          />
-                          <CardContent className="p-3">
-                            <div className="space-y-2">
-                              <input
-                                placeholder="Descrição da foto"
-                                className="w-full text-sm rounded-md border p-2 resize-none"
-                                value={foto.descricao || ''}
-                                onChange={(e) => handleFotoDescricaoChange(foto.id, e.target.value)}
-                              />
-                              <Button
-                                variant="destructive"
-                                size="sm"
-                                className="w-full"
-                                onClick={() => handleRemoverFoto(foto.id)}
-                              >
-                                Remover
-                              </Button>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-4 text-muted-foreground">
-                      Nenhuma foto adicionada.
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
               {/* Visualização e Exportação */}
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
@@ -1134,6 +999,13 @@ export default function RelatorioVistoriaPage() {
                   </CardContent>
                 )}
               </Card>
+
+              {/* Campo oculto para resultado - sempre IMPROCEDENTE */}
+              <input 
+                type="hidden" 
+                {...form.register("resultado")} 
+                value="IMPROCEDENTE"
+              />
             </form>
           </Form>
         </div>
