@@ -14,7 +14,6 @@ import {
   gerarRelatorioAleatorio
 } from '@shared/relatorioVistoriaSchema';
 import { gerarRelatorioSimples } from '@/lib/relatorioVistoriaSimpleGenerator';
-import { aplicarTemplateIntroducao, aplicarTemplateConclusao, TEMPLATE_ANALISE_TECNICA } from '@/lib/relatorioVistoriaTemplates';
 
 import { DashboardLayoutNew } from '@/layouts/DashboardLayoutNew';
 import { PageTransition } from '@/components/ui/loading-animation';
@@ -190,22 +189,49 @@ export default function RelatorioVistoriaPage() {
       // Garantir que estamos usando IMPROCEDENTE sempre
       formData.resultado = "IMPROCEDENTE";
       
-      // Gerar textos a partir dos templates
-      // Introdução
-      const introducaoTexto = aplicarTemplateIntroducao({
-        modeloTelha: formData.modeloTelha,
-        espessura: formData.espessura,
-        protocolo: formData.protocolo,
-        anosGarantia: formData.anosGarantia,
-        anosGarantiaSistemaCompleto: formData.anosGarantiaSistemaCompleto
-      });
+      // Textos fixos com substituição de variáveis
+      const introducaoTexto = `A Área de Assistência Técnica foi solicitada para atender uma reclamação
+relacionada ao surgimento de infiltrações nas telhas de fibrocimento: -
+Telha da marca BRASILIT modelo ${formData.modeloTelha} de ${formData.espessura}mm, produzidas com
+tecnologia CRFS - Cimento Reforçado com Fios Sintéticos - 100% sem
+amianto - cuja fabricação segue a norma internacional ISO 9933, bem como
+as normas técnicas da ABNT: NBR-15210-1, NBR-15210-2 e NBR-15210-3.
+
+Em atenção a vossa solicitação, analisamos as evidências encontradas,
+para avaliar as manifestações patológicas reclamadas em telhas de nossa
+marca aplicada em sua cobertura conforme registro de reclamação
+protocolo FAR ${formData.protocolo}.
+
+O modelo de telha escolhido para a edificação foi: ${formData.modeloTelha}. Esse
+modelo, como os demais, possui a necessidade de seguir rigorosamente as
+orientações técnicas contidas no Guia Técnico de Telhas de Fibrocimento
+e Acessórios para Telhado - Brasilit para o melhor desempenho do
+produto, assim como a garantia do produto coberta por ${formData.anosGarantia} anos (ou ${formData.anosGarantiaSistemaCompleto}
+anos para sistema completo).`;
       
-      // Conclusão - sempre usando IMPROCEDENTE 
-      const conclusaoTexto = aplicarTemplateConclusao({
-        resultado: "IMPROCEDENTE",
-        modeloTelha: formData.modeloTelha,
-        anosGarantiaTotal: formData.anosGarantiaTotal
-      });
+      // Texto fixo da análise técnica
+      const analiseTecnicaTexto = `Durante a visita técnica realizada no local, nossa equipe conduziu uma
+vistoria minuciosa da cobertura, documentando e analisando as condições
+de instalação e o estado atual das telhas. Após criteriosa avaliação das
+evidências coletadas em campo, identificamos alguns desvios nos
+procedimentos de manuseio e instalação em relação às especificações
+técnicas do fabricante, os quais são detalhados a seguir.`;
+      
+      // Conclusão - sempre como IMPROCEDENTE
+      const conclusaoTexto = `Com base na análise técnica realizada, foram identificadas as não conformidades listadas acima.
+
+Em função das não conformidades constatadas no manuseio e instalação das chapas Brasilit, 
+finalizamos o atendimento considerando a reclamação como IMPROCEDENTE, onde os problemas reclamados 
+se dão pelo incorreto manuseio e instalação das telhas e não a problemas relacionados à qualidade do material.
+
+As telhas BRASILIT modelo FIBROCIMENTO ${formData.modeloTelha} possuem ${formData.anosGarantiaTotal} anos de garantia 
+com relação a problemas de fabricação. A garantia Brasilit está condicionada a correta aplicação do produto, 
+seguindo rigorosamente as instruções de instalação contidas no Guia Técnico de Telhas de Fibrocimento 
+e Acessórios para Telhado - Brasilit. Este guia técnico está sempre disponível em: http://www.brasilit.com.br.
+
+Ratificamos que os produtos Brasilit atendem as Normas da Associação Brasileira de Normas Técnicas - ABNT, 
+específicas para cada linha de produto, e cumprimos as exigências legais de garantia de produtos
+conforme a legislação em vigor.`;
       
       // Filtrar não conformidades selecionadas
       const naoConformidadesSelecionadas = formData.naoConformidades
@@ -327,7 +353,7 @@ export default function RelatorioVistoriaPage() {
           
           <div style="margin-top: 20px;">
             <h2>2. ANÁLISE TÉCNICA</h2>
-            <p>${TEMPLATE_ANALISE_TECNICA}</p>
+            <p>${analiseTecnicaTexto}</p>
             
             <h3>2.1 NÃO CONFORMIDADES IDENTIFICADAS</h3>
             ${listaNaoConformidades}
@@ -422,25 +448,10 @@ export default function RelatorioVistoriaPage() {
       // Clonar os dados do formulário para não afetar o estado
       const formData = {...form.getValues()};
       
-      // Aplicar os templates para os textos fixos antes de gerar o documento
-      formData.introducao = aplicarTemplateIntroducao({
-        modeloTelha: formData.modeloTelha,
-        espessura: formData.espessura,
-        protocolo: formData.protocolo,
-        anosGarantia: formData.anosGarantia,
-        anosGarantiaSistemaCompleto: formData.anosGarantiaSistemaCompleto
-      });
-      
-      formData.analiseTecnica = TEMPLATE_ANALISE_TECNICA;
-      
       // Forçar resultado como IMPROCEDENTE
       formData.resultado = "IMPROCEDENTE";
       
-      formData.conclusao = aplicarTemplateConclusao({
-        resultado: "IMPROCEDENTE", // Forçar IMPROCEDENTE
-        modeloTelha: formData.modeloTelha,
-        anosGarantiaTotal: formData.anosGarantiaTotal
-      });
+      // Os textos padrão serão inseridos diretamente no gerador
       
       // Filtrar não conformidades selecionadas e usar as versões completas
       const naoConformidadesSelecionadas = formData.naoConformidades
