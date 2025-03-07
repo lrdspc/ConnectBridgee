@@ -127,17 +127,12 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
       ]
     });
 
-    // Rodapé simplificado
+    // Rodapé simplificado (sem numeração de páginas para evitar erros)
     const footer = new Footer({
       children: [
         new Paragraph({
-          text: "Página ",
-          alignment: AlignmentType.CENTER,
-          children: [
-            new TextRun({
-              children: ["Página ", { type: "page-number" }]
-            })
-          ]
+          text: "Brasilit Saint-Gobain - Relatório de Vistoria Técnica",
+          alignment: AlignmentType.CENTER
         })
       ]
     });

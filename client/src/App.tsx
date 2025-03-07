@@ -22,6 +22,7 @@ const ClienteDetalhesPage = lazy(() => import('./pages/ClienteDetalhesPage'));
 // Páginas principais de relatórios - reduzidas e consolidadas
 const RelatoriosPage = lazy(() => import('./pages/RelatoriosPage'));
 const RelatorioVistoriaPage = lazy(() => import('./pages/RelatorioVistoriaPage'));
+const TesteRelatorioPage = lazy(() => import('./pages/TesteRelatorioPage'));
 
 // Componente de loading para mostrar durante o carregamento das páginas
 const PageLoading = () => (
@@ -54,6 +55,7 @@ function App() {
             {/* Relatórios e Vistorias */}
             <Route path="/relatorios" component={RelatoriosPage} />
             <Route path="/nova-vistoria" component={RelatorioVistoriaPage} />
+            <Route path="/teste-relatorio" component={TesteRelatorioPage} />
             
             {/* Redirecionar antiga rota FAR para a nova página consolidada */}
             <Route path="/vistoria-far">
