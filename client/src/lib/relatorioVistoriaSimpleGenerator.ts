@@ -68,7 +68,7 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
       if (naoConformidadesSelecionadas.length > 0) {
         // Adicionar cada não conformidade com a formatação exata conforme especificação
         naoConformidadesSelecionadas.forEach((nc, index) => {
-          // Título da não conformidade em negrito
+          // Título da não conformidade em negrito com numeração
           naoConformidadesParagrafos.push(
             new Paragraph({
               children: [
@@ -77,7 +77,11 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
                   bold: true
                 })
               ],
-              spacing: { after: 240 } // 8pt = linha em branco após título
+              spacing: { after: 240 }, // 8pt = linha em branco após título
+              numbering: {
+                reference: "naoConformidadesLista",
+                level: 0
+              }
             })
           );
           
@@ -86,16 +90,18 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
             new Paragraph({
               text: nc.descricao,
               alignment: AlignmentType.JUSTIFIED,
-              spacing: { after: 240 } // 8pt = linha em branco após texto
+              spacing: { after: 240 }, // 8pt = linha em branco após texto
+              indent: { left: convertInchesToTwip(0.25) } // Indentação para alinhar com o texto numerado
             })
           );
           
           // Adicionar à lista de não conformidades para a conclusão (apenas títulos)
           naoConformidadesListaConclusao.push(
             new Paragraph({
-              text: `${index + 1}. ${nc.titulo}`,
+              text: nc.titulo,
               spacing: { after: 240 }, // 8pt = linha em branco após item
-              bullet: {
+              numbering: {
+                reference: "naoConformidadesLista",
                 level: 0
               }
             })
@@ -216,6 +222,28 @@ conforme a legislação em vigor.`;
                 style: {
                   paragraph: {
                     indent: { left: convertInchesToTwip(0.5), hanging: convertInchesToTwip(0.25) }
+                  },
+                  run: {
+                    bold: true // Números em negrito
+                  }
+                }
+              }
+            ]
+          },
+          {
+            reference: "fotoLista",
+            levels: [
+              {
+                level: 0,
+                format: LevelFormat.DECIMAL,
+                text: "Foto %1:",
+                alignment: AlignmentType.LEFT,
+                style: {
+                  paragraph: {
+                    indent: { left: convertInchesToTwip(0.5), hanging: convertInchesToTwip(0.25) }
+                  },
+                  run: {
+                    bold: true
                   }
                 }
               }
@@ -468,8 +496,32 @@ conforme a legislação em vigor.`;
             
             new Paragraph({
               text: "Assistência Técnica Brasilit Saint-Gobain",
-              spacing: { after: 240 }
-            })
+              spacing: { after: 480 } // Duas linhas em branco
+            }),
+            
+            // Adicionar seção de fotos se houver fotos
+            ...(relatorio.fotos && relatorio.fotos.length > 0 ? [
+              // Título da seção de fotos
+              new Paragraph({
+                children: [
+                  new TextRun({ 
+                    text: "ANEXO: REGISTRO FOTOGRÁFICO", 
+                    bold: true
+                  })
+                ],
+                alignment: AlignmentType.CENTER,
+                spacing: { before: 480, after: 240 }
+              }),
+              
+              // Placeholder para as fotos
+              // Elas seriam inseridas aqui, mas a biblioteca docx tem limitações com imagens
+              // Por isso, usamos um texto explicativo
+              new Paragraph({
+                text: `Este relatório inclui ${relatorio.fotos.length} registro(s) fotográfico(s) que não foram impressos nesta versão. Para visualizar as fotos, consulte a versão digital completa.`,
+                alignment: AlignmentType.JUSTIFIED,
+                spacing: { after: 240 }
+              })
+            ] : [])
           ]
         }
       ]
