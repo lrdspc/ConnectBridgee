@@ -528,24 +528,19 @@ conforme a legislação em vigor.`;
       ]
     });
     
-    // Exportar para Blob - Versão simplificada e mais confiável
+    // Exportar para Blob - Versão oficial e confiável
     log("Finalizando a geração do documento e exportando...");
     
-    try {
-      // Usar a biblioteca docx diretamente para criar um buffer
-      const buffer = await Packer.toBuffer(doc);
-      
-      // Converter o buffer para Blob com o tipo MIME correto
-      const blob = new Blob([buffer], { 
-        type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" 
-      });
-      
-      log("Documento DOCX gerado com sucesso!");
-      return blob;
-    } catch (error) {
-      console.error("Erro ao gerar documento DOCX:", error);
-      throw new Error(`Falha ao gerar documento DOCX: ${error}`);
-    }
+    // Exportar o documento para um buffer
+    const buffer = await Packer.toBuffer(doc);
+    
+    // Criar um Blob a partir do buffer com o tipo MIME correto para DOCX
+    const blob = new Blob([buffer], { 
+      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" 
+    });
+    
+    log("Documento DOCX gerado com sucesso!");
+    return blob;
   } catch (error) {
     console.error("Erro ao gerar relatório:", error);
     throw new Error(`Falha ao gerar o relatório: ${error}`);

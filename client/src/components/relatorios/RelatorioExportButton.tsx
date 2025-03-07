@@ -4,7 +4,6 @@ import { FileDown, Loader2 } from "lucide-react";
 import type { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { toast } from "sonner";
 import { gerarRelatorioSimples } from "@/lib/relatorioVistoriaSimpleGenerator";
-import { gerarRelatorioBasico } from "@/lib/basicReportGenerator";
 
 // Logs para debug
 const DEBUG = true;
@@ -153,31 +152,13 @@ export function RelatorioExportButton({
       // Definir nome do arquivo
       const fileName = `${fileNamePrefix}-${relatorioPreparado.protocolo || 'Vistoria'}-ABNT.docx`;
       
-      // Tentar usar o gerador principal primeiro
-      try {
-        log("Gerando relatório com o gerador principal (formatação ABNT)");
-        const blob = await gerarRelatorioSimples(relatorioPreparado);
-        saveDocFile(blob, fileName);
-        
-        toast.success("Relatório ABNT exportado com sucesso!");
-        onExportSuccess?.(fileName);
-      } catch (primaryError) {
-        // Se falhar, usar o gerador básico como backup
-        console.error("Erro no gerador principal, tentando o gerador básico:", primaryError);
-        toast.warning("Houve um problema com a formatação avançada. Gerando relatório simplificado...");
-        
-        try {
-          log("Gerando relatório com o gerador básico (formatação simplificada)");
-          const backupBlob = await gerarRelatorioBasico(relatorioPreparado);
-          saveDocFile(backupBlob, `${fileNamePrefix}-${relatorioPreparado.protocolo || 'Vistoria'}-Simples.docx`);
-          
-          toast.success("Relatório simplificado exportado com sucesso!");
-          onExportSuccess?.(fileName);
-        } catch (backupError) {
-          console.error("Ambos os geradores falharam:", backupError);
-          throw new Error("Falha em todos os geradores de relatório. Por favor, contate o suporte técnico.");
-        }
-      }
+      // Gerar o relatório com o gerador padrão
+      log("Gerando relatório com formatação ABNT exata");
+      const blob = await gerarRelatorioSimples(relatorioPreparado);
+      saveDocFile(blob, fileName);
+      
+      toast.success("Relatório ABNT exportado com sucesso!");
+      onExportSuccess?.(fileName);
     } catch (error) {
       console.error("Erro ao exportar documento:", error);
       toast.error(`Erro ao exportar documento: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
