@@ -13,9 +13,9 @@ interface ExtendedRelatorioVistoria extends RelatorioVistoria {
   [key: string]: any; // Para permitir propriedades adicionais
 }
 
-// Configurações de estilo para manter consistência com a especificação
-const FONTE_PRINCIPAL = "Times New Roman";
-const TAMANHO_FONTE = 24; // 12pt = 24 half-points
+// Configurações de estilo para manter consistência com a especificação ABNT
+const FONTE_PRINCIPAL = "Arial"; // Alterado para Arial conforme ABNT NBR 14724
+const TAMANHO_FONTE = 24; // 12pt = 24 half-points (padrão ABNT)
 
 // Função para gerar o documento Word
 export async function gerarRelatorioVistoriaDoc(relatorio: ExtendedRelatorioVistoria): Promise<Blob> {
