@@ -4,7 +4,8 @@ import { FileText, FileDown } from "lucide-react";
 import type { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { toast } from "sonner";
 import { generateRelatorioVistoriaBrasil } from "@/lib/relatorioVistoriaBrasilGenerator";
-import { gerarRelatorioVistoriaDoc } from "@/lib/relatorioVistoriaDocGenerator";
+import { gerarRelatorioVistoriaDoc as gerarRelatorioVistoriaDocOriginal } from "@/lib/relatorioVistoriaDocGenerator";
+import { gerarRelatorioVistoriaDoc as gerarRelatorioVistoriaDocSimples } from "@/lib/relatorioVistoriaDocGeneratorSimple";
 
 // Interface estendida para compatibilidade com versões anteriores do código
 interface ExtendedRelatorioVistoria extends RelatorioVistoria {
@@ -34,10 +35,23 @@ export function ExportDocButton({
       setIsGenerating(true);
       toast.info("Gerando documento...");
       
-      // Usar o gerador específico com base na flag
-      const blob = useNewGenerator 
-        ? await generateRelatorioVistoriaBrasil(relatorio)
-        : await gerarRelatorioVistoriaDoc(relatorio);
+      let blob;
+      
+      // Tentar diferentes geradores em caso de falha
+      try {
+        // Tentar primeiro com o gerador simples (html-to-docx)
+        blob = await gerarRelatorioVistoriaDocSimples(relatorio);
+      } catch (innerError) {
+        console.warn("Falha no gerador simples, tentando gerador original:", innerError);
+        try {
+          // Se falhar, tentar com o gerador original
+          blob = await gerarRelatorioVistoriaDocOriginal(relatorio);
+        } catch (docxError) {
+          console.warn("Falha no gerador original, tentando o gerador Brasil:", docxError);
+          // Se ambos falharem, usar o gerador Brasil como último recurso
+          blob = await generateRelatorioVistoriaBrasil(relatorio);
+        }
+      }
       
       // Criar e clicar em um link temporário para fazer o download
       const url = URL.createObjectURL(blob);
