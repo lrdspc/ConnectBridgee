@@ -178,24 +178,6 @@ export default function DashboardPage() {
   const nextVisit = getNextVisit();
   const visitasHoje = getVisitasHoje();
 
-  // Função para alternar configuração do dashboard
-  const toggleDashboardItem = (item: keyof typeof dashboardConfig) => {
-    setDashboardConfig(prev => ({
-      ...prev,
-      [item]: !prev[item]
-    }));
-  };
-
-  if (isLoading) {
-    return (
-      <DashboardLayoutNew>
-        <div className="flex h-[80vh] items-center justify-center">
-          <LoadingAnimation text="Carregando seu dashboard..." />
-        </div>
-      </DashboardLayoutNew>
-    );
-  }
-
   // Função para salvar configurações
   const handleConfigChange = (newConfig: DashboardConfig) => {
     setDashboardConfig(newConfig);
@@ -215,6 +197,16 @@ export default function DashboardPage() {
     const widget = dashboardConfig.widgets.find(w => w.id === widgetId);
     return widget ? widget.enabled : false;
   };
+
+  if (isLoading) {
+    return (
+      <DashboardLayoutNew>
+        <div className="flex h-[80vh] items-center justify-center">
+          <LoadingAnimation text="Carregando seu dashboard..." />
+        </div>
+      </DashboardLayoutNew>
+    );
+  }
 
   return (
     <PageTransition>
@@ -407,7 +399,7 @@ export default function DashboardPage() {
           
           {/* Cards de estatísticas */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {dashboardConfig.showVisitasAgendadas && (
+            {isWidgetEnabled('visitas_agendadas') && (
               <Card className="bg-blue-50 border-blue-200 h-[130px]">
                 <CardHeader className="py-3">
                   <CardTitle className="text-blue-800 text-sm flex items-center gap-2">
@@ -421,7 +413,7 @@ export default function DashboardPage() {
               </Card>
             )}
             
-            {dashboardConfig.showEmAndamento && (
+            {isWidgetEnabled('visitas_agendadas') && (
               <Card className="bg-amber-50 border-amber-200 h-[130px]">
                 <CardHeader className="py-3">
                   <CardTitle className="text-amber-800 text-sm flex items-center gap-2">
@@ -435,7 +427,7 @@ export default function DashboardPage() {
               </Card>
             )}
             
-            {dashboardConfig.showPendentes && (
+            {isWidgetEnabled('visitas_agendadas') && (
               <Card className="bg-purple-50 border-purple-200 h-[130px]">
                 <CardHeader className="py-3">
                   <CardTitle className="text-purple-800 text-sm flex items-center gap-2">
@@ -449,7 +441,7 @@ export default function DashboardPage() {
               </Card>
             )}
             
-            {dashboardConfig.showConcluidas && (
+            {isWidgetEnabled('visitas_agendadas') && (
               <Card className="bg-green-50 border-green-200 h-[130px]">
                 <CardHeader className="py-3">
                   <CardTitle className="text-green-800 text-sm flex items-center gap-2">
@@ -468,6 +460,38 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Coluna principal */}
             <div className="lg:col-span-2 space-y-6">
+              {/* Gráfico semanal */}
+              {isWidgetEnabled('grafico_semanal') && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <BarChart2 className="h-5 w-5 mr-2" />
+                      Visitas por dia da semana
+                    </CardTitle>
+                    <CardDescription>
+                      Últimos 7 dias
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Chart
+                      type="bar"
+                      height={200}
+                      data={weeklyVisits}
+                      xAxis={{
+                        dataKey: "day",
+                      }}
+                      series={[
+                        {
+                          dataKey: "count",
+                          name: "Visitas",
+                          color: "#3b82f6",
+                        },
+                      ]}
+                    />
+                  </CardContent>
+                </Card>
+              )}
+              
               {/* Tabs para diferentes visões */}
               <Tabs defaultValue="agendado" className="w-full">
                 <TabsList className="grid grid-cols-4 mb-4">
@@ -620,7 +644,7 @@ export default function DashboardPage() {
             {/* Coluna lateral */}
             <div className="space-y-6">
               {/* Rota do dia */}
-              {dashboardConfig.showRotaDia && (
+              {isWidgetEnabled('rota_dia') && (
                 <Card>
                   <CardHeader className="pb-2">
                     <CardTitle className="flex items-center">
@@ -646,7 +670,7 @@ export default function DashboardPage() {
               )}
 
               {/* Informações climáticas */}
-              {dashboardConfig.showClimaHoje && (
+              {isWidgetEnabled('clima') && (
                 <Card>
                   <CardHeader className="pb-2">
                     <CardTitle className="flex items-center">
@@ -679,52 +703,14 @@ export default function DashboardPage() {
                           <span>Umidade: 70%</span>
                         </div>
                         <div className="flex items-center">
-                          <span>Vento: 12 km/h</span>
+                          <RefreshCw className="h-3 w-3 mr-1 text-green-500" />
+                          <span>Vento: 10 km/h</span>
                         </div>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
               )}
-              
-              {/* Resumo de desempenho */}
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="flex items-center">
-                    <BarChart2 className="h-5 w-5 mr-2" />
-                    Seu Desempenho
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Esta semana</span>
-                      <span className="text-sm font-medium">{weeklyVisits.reduce((acc, day) => acc + day.count, 0)} visitas</span>
-                    </div>
-                    <div className="w-full bg-gray-100 rounded-full h-2">
-                      <div 
-                        className="bg-green-500 h-2 rounded-full" 
-                        style={{ width: "85%" }}
-                      ></div>
-                    </div>
-                    <div className="flex justify-between text-xs text-gray-500">
-                      <span>Meta: 21 visitas mensais</span>
-                      <span>85% concluído</span>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-2 mt-4">
-                      <div className="border rounded p-2 text-center">
-                        <p className="text-xs text-gray-500">Tempo médio</p>
-                        <p className="font-medium">45 min</p>
-                      </div>
-                      <div className="border rounded p-2 text-center">
-                        <p className="text-xs text-gray-500">Satisfação</p>
-                        <p className="font-medium">4.8 / 5</p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </div>

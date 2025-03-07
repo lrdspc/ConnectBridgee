@@ -43,3 +43,18 @@ export function formatDateTime(dateInput: Date | string, timeString?: string): s
   const formattedDate = formatDate(dateInput)
   return timeString ? `${formattedDate} às ${timeString}` : formattedDate
 }
+
+/**
+ * Gera texto alternativo para avatares quando a imagem não está disponível
+ * Pode usar nome, email ou qualquer string para gerar iniciais
+ */
+export function avatarFallback(name?: string): string {
+  if (!name) return "U"
+  
+  return name
+    .split(' ')
+    .map(part => part[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase()
+}

@@ -48,14 +48,18 @@ import {
   Eye,
   ShieldCheck,
   Globe,
+  X,
+  FileText,
+  Shield,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLocation } from 'wouter';
 import { useAuth } from '@/hooks/useAuth';
-import { avatarFallback } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Notification } from '@/components/notifications/NotificationsDropdown';
+import { avatarFallback, cn } from '@/lib/utils';
+import { X, Shield, FileText as FileTextIcon } from 'lucide-react';
 
 export default function ConfiguracoesPage() {
   const { toast } = useToast();
@@ -932,10 +936,10 @@ export default function ConfiguracoesPage() {
                       </div>
                     ) : (
                       <div className="space-y-3">
-                        {notifications.map(notification => (
+                        {notifications.map((notification) => (
                           <div 
                             key={notification.id} 
-                            className={cn(
+                            className={cnLocal(
                               "flex items-start p-3 rounded-lg border",
                               notification.read ? "bg-card" : "bg-muted/30 border-primary/20"
                             )}
@@ -945,7 +949,7 @@ export default function ConfiguracoesPage() {
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-start justify-between">
-                                <p className={cn(
+                                <p className={cnLocal(
                                   "text-sm font-medium",
                                   !notification.read && "font-semibold"
                                 )}>
@@ -960,7 +964,9 @@ export default function ConfiguracoesPage() {
                                   <X className="h-3 w-3" />
                                 </Button>
                               </div>
-                              <p className="text-sm text-muted-foreground mt-1">{notification.message}</p>
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {notification.message}
+                              </p>
                               <div className="flex items-center justify-between mt-2">
                                 <span className="text-xs text-muted-foreground">
                                   {format(new Date(notification.date), "dd 'de' MMMM, HH:mm", { locale: ptBR })}
