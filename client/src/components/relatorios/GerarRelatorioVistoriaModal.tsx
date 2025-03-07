@@ -15,6 +15,7 @@ import { Loader, Save, X } from "lucide-react";
 import { toast } from "sonner";
 import { RelatorioVistoria, modelosTelhas, espessurasTelhas, resultadoReclamacaoEnum } from "../../../shared/relatorioVistoriaSchema";
 import { generateRelatorioVistoria } from "@/lib/relatorioVistoriaGenerator";
+import { generateRelatorioVistoriaBrasil } from "@/lib/relatorioVistoriaBrasilGenerator";
 
 interface GerarRelatorioVistoriaModalProps {
   open: boolean;
