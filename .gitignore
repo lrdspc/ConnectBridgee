@@ -4,3 +4,64 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
+# Dependências
+/node_modules
+/.pnp
+.pnp.js
+
+# Ambiente
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.production
+
+# Builds
+/dist
+/build
+/client/dist
+/.next/
+/out/
+
+# Cache e arquivos temporários
+.DS_Store
+.cache
+.project
+.settings
+.tmproj
+*.esproj
+nbproject
+*.sublime-project
+*.sublime-workspace
+.idea
+*.swp
+*.swo
+.vscode
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+debug.log
+logs
+*.log
+
+# Coverage e testes
+/coverage
+/.nyc_output
+/cypress/screenshots
+/cypress/videos
+
+# Arquivos específicos do Replit
+.replit
+.nix
+replit.nix
+.config
+.bashrc
+.bash_aliases
+.profile
+.local
+
+# Arquivos gerados pelo sistema
+generated-icon.png
