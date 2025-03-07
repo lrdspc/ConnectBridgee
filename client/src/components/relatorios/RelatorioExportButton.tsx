@@ -114,6 +114,22 @@ export function RelatorioExportButton({
       setIsGenerating(true);
       toast.info("Preparando relatório com formatação ABNT...");
       
+      // Verificar se temos dados suficientes
+      if (!relatorio.cliente || !relatorio.dataVistoria) {
+        toast.error("Preencha ao menos os campos básicos (cliente e data de vistoria)");
+        setIsGenerating(false);
+        return;
+      }
+      
+      log("Dados recebidos para relatório:", {
+        cliente: relatorio.cliente,
+        dataVistoria: relatorio.dataVistoria,
+        protocolo: relatorio.protocolo,
+        modeloTelha: relatorio.modeloTelha,
+        espessura: relatorio.espessura,
+        resultado: relatorio.resultado,
+      });
+      
       // Preparar dados do relatório (garantir padrões)
       const relatorioPreparado = {
         ...relatorio,
