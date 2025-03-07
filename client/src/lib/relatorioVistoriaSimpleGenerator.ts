@@ -18,7 +18,6 @@ import {
   Paragraph, 
   TextRun, 
   AlignmentType,
-  ListLevel,
   convertInchesToTwip,
   LevelFormat,
   UnderlineType
@@ -164,7 +163,7 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
             id: "Normal",
             name: "Normal",
             run: {
-              font: "Times New Roman", // Alterado para Times New Roman conforme especificação
+              font: "Arial", // Utilizando Arial conforme solicitado pelo cliente
               size: 24 // 12pt
             },
             paragraph: {

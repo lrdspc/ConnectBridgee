@@ -19,10 +19,9 @@ const VisitDetailsPage = lazy(() => import('./pages/VisitDetailsPage'));
 const ClientesPage = lazy(() => import('./pages/ClientesPage'));
 const ClienteDetalhesPage = lazy(() => import('./pages/ClienteDetalhesPage'));
 
-// Páginas principais de relatórios - reduzidas e consolidadas
+// Páginas de relatórios - consolidadas em uma única página principal
 const RelatoriosPage = lazy(() => import('./pages/RelatoriosPage'));
 const RelatorioVistoriaPage = lazy(() => import('./pages/RelatorioVistoriaPage'));
-const TesteRelatorioPage = lazy(() => import('./pages/TesteRelatorioPageSimple'));
 
 // Componente de loading para mostrar durante o carregamento das páginas
 const PageLoading = () => (
@@ -52,14 +51,15 @@ function App() {
             <Route path="/clientes" component={ClientesPage} />
             <Route path="/clientes/:id" component={ClienteDetalhesPage} />
             
-            {/* Relatórios e Vistorias */}
+            {/* Relatórios e Vistorias - todas páginas consolidadas em uma única rota */}
             <Route path="/relatorios" component={RelatoriosPage} />
+            <Route path="/relatorio-vistoria" component={RelatorioVistoriaPage} />
             <Route path="/nova-vistoria" component={RelatorioVistoriaPage} />
-            <Route path="/teste-relatorio" component={TesteRelatorioPage} />
-            <Route path="/teste-relatorio-simple" component={TesteRelatorioPage} />
-            
-            {/* Redirecionar antiga rota FAR para a nova página consolidada */}
+            <Route path="/teste-relatorio" component={RelatorioVistoriaPage} />
+            <Route path="/teste-relatorio-simple" component={RelatorioVistoriaPage} />
             <Route path="/vistoria-far" component={RelatorioVistoriaPage} />
+            <Route path="/vistoria" component={RelatorioVistoriaPage} />
+            <Route path="/vistoria-tecnica" component={RelatorioVistoriaPage} />
             
             {/* Fallback para rota não encontrada */}
             <Route component={NotFound} />
