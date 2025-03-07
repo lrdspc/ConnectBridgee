@@ -546,6 +546,11 @@ const VistoriaFARPage = () => {
     const hasValidTelha = formData.telhas.some(telha => telha.quantidade > 0);
     if (!hasValidTelha) errors.telhas = "Adicione ao menos uma telha com quantidade válida";
     
+    // Validar resultado
+    if (!formData.resultado) {
+      errors.resultado = "É necessário selecionar um parecer final (PROCEDENTE ou IMPROCEDENTE)";
+    }
+    
     // Validar problemas selecionados
     const hasSelectedProblema = formData.problemas.some(problema => problema.selecionado);
     if (!hasSelectedProblema && formData.resultado === "IMPROCEDENTE") {
@@ -576,7 +581,8 @@ const VistoriaFARPage = () => {
           introducao: 'textos',
           analiseTecnica: 'textos',
           conclusao: 'conclusao',
-          recomendacao: 'conclusao'
+          recomendacao: 'conclusao',
+          resultado: 'conclusao'
         };
         
         const tabToFocus = fieldToTabMap[firstErrorField] || 'dados';
@@ -693,7 +699,8 @@ const VistoriaFARPage = () => {
             introducao: 'textos',
             analiseTecnica: 'textos',
             conclusao: 'conclusao',
-            recomendacao: 'conclusao'
+            recomendacao: 'conclusao',
+            resultado: 'conclusao'
           };
           
           const tabToFocus = fieldToTabMap[firstErrorField] || 'dados';
@@ -1549,7 +1556,7 @@ const VistoriaFARPage = () => {
                   
                   <div className="space-y-2 pt-2">
                     <Label htmlFor="resultado">Parecer Final</Label>
-                    <div className="pt-2 flex gap-4">
+                    <div className={`pt-2 flex gap-4 ${formErrors.resultado ? "border border-red-500 p-2 rounded" : ""}`}>
                       <div className="flex items-center">
                         <input
                           type="radio"
@@ -1585,6 +1592,9 @@ const VistoriaFARPage = () => {
                         </label>
                       </div>
                     </div>
+                    {formErrors.resultado && (
+                      <p className="text-sm text-red-500 mt-1">{formErrors.resultado}</p>
+                    )}
                   </div>
                 </CardContent>
                 
