@@ -1,5 +1,12 @@
 import { Document, Paragraph, TextRun, Packer, AlignmentType, Header, Footer, HeadingLevel, BorderStyle, Table, TableRow, TableCell, WidthType, ImageRun, IImageOptions } from "docx";
 import { RelatorioVistoria } from "../../../shared/relatorioVistoriaSchema";
+import { 
+  TEMPLATE_INTRODUCAO, 
+  TEMPLATE_ANALISE_TECNICA,
+  TEMPLATE_CONCLUSAO, 
+  aplicarTemplateIntroducao, 
+  aplicarTemplateConclusao 
+} from "./relatorioVistoriaTemplates";
 
 // Converte dataURL para um Buffer que pode ser usado pelo docx
 async function dataUrlToBuffer(dataUrl: string): Promise<Uint8Array> {
@@ -387,25 +394,7 @@ function generateResponsaveisTecnicos(relatorio: RelatorioVistoria): Paragraph[]
   return paragraphs;
 }
 
-// Texto fixo do template para a introdução
-const TEMPLATE_INTRODUCAO = `A Área de Assistência Técnica foi solicitada para atender uma reclamação
-relacionada ao surgimento de infiltrações nas telhas de fibrocimento: -
-Telha da marca BRASILIT modelo ONDULADA de 5mm, produzidas com
-tecnologia CRFS - Cimento Reforçado com Fios Sintéticos - 100% sem
-amianto - cuja fabricação segue a norma internacional ISO 9933, bem como
-as normas técnicas da ABNT: NBR-15210-1, NBR-15210-2 e NBR-15210-3.
-
-Em atenção a vossa solicitação, analisamos as evidências encontradas,
-para avaliar as manifestações patológicas reclamadas em telhas de nossa
-marca aplicada em sua cobertura conforme registro de reclamação
-protocolo FAR {protocolo}.
-
-O modelo de telha escolhido para a edificação foi: {modeloTelha}. Esse
-modelo, como os demais, possui a necessidade de seguir rigorosamente as
-orientações técnicas contidas no Guia Técnico de Telhas de Fibrocimento
-e Acessórios para Telhado --- Brasilit para o melhor desempenho do
-produto, assim como a garantia do produto coberta por {anosGarantia} anos (ou {anosGarantiaSistemaCompleto}
-anos para sistema completo).`;
+// Usando o template da nova biblioteca de templates
 
 // Função para gerar a seção de introdução
 function generateIntroducao(relatorio: RelatorioVistoria): Paragraph[] {
@@ -515,13 +504,7 @@ function generateIntroducao(relatorio: RelatorioVistoria): Paragraph[] {
   return paragraphs;
 }
 
-// Texto fixo do template para a análise técnica
-const TEMPLATE_ANALISE_TECNICA = `Durante a visita técnica realizada no local, nossa equipe conduziu uma
-vistoria minuciosa da cobertura, documentando e analisando as condições
-de instalação e o estado atual das telhas. Após criteriosa avaliação das
-evidências coletadas em campo, identificamos alguns desvios nos
-procedimentos de manuseio e instalação em relação às especificações
-técnicas do fabricante, os quais são detalhados a seguir:`;
+// Usando o template da nova biblioteca de templates
 
 // Função para gerar a seção de análise técnica
 function generateAnaliseTecnica(relatorio: RelatorioVistoria): Paragraph[] {
