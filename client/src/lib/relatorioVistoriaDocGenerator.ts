@@ -643,6 +643,14 @@ export async function gerarRelatorioVistoriaDoc(relatorio: ExtendedRelatorioVist
   });
 
   // Gerar o documento e retornar como Blob
-  const packer = require("docx").Packer;
-  return packer.toBlob(doc);
+  // Usamos o Packer da importação de cima, sem precisar do require
+  try {
+    // Converte para blob e retorna
+    return await Document.save(doc, {
+      fileName: `relatorio-vistoria-${relatorio.protocolo || 'novo'}.docx`
+    });
+  } catch (error) {
+    console.error("Erro ao gerar documento DOCX:", error);
+    throw new Error("Não foi possível gerar o documento Word: " + error);
+  }
 }
