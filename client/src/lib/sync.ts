@@ -322,8 +322,23 @@ export const syncVisitsFromServer = async (): Promise<void> => {
       const localVisit = await db.visits.get(serverVisit.id);
       
       if (!localVisit) {
-        // Add new visit
-        await db.visits.add({ ...serverVisit, synced: true });
+        try {
+          // Verificar se já existe um registro com este ID antes de adicionar
+          const exists = await db.visits.get(serverVisit.id);
+          if (exists) {
+            // Se já existe, atualizar em vez de adicionar
+            await db.visits.update(serverVisit.id, { ...serverVisit, synced: true });
+            console.log(`Atualizado registro existente com ID ${serverVisit.id}`);
+          } else {
+            // Se não existe, adicionar novo
+            await db.visits.put({ ...serverVisit, synced: true });
+            console.log(`Adicionado novo registro com ID ${serverVisit.id}`);
+          }
+        } catch (error) {
+          console.error(`Erro ao adicionar/atualizar visita ${serverVisit.id}:`, error);
+          // Se houver erro, tentar atualizar como fallback
+          await db.visits.update(serverVisit.id, { ...serverVisit, synced: true });
+        }
       } else {
         // Verificar se há um conflito (ambas as versões foram modificadas)
         const serverDate = new Date(serverVisit.updatedAt);

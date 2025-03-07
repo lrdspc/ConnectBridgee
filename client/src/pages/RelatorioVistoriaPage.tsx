@@ -548,31 +548,7 @@ conforme a legislação em vigor.`;
               >
                 <Clipboard className="h-4 w-4" /> Limpar
               </Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  if (window.confirm("Deseja resetar o banco de dados? Todos os dados serão perdidos.")) {
-                    // Carregamos o script de reset do banco
-                    const script = document.createElement('script');
-                    script.src = '/src/reset-database.js';
-                    script.type = 'module';
-                    document.body.appendChild(script);
-                    
-                    // Removemos o script após execução
-                    script.onload = () => {
-                      document.body.removeChild(script);
-                      toast({
-                        title: 'Banco de dados resetado',
-                        description: 'O banco de dados foi reinicializado com sucesso.',
-                      });
-                    };
-                  }
-                }}
-                size="sm"
-                className="flex items-center gap-1"
-              >
-                <Database className="h-4 w-4" /> Resetar DB
-              </Button>
+
               <Button 
                 variant="outline" 
                 className="flex items-center gap-1"
