@@ -4,7 +4,7 @@ import { FileDown, Loader2 } from "lucide-react";
 import type { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { toast } from "sonner";
 import { gerarRelatorioSimples } from "@/lib/relatorioVistoriaSimpleGenerator";
-import { saveAs } from "file-saver";
+import { downloadBlob, createUniqueFileName } from "@/lib/docDownloadUtils";
 
 // Logs para debug
 const DEBUG = true;
@@ -89,53 +89,22 @@ export function RelatorioExportButton({
   const [isGenerating, setIsGenerating] = useState(false);
   
   // Função para salvar o arquivo DOCX a partir de um blob
-  const saveDocFile = (blob: Blob, fileName: string) => {
-    log("Tentando download de arquivo:", fileName);
+  const saveDocFile = async (blob: Blob, fileName: string) => {
+    log("Iniciando download do arquivo:", fileName);
     
     try {
-      // Método 1: Usar FileSaver.js
-      log("Método 1: FileSaver");
-      saveAs(blob, fileName);
-    } catch (error) {
-      console.error("Erro em FileSaver:", error);
-      toast.error("Erro no FileSaver, tentando método alternativo");
+      // Usar nossa nova função de utilidade com múltiplos fallbacks
+      const success = await downloadBlob(blob, fileName);
       
-      try {
-        // Método 2: Método nativo
-        log("Método 2: URL.createObjectURL");
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = fileName;
-        link.style.display = 'none';
-        document.body.appendChild(link);
-        link.click();
-        
-        // Limpar recursos
-        setTimeout(() => {
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-        }, 100);
-      } catch (alternativeError) {
-        console.error("Erro no método alternativo:", alternativeError);
-        
-        try {
-          // Método 3: Abrir em nova aba
-          log("Método 3: Nova aba");
-          const url = URL.createObjectURL(blob);
-          window.open(url, '_blank');
-          
-          toast.info("O arquivo foi aberto em uma nova aba. Por favor, salve-o manualmente.");
-          
-          // Limpar recursos
-          setTimeout(() => {
-            URL.revokeObjectURL(url);
-          }, 100);
-        } catch (finalError) {
-          console.error("Todos os métodos falharam:", finalError);
-          toast.error("Não foi possível fazer o download do arquivo por nenhum método");
-        }
+      if (success) {
+        log("Download iniciado com sucesso");
+      } else {
+        log("Falha em todos os métodos de download");
+        toast.error("Não foi possível fazer o download do arquivo");
       }
+    } catch (error) {
+      console.error("Erro ao tentar download:", error);
+      toast.error(`Erro no download: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
     }
   };
   
@@ -184,13 +153,16 @@ export function RelatorioExportButton({
         naoConformidades: relatorioPreparado.naoConformidades?.length || 0
       });
       
-      // Definir nome do arquivo
-      const fileName = `${fileNamePrefix}-${relatorioPreparado.protocolo || 'Vistoria'}-ABNT.docx`;
+      // Definir nome do arquivo com timestamp para evitar problemas de cache
+      const fileName = createUniqueFileName(
+        `${fileNamePrefix}-${relatorioPreparado.protocolo || 'Vistoria'}-ABNT`,
+        "docx"
+      );
       
       // Gerar o relatório com o gerador padrão
       log("Gerando relatório com formatação ABNT exata");
       const blob = await gerarRelatorioSimples(relatorioPreparado);
-      saveDocFile(blob, fileName);
+      await saveDocFile(blob, fileName);
       
       toast.success("Relatório ABNT exportado com sucesso!");
       onExportSuccess?.(fileName);

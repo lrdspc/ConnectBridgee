@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { saveAs } from 'file-saver';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
+import { downloadBlob, createUniqueFileName, DOCX_MIME_TYPE } from '@/lib/docDownloadUtils';
 
 export default function TestDownloadPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -49,10 +50,8 @@ export default function TestDownloadPage() {
     // Gerar o buffer do documento
     const buffer = await Packer.toBuffer(doc);
     
-    // Criar um Blob com o tipo MIME correto para DOCX
-    const blob = new Blob([buffer], { 
-      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" 
-    });
+    // Criar um Blob com o tipo MIME correto para DOCX usando nossa constante
+    const blob = new Blob([buffer], { type: DOCX_MIME_TYPE });
     
     console.log("Documento DOCX criado com sucesso");
     return blob;
@@ -140,6 +139,32 @@ export default function TestDownloadPage() {
       setIsLoading(false);
     }
   };
+  
+  // Método de download usando a função de utilidade avançada
+  const downloadWithUtility = async () => {
+    try {
+      setIsLoading(true);
+      toast.info("Gerando arquivo de teste com método avançado...");
+
+      const blob = await createBasicDocx();
+      const fileName = createUniqueFileName("teste-download-util", "docx");
+
+      // Usar a função de utilidade avançada
+      console.log("Usando utilitário avançado para download:", fileName);
+      const success = await downloadBlob(blob, fileName);
+      
+      if (success) {
+        toast.success("Arquivo gerado com método avançado!");
+      } else {
+        toast.error("Falha em todos os métodos de download");
+      }
+    } catch (error) {
+      console.error("Erro com método avançado:", error);
+      toast.error(`Erro: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -180,6 +205,18 @@ export default function TestDownloadPage() {
             variant="secondary"
           >
             Testar Abertura em Nova Aba
+          </Button>
+        </div>
+        <div className="p-4 border bg-blue-50 rounded-lg">
+          <h2 className="text-lg font-medium mb-2">Método 4: Utilidade Avançada</h2>
+          <p className="mb-4 text-gray-700">Usa nossa nova função utilitária com múltiplos fallbacks</p>
+          <Button 
+            onClick={downloadWithUtility}
+            disabled={isLoading}
+            className="w-full"
+            variant="default"
+          >
+            Testar Download com Utilitário Avançado
           </Button>
         </div>
       </div>
