@@ -379,12 +379,125 @@ export function DashboardCustomizationModal({
               </div>
             </div>
             
+            <Separator />
+            
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-medium">Ordem dos Widgets</h3>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    // Resetar ordem para a original
+                    setLocalConfig(prev => ({
+                      ...prev,
+                      widgetOrder: availableWidgets.map(widget => widget.id)
+                    }));
+                    
+                    toast({
+                      title: "Ordem resetada",
+                      description: "A ordem dos widgets foi restaurada para o padrão.",
+                    });
+                  }}
+                >
+                  <RotateCcw className="mr-2 h-3 w-3" />
+                  Restaurar ordem padrão
+                </Button>
+              </div>
+              
+              <p className="text-sm text-muted-foreground mb-4">
+                Arraste os itens para reordenar os widgets na sua página inicial
+              </p>
+              
+              <div className="space-y-2">
+                {localConfig.widgetOrder
+                  .filter(id => localConfig.visibleWidgets[id])
+                  .map((widgetId, index) => {
+                    const widget = availableWidgets.find(w => w.id === widgetId);
+                    if (!widget) return null;
+                    
+                    return (
+                      <div
+                        key={widget.id}
+                        className="flex items-center justify-between rounded-md border p-3 bg-card cursor-move"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="flex-shrink-0 w-8 flex justify-center">
+                            {index + 1}.
+                          </div>
+                          <div className="h-8 w-8 rounded-md border bg-muted flex items-center justify-center">
+                            {widget.icon}
+                          </div>
+                          <span>{widget.name}</span>
+                        </div>
+                        
+                        <div className="flex items-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => {
+                              // Mover para cima
+                              if (index > 0) {
+                                const newOrder = [...localConfig.widgetOrder];
+                                const temp = newOrder[index];
+                                newOrder[index] = newOrder[index - 1];
+                                newOrder[index - 1] = temp;
+                                
+                                setLocalConfig(prev => ({
+                                  ...prev,
+                                  widgetOrder: newOrder
+                                }));
+                              }
+                            }}
+                            disabled={index === 0}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-up">
+                              <path d="m5 12 7-7 7 7"/>
+                              <path d="M12 19V5"/>
+                            </svg>
+                          </Button>
+                          
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => {
+                              // Mover para baixo
+                              const visibleWidgets = localConfig.widgetOrder.filter(id => localConfig.visibleWidgets[id]);
+                              if (index < visibleWidgets.length - 1) {
+                                const newOrder = [...localConfig.widgetOrder];
+                                const temp = newOrder[index];
+                                newOrder[index] = newOrder[index + 1];
+                                newOrder[index + 1] = temp;
+                                
+                                setLocalConfig(prev => ({
+                                  ...prev,
+                                  widgetOrder: newOrder
+                                }));
+                              }
+                            }}
+                            disabled={index === localConfig.widgetOrder.filter(id => localConfig.visibleWidgets[id]).length - 1}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-down">
+                              <path d="M12 5v14"/>
+                              <path d="m19 12-7 7-7-7"/>
+                            </svg>
+                          </Button>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+            
             <div className="bg-muted/50 p-4 rounded-md flex items-start space-x-4">
               <Info className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
               <div className="text-sm">
                 <h4 className="font-medium">Dica de personalização</h4>
                 <p className="text-muted-foreground">
-                  Você pode arrastar e reordenar os widgets diretamente no dashboard mantendo o botão do mouse pressionado sobre a barra de título de qualquer widget.
+                  Você pode ativar ou desativar widgets usando os interruptores acima, e modificar 
+                  o layout do dashboard ajustando as configurações de densidade e número de colunas.
                 </p>
               </div>
             </div>

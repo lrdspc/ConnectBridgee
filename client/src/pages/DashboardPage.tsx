@@ -200,6 +200,247 @@ export default function DashboardPage() {
     );
   }
 
+  // Função para renderizar um widget específico com base no ID
+  const renderWidget = (widgetId: string) => {
+    switch (widgetId) {
+      case 'resumo':
+        return isWidgetEnabled('resumo') && (
+          <Card key="resumo" className="border-blue-200">
+            <CardHeader className="bg-blue-50 pb-2">
+              <div className="flex justify-between items-center">
+                <CardTitle className="flex items-center text-blue-800 whitespace-nowrap">
+                  <Calendar className="h-5 w-5 mr-2 flex-shrink-0" />
+                  Visitas de Hoje
+                </CardTitle>
+                <Link href="/visitas">
+                  <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800">
+                    Ver Todas <ChevronRight className="h-4 w-4 ml-1" />
+                  </Button>
+                </Link>
+              </div>
+              <CardDescription>
+                {formatDate(today, 'dd/MM/yyyy')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-4">
+              {visitasHoje.length === 0 ? (
+                <div className="bg-gray-50 border border-gray-100 rounded-md p-4 text-center">
+                  <p className="text-gray-500">Nenhuma visita agendada para hoje</p>
+                  <Link href="/nova-visita">
+                    <Button variant="outline" size="sm" className="mt-2">
+                      <PlusCircle className="h-4 w-4 mr-2" /> Agendar Visita
+                    </Button>
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {visitasHoje.map((visit) => (
+                    <Link key={visit.id} href={`/visitas/${visit.id}`}>
+                      <div className="border rounded-md p-3 cursor-pointer hover:bg-gray-50 transition">
+                        <div className="flex justify-between">
+                          <h3 className="font-medium">{visit.clientName}</h3>
+                          <span className={`text-xs px-2 py-1 rounded ${
+                            visit.status === 'completed' ? 'bg-green-100 text-green-800' :
+                            visit.status === 'in-progress' ? 'bg-amber-100 text-amber-800' :
+                            visit.status === 'pending' ? 'bg-purple-100 text-purple-800' :
+                            'bg-blue-100 text-blue-800'
+                          }`}>
+                            {visit.status === 'completed' ? 'Concluída' :
+                             visit.status === 'in-progress' ? 'Em Andamento' :
+                             visit.status === 'pending' ? 'Pendente' :
+                             'Agendada'}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
+                          <Clock className="h-3 w-3" />
+                          <span>{visit.time || 'Horário não definido'}</span>
+                        </div>
+                        <div className="flex items-center gap-2 mt-1 text-sm text-gray-500">
+                          <MapPin className="h-3 w-3" />
+                          <span className="truncate">{visit.address}</span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        );
+        
+      case 'proxima_visita':
+        return isWidgetEnabled('proxima_visita') && nextVisit && (
+          <Card key="proxima_visita" className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white">
+            <CardHeader>
+              <CardTitle className="flex items-center text-white">
+                <Calendar className="mr-2 h-5 w-5" />
+                Próxima Visita
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-xl font-bold">{nextVisit.clientName}</h3>
+                  <p className="text-blue-100 mt-1 flex items-center">
+                    <MapPin className="h-3 w-3 mr-1" />
+                    {nextVisit.address}
+                  </p>
+                </div>
+                <div className="bg-white/10 p-3 rounded-md">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <Calendar className="h-4 w-4 mr-2" />
+                      <span>{formatDate(new Date(nextVisit.date), 'dd/MM/yyyy')}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <Clock className="h-4 w-4 mr-2" />
+                      <span>{nextVisit.time || 'Não definido'}</span>
+                    </div>
+                  </div>
+                </div>
+                <Link href={`/visitas/${nextVisit.id}`}>
+                  <Button className="w-full bg-white text-blue-700 hover:bg-blue-50">
+                    Ver Detalhes
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        );
+        
+      case 'acoes_rapidas':
+        return isWidgetEnabled('acoes_rapidas') && (
+          <Card key="acoes_rapidas">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center">
+                <FileText className="mr-2 h-5 w-5" />
+                Ações Rápidas
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-3">
+                <Link href="/relatorio-vistoria">
+                  <Button className="w-full bg-primary hover:bg-primary/90 h-auto py-3">
+                    <FileText className="mr-2 h-4 w-4" /> 
+                    <div className="flex flex-col items-start">
+                      <span>Nova Vistoria</span>
+                    </div>
+                  </Button>
+                </Link>
+                <Link href="/rotas">
+                  <Button className="w-full bg-green-600 hover:bg-green-700 h-auto py-3">
+                    <MapPin className="mr-2 h-4 w-4" /> 
+                    <div className="flex flex-col items-start">
+                      <span>Ver Rota</span>
+                    </div>
+                  </Button>
+                </Link>
+                <Link href="/clientes">
+                  <Button className="w-full" variant="outline">
+                    <Users className="mr-2 h-4 w-4" /> Clientes
+                  </Button>
+                </Link>
+                <Link href="/relatorios">
+                  <Button className="w-full" variant="outline">
+                    <ClipboardList className="mr-2 h-4 w-4" /> Relatórios
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        );
+        
+      case 'visitas_agendadas':
+        return isWidgetEnabled('visitas_agendadas') && (
+          <div key="visitas_agendadas" className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Card className="bg-blue-50 border-blue-200 h-[130px]">
+              <CardHeader className="py-3">
+                <CardTitle className="text-blue-800 text-sm flex items-center gap-2">
+                  <Clock className="h-5 w-5 flex-shrink-0" />
+                  <span className="whitespace-nowrap">Agendadas</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-blue-700">{stats.scheduled}</div>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-amber-50 border-amber-200 h-[130px]">
+              <CardHeader className="py-3">
+                <CardTitle className="text-amber-800 text-sm flex items-center gap-2">
+                  <Clock3 className="h-5 w-5 flex-shrink-0" />
+                  <span className="text-sm whitespace-nowrap">Em Andamento</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-amber-700">{stats.inProgress}</div>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-purple-50 border-purple-200 h-[130px]">
+              <CardHeader className="py-3">
+                <CardTitle className="text-purple-800 text-sm flex items-center gap-2">
+                  <AlertCircle className="h-5 w-5 flex-shrink-0" />
+                  <span className="whitespace-nowrap">Pendentes</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-purple-700">{stats.pending}</div>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-green-50 border-green-200 h-[130px]">
+              <CardHeader className="py-3">
+                <CardTitle className="text-green-800 text-sm flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 flex-shrink-0" />
+                  <span className="whitespace-nowrap">Concluídas</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-green-700">{stats.completed}</div>
+              </CardContent>
+            </Card>
+          </div>
+        );
+        
+      case 'grafico_semanal':
+        return isWidgetEnabled('grafico_semanal') && (
+          <Card key="grafico_semanal">
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <BarChart2 className="h-5 w-5 mr-2" />
+                Visitas por dia da semana
+              </CardTitle>
+              <CardDescription>
+                Últimos 7 dias
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Chart
+                type="bar"
+                height={200}
+                data={weeklyVisits}
+                xAxis={{
+                  dataKey: "day",
+                }}
+                series={[
+                  {
+                    dataKey: "count",
+                    name: "Visitas",
+                    color: "#3b82f6",
+                  },
+                ]}
+              />
+            </CardContent>
+          </Card>
+        );
+        
+      // Adicionar casos para outros widgets conforme necessário
+      default:
+        return null;
+    }
+  };
+
   return (
     <PageTransition>
       <DashboardLayoutNew>
@@ -242,247 +483,16 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Seção principal - Visitas de Hoje */}
-          {isWidgetEnabled('resumo') && (
-            <Card className="border-blue-200">
-              <CardHeader className="bg-blue-50 pb-2">
-                <div className="flex justify-between items-center">
-                  <CardTitle className="flex items-center text-blue-800 whitespace-nowrap">
-                    <Calendar className="h-5 w-5 mr-2 flex-shrink-0" />
-                    Visitas de Hoje
-                  </CardTitle>
-                  <Link href="/visitas">
-                    <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800">
-                      Ver Todas <ChevronRight className="h-4 w-4 ml-1" />
-                    </Button>
-                  </Link>
-                </div>
-                <CardDescription>
-                  {formatDate(today, 'dd/MM/yyyy')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-4">
-                {visitasHoje.length === 0 ? (
-                  <div className="bg-gray-50 border border-gray-100 rounded-md p-4 text-center">
-                    <p className="text-gray-500">Nenhuma visita agendada para hoje</p>
-                    <Link href="/nova-visita">
-                      <Button variant="outline" size="sm" className="mt-2">
-                        <PlusCircle className="h-4 w-4 mr-2" /> Agendar Visita
-                      </Button>
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {visitasHoje.map((visit) => (
-                      <Link key={visit.id} href={`/visitas/${visit.id}`}>
-                        <div className="border rounded-md p-3 cursor-pointer hover:bg-gray-50 transition">
-                          <div className="flex justify-between">
-                            <h3 className="font-medium">{visit.clientName}</h3>
-                            <span className={`text-xs px-2 py-1 rounded ${
-                              visit.status === 'completed' ? 'bg-green-100 text-green-800' :
-                              visit.status === 'in-progress' ? 'bg-amber-100 text-amber-800' :
-                              visit.status === 'pending' ? 'bg-purple-100 text-purple-800' :
-                              'bg-blue-100 text-blue-800'
-                            }`}>
-                              {visit.status === 'completed' ? 'Concluída' :
-                               visit.status === 'in-progress' ? 'Em Andamento' :
-                               visit.status === 'pending' ? 'Pendente' :
-                               'Agendada'}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
-                            <Clock className="h-3 w-3" />
-                            <span>{visit.time || 'Horário não definido'}</span>
-                          </div>
-                          <div className="flex items-center gap-2 mt-1 text-sm text-gray-500">
-                            <MapPin className="h-3 w-3" />
-                            <span className="truncate">{visit.address}</span>
-                          </div>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Próxima Visita */}
-          {isWidgetEnabled('proxima_visita') && nextVisit && (
-            <Card className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white">
-              <CardHeader>
-                <CardTitle className="flex items-center text-white">
-                  <Calendar className="mr-2 h-5 w-5" />
-                  Próxima Visita
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-xl font-bold">{nextVisit.clientName}</h3>
-                    <p className="text-blue-100 mt-1 flex items-center">
-                      <MapPin className="h-3 w-3 mr-1" />
-                      {nextVisit.address}
-                    </p>
-                  </div>
-                  <div className="bg-white/10 p-3 rounded-md">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <Calendar className="h-4 w-4 mr-2" />
-                        <span>{formatDate(new Date(nextVisit.date), 'dd/MM/yyyy')}</span>
-                      </div>
-                      <div className="flex items-center">
-                        <Clock className="h-4 w-4 mr-2" />
-                        <span>{nextVisit.time || 'Não definido'}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <Link href={`/visitas/${nextVisit.id}`}>
-                    <Button className="w-full bg-white text-blue-700 hover:bg-blue-50">
-                      Ver Detalhes
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Ações Rápidas */}
-          {isWidgetEnabled('acoes_rapidas') && (
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center">
-                  <FileText className="mr-2 h-5 w-5" />
-                  Ações Rápidas
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-3">
-                  <Link href="/relatorio-vistoria">
-                    <Button className="w-full bg-primary hover:bg-primary/90 h-auto py-3">
-                      <FileText className="mr-2 h-4 w-4" /> 
-                      <div className="flex flex-col items-start">
-                        <span>Nova Vistoria</span>
-                      </div>
-                    </Button>
-                  </Link>
-                  <Link href="/rotas">
-                    <Button className="w-full bg-green-600 hover:bg-green-700 h-auto py-3">
-                      <MapPin className="mr-2 h-4 w-4" /> 
-                      <div className="flex flex-col items-start">
-                        <span>Ver Rota</span>
-                      </div>
-                    </Button>
-                  </Link>
-                  <Link href="/clientes">
-                    <Button className="w-full" variant="outline">
-                      <Users className="mr-2 h-4 w-4" /> Clientes
-                    </Button>
-                  </Link>
-                  <Link href="/relatorios">
-                    <Button className="w-full" variant="outline">
-                      <ClipboardList className="mr-2 h-4 w-4" /> Relatórios
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+          {/* Renderizar widgets na ordem definida pelo usuário */}
+          {dashboardConfig.widgetOrder
+            .filter(widgetId => isWidgetEnabled(widgetId))
+            .map(renderWidget)
+          }
           
-          {/* Cards de estatísticas */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {isWidgetEnabled('visitas_agendadas') && (
-              <Card className="bg-blue-50 border-blue-200 h-[130px]">
-                <CardHeader className="py-3">
-                  <CardTitle className="text-blue-800 text-sm flex items-center gap-2">
-                    <Clock className="h-5 w-5 flex-shrink-0" />
-                    <span className="whitespace-nowrap">Agendadas</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold text-blue-700">{stats.scheduled}</div>
-                </CardContent>
-              </Card>
-            )}
-            
-            {isWidgetEnabled('visitas_agendadas') && (
-              <Card className="bg-amber-50 border-amber-200 h-[130px]">
-                <CardHeader className="py-3">
-                  <CardTitle className="text-amber-800 text-sm flex items-center gap-2">
-                    <Clock3 className="h-5 w-5 flex-shrink-0" />
-                    <span className="text-sm whitespace-nowrap">Em Andamento</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold text-amber-700">{stats.inProgress}</div>
-                </CardContent>
-              </Card>
-            )}
-            
-            {isWidgetEnabled('visitas_agendadas') && (
-              <Card className="bg-purple-50 border-purple-200 h-[130px]">
-                <CardHeader className="py-3">
-                  <CardTitle className="text-purple-800 text-sm flex items-center gap-2">
-                    <AlertCircle className="h-5 w-5 flex-shrink-0" />
-                    <span className="whitespace-nowrap">Pendentes</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold text-purple-700">{stats.pending}</div>
-                </CardContent>
-              </Card>
-            )}
-            
-            {isWidgetEnabled('visitas_agendadas') && (
-              <Card className="bg-green-50 border-green-200 h-[130px]">
-                <CardHeader className="py-3">
-                  <CardTitle className="text-green-800 text-sm flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 flex-shrink-0" />
-                    <span className="whitespace-nowrap">Concluídas</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold text-green-700">{stats.completed}</div>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-
           {/* Conteúdo principal */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Coluna principal */}
+            {/* Coluna principal - os widgets acima já foram renderizados na ordem definida */}
             <div className="lg:col-span-2 space-y-6">
-              {/* Gráfico semanal */}
-              {isWidgetEnabled('grafico_semanal') && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <BarChart2 className="h-5 w-5 mr-2" />
-                      Visitas por dia da semana
-                    </CardTitle>
-                    <CardDescription>
-                      Últimos 7 dias
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Chart
-                      type="bar"
-                      height={200}
-                      data={weeklyVisits}
-                      xAxis={{
-                        dataKey: "day",
-                      }}
-                      series={[
-                        {
-                          dataKey: "count",
-                          name: "Visitas",
-                          color: "#3b82f6",
-                        },
-                      ]}
-                    />
-                  </CardContent>
-                </Card>
-              )}
               
               {/* Tabs para diferentes visões */}
               <Tabs defaultValue="agendado" className="w-full">
