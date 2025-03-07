@@ -212,6 +212,28 @@ export function DashboardCustomizationModal({
   
   // Salvar configurações
   const saveConfig = () => {
+    // Log para debug
+    console.log('Salvando configurações...', localConfig);
+    
+    // Certificar que temos widgets para salvar
+    if (!localConfig.visibleWidgets || Object.keys(localConfig.visibleWidgets).length === 0) {
+      console.warn('Configurações de widgets vazias!');
+      
+      // Inicializar com valores padrão se estiver vazio
+      localConfig.visibleWidgets = Object.fromEntries(
+        availableWidgets.map(widget => [widget.id, widget.defaultEnabled])
+      );
+    }
+    
+    // Adicionar os widgets do dashboard atual caso não estejam mapeados
+    const currentWidgets = ['resumo', 'proxima_visita', 'acoes_rapidas', 'visitas_agendadas', 'grafico_semanal', 'rota_dia', 'clima'];
+    currentWidgets.forEach(widgetId => {
+      if (localConfig.visibleWidgets[widgetId] === undefined) {
+        localConfig.visibleWidgets[widgetId] = true;
+      }
+    });
+    
+    // Chamar a função de callback para atualizar o estado principal
     onConfigChange(localConfig);
     
     toast({

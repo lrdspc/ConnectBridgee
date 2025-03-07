@@ -150,17 +150,38 @@ export default function DashboardPage() {
 
   // Função para salvar configurações
   const handleConfigChange = (newConfig: DashboardConfig) => {
+    console.log('Recebendo configurações no Dashboard:', newConfig);
+    
+    // Validar se o objeto contém a estrutura correta
+    if (!newConfig.visibleWidgets || Object.keys(newConfig.visibleWidgets).length === 0) {
+      console.warn('Configurações recebidas não possuem visibleWidgets válido!');
+      return;
+    }
+    
+    // Atualizar o estado com as novas configurações
     setDashboardConfig(newConfig);
+    
     // Manter o viewMode independente do layout para não conflitar tipos
     // Podemos usar o layout para ajustar espaçamento, mas não alterar visualização grid/list
     
-    // Salvar no localStorage
-    localStorage.setItem('dashboard_config', JSON.stringify(newConfig));
-    
-    toast({
-      title: "Dashboard personalizado",
-      description: "Suas preferências foram salvas com sucesso",
-    });
+    // Salvar no localStorage com um try/catch para segurança
+    try {
+      localStorage.setItem('dashboard_config', JSON.stringify(newConfig));
+      console.log('Configurações salvas com sucesso no localStorage');
+      
+      toast({
+        title: "Dashboard personalizado",
+        description: "Suas preferências foram salvas com sucesso",
+      });
+    } catch (error) {
+      console.error('Erro ao salvar configurações no localStorage:', error);
+      
+      toast({
+        title: "Erro ao salvar",
+        description: "Não foi possível salvar suas preferências. Tente novamente.",
+        variant: "destructive"
+      });
+    }
   };
 
   // Verifica se um widget está habilitado
