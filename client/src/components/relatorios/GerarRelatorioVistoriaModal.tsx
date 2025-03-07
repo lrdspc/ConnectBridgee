@@ -108,8 +108,8 @@ export function GerarRelatorioVistoriaModal({
         return;
       }
       
-      // Gerar o relatório
-      const blob = await generateRelatorioVistoria(relatorio);
+      // Gerar o relatório usando o novo gerador com o template Brasil
+      const blob = await generateRelatorioVistoriaBrasil(relatorio);
       
       // Criar URL para download
       const url = URL.createObjectURL(blob);
