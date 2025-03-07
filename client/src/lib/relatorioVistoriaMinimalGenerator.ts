@@ -181,10 +181,16 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
             }
           },
           children: [
-            // Título principal
+            // Título principal (apenas uma vez)
             new Paragraph({
-              text: "RELATÓRIO DE VISTORIA TÉCNICA",
-              heading: HeadingLevel.HEADING_1,
+              children: [
+                new TextRun({
+                  text: "RELATÓRIO DE VISTORIA TÉCNICA",
+                  bold: true,
+                  size: 32, // 16pt
+                  font: "Arial"
+                })
+              ],
               alignment: AlignmentType.CENTER,
               spacing: { after: 400 },
               border: {
@@ -326,22 +332,35 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
             
             new Paragraph({
               children: [
-                new TextRun({ text: "Quantidade: ", bold: true }),
-                new TextRun({ text: relatorio.quantidade?.toString() || "" })
+                new TextRun({ text: "Quantidade: ", bold: true, font: "Arial" }),
+                new TextRun({ 
+                  text: relatorio.quantidade ? relatorio.quantidade.toString() : "Não informada",
+                  font: "Arial"
+                })
               ],
               spacing: { after: 100 }
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Modelo: ", bold: true }),
-                new TextRun({ text: `${relatorio.modeloTelha} ${relatorio.espessura}mm CRFS` })
+                new TextRun({ text: "Modelo de telha: ", bold: true, font: "Arial" }),
+                new TextRun({ 
+                  text: relatorio.modeloTelha ? 
+                    `${relatorio.modeloTelha} ${relatorio.espessura}mm CRFS` : 
+                    "Não informado",
+                  font: "Arial"
+                })
               ],
               spacing: { after: 100 }
             }),
             new Paragraph({
               children: [
-                new TextRun({ text: "Área coberta: ", bold: true }),
-                new TextRun({ text: `${relatorio.area?.toString() || "0"}m² (aproximadamente)` })
+                new TextRun({ text: "Área coberta: ", bold: true, font: "Arial" }),
+                new TextRun({ 
+                  text: relatorio.area ? 
+                    `${relatorio.area.toString()}m² (aproximadamente)` : 
+                    "Não informada",
+                  font: "Arial"
+                })
               ],
               spacing: { after: 300 }
             }),
