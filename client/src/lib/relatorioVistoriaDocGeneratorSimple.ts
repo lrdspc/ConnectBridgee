@@ -41,6 +41,7 @@ async function dataUrlToArrayBuffer(dataUrl: string): Promise<ArrayBuffer> {
  */
 export async function gerarRelatorioVistoriaDoc(relatorio: ExtendedRelatorioVistoria): Promise<Blob> {
   try {
+    console.log('🔶 Usando gerador simples para DOCX com formatação ABNT [ALTERNATIVO]');
     logDebug('Iniciando geração de documento com html-to-docx');
     // Preparar dados para o template
     
@@ -158,7 +159,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: ExtendedRelatorioVist
         </style>
       </head>
       <body>
-        <h1>RELATÓRIO DE VISTORIA TÉCNICA</h1>
+        <h1>RELATÓRIO DE VISTORIA TÉCNICA [VERSÃO ABNT]</h1>
         
         <h2>IDENTIFICAÇÃO DO PROJETO</h2>
         <table>

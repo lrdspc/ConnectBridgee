@@ -203,7 +203,7 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
             new Paragraph({
               children: [
                 new TextRun({
-                  text: "RELATÓRIO DE VISTORIA TÉCNICA [VERSÃO APRIMORADA]",
+                  text: "RELATÓRIO DE VISTORIA TÉCNICA [VERSÃO ABNT]",
                   bold: true,
                   size: 30, // 15pt
                   font: "Arial"

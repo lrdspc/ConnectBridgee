@@ -19,6 +19,7 @@ const TAMANHO_FONTE = 24; // 12pt = 24 half-points (padrão ABNT)
 
 // Função para gerar o documento Word
 export async function gerarRelatorioVistoriaDoc(relatorio: ExtendedRelatorioVistoria): Promise<Blob> {
+  console.log('⚠️ Usando gerador original para DOCX com formatação ABNT [EMERGÊNCIA]');
   // Criar conjunto de parágrafos do documento
   const children: FileChild[] = [];
 
