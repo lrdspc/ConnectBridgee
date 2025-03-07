@@ -49,10 +49,13 @@ export const relatorioVistoriaSchema = z.object({
   anosGarantiaSistemaCompleto: z.string().default("10"),
   anosGarantiaTotal: z.string().default("10"),
   
-  // Análise
-  introducao: z.string().optional(),
-  analiseTecnica: z.string().optional(),
-  conclusao: z.string().optional(),
+  // Campos de texto fixo (não devem ser editados pelo usuário)
+  // Os textos vêm do template e não dos campos de formulário
+  introducao: z.string().optional().default(""),
+  analiseTecnica: z.string().optional().default(""),
+  conclusao: z.string().optional().default(""),
+  
+  // Campos opcionais que podem ser preenchidos pelo usuário
   recomendacao: z.string().optional(),
   observacoesGerais: z.string().optional(),
   

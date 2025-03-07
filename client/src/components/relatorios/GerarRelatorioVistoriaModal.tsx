@@ -508,41 +508,7 @@ export function GerarRelatorioVistoriaModal({
                 </p>
               </div>
               
-              <div className="space-y-2">
-                <Label htmlFor="introducao">Introdução (opcional)</Label>
-                <Textarea
-                  id="introducao"
-                  name="introducao"
-                  value={relatorio.introducao || ""}
-                  onChange={handleInputChange}
-                  placeholder="Texto personalizado para a introdução"
-                  rows={4}
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="analiseTecnica">Análise Técnica (opcional)</Label>
-                <Textarea
-                  id="analiseTecnica"
-                  name="analiseTecnica"
-                  value={relatorio.analiseTecnica || ""}
-                  onChange={handleInputChange}
-                  placeholder="Texto personalizado para a análise técnica"
-                  rows={4}
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="conclusao">Conclusão (opcional)</Label>
-                <Textarea
-                  id="conclusao"
-                  name="conclusao"
-                  value={relatorio.conclusao || ""}
-                  onChange={handleInputChange}
-                  placeholder="Texto personalizado para a conclusão"
-                  rows={4}
-                />
-              </div>
+              {/* Campos para textos fixos removidos conforme instrução */}
               
               <div className="space-y-2">
                 <Label htmlFor="recomendacao">Recomendações (opcional)</Label>
