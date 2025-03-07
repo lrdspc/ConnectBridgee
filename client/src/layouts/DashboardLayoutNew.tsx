@@ -16,7 +16,8 @@ import {
   Search,
   HelpCircle,
   FileText,
-  Menu
+  Menu,
+  Clipboard
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -24,6 +25,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -33,12 +35,15 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
   const [location] = useLocation();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, logout } = useAuth();
   const mainRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
-  // Fecha a sidebar em telas menores quando a rota muda
+  // Fecha a sidebar e menu móvel quando a rota muda
   useEffect(() => {
     setSidebarOpen(false);
+    setMobileMenuOpen(false);
   }, [location]);
 
   const menuItems = [
@@ -53,6 +58,11 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
   // Toggle sidebar collapsed state
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
+  };
+  
+  // Toggle mobile menu
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
   };
 
   return (
@@ -71,8 +81,33 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
             </h1>
           </div>
 
+          {/* Menu de navegação horizontal (apenas desktop) */}
+          <nav className="hidden md:flex items-center ml-6 space-x-1">
+            {menuItems.map((item) => (
+              <Link key={item.path} href={item.path}>
+                <a className={cn(
+                  "flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                  location === item.path 
+                    ? "bg-primary/10 text-primary" 
+                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                )}>
+                  <span className="mr-2">{item.icon}</span>
+                  <span>{item.name}</span>
+                  {item.badge && (
+                    <Badge 
+                      variant="outline" 
+                      className="ml-2 bg-primary/10 text-primary border-primary/20 text-xs"
+                    >
+                      {item.badge}
+                    </Badge>
+                  )}
+                </a>
+              </Link>
+            ))}
+          </nav>
+          
           {/* Barra de pesquisa - visível apenas em telas médias e maiores */}
-          <div className="hidden md:flex items-center h-9 w-64 rounded-md border border-input bg-white px-3 py-1 text-sm shadow-sm transition-colors">
+          <div className="hidden lg:flex items-center h-9 w-64 rounded-md border border-input bg-white px-3 py-1 text-sm shadow-sm transition-colors ml-4">
             <Search className="h-4 w-4 mr-2 text-muted-foreground" />
             <input 
               type="search" 
@@ -243,11 +278,11 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
         </main>
       </div>
 
-      {/* Botão de menu flutuante no canto inferior direito */}
+      {/* Botão de menu flutuante no canto inferior direito - visível apenas em mobile */}
       <button
         className={cn(
           "fixed bottom-6 right-6 z-50 bg-primary text-white rounded-full shadow-lg p-3",
-          "flex items-center justify-center w-12 h-12 transition-all duration-300 transform",
+          "md:hidden flex items-center justify-center w-12 h-12 transition-all duration-300 transform",
           sidebarOpen ? "rotate-90 scale-95" : "hover:scale-105"
         )}
         onClick={() => setSidebarOpen(!sidebarOpen)}
