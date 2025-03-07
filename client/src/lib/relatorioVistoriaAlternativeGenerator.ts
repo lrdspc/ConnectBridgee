@@ -3,7 +3,12 @@
  * Usa abordagem simplificada para evitar problemas com a biblioteca docx
  */
 
-import { Document, Packer, Paragraph } from "docx";
+import { 
+  Document as DocxDocument, 
+  Packer as DocxPacker, 
+  Paragraph as DocxParagraph,
+  AlignmentType
+} from "docx";
 import { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { naoConformidadesDisponiveis } from "@shared/relatorioVistoriaSchema";
 import { TEMPLATE_ANALISE_TECNICA } from '@/lib/relatorioVistoriaTemplates';
@@ -35,7 +40,7 @@ export async function gerarRelatorioVistoriaAlternativo(relatorio: RelatorioVist
     });
 
     // Criar parágrafos para não conformidades
-    const naoConformidadesParags: Paragraph[] = [];
+    const naoConformidadesParags: DocxParagraph[] = [];
     
     if (relatorio.naoConformidades && relatorio.naoConformidades.length > 0) {
       // Filtrar apenas as selecionadas
@@ -55,86 +60,86 @@ export async function gerarRelatorioVistoriaAlternativo(relatorio: RelatorioVist
         // Adicionar cada uma como um parágrafo separado
         naoConformidadesSelecionadas.forEach((nc: any, index: number) => {
           naoConformidadesParags.push(
-            new Paragraph({
+            new DocxParagraph({
               text: `${index + 1}. ${nc.titulo}`
             })
           );
           
           naoConformidadesParags.push(
-            new Paragraph({
+            new DocxParagraph({
               text: nc.descricao
             })
           );
         });
       } else {
         naoConformidadesParags.push(
-          new Paragraph({
+          new DocxParagraph({
             text: "Não foram identificadas não conformidades."
           })
         );
       }
     } else {
       naoConformidadesParags.push(
-        new Paragraph({
+        new DocxParagraph({
           text: "Não foram identificadas não conformidades."
         })
       );
     }
 
     // Criar um documento simples com formatação mínima
-    const doc = new Document({
+    const doc = new DocxDocument({
       creator: "Brasilit Assistência Técnica",
       title: `Relatório de Vistoria Técnica - ${relatorio.cliente || ""}`,
       sections: [
         {
           properties: {},
           children: [
-            new Paragraph({ text: "RELATÓRIO DE VISTORIA TÉCNICA", heading: "Heading1" }),
+            new DocxParagraph({ text: "RELATÓRIO DE VISTORIA TÉCNICA", heading: "Heading1" }),
             
-            new Paragraph({ text: "IDENTIFICAÇÃO DO PROJETO", heading: "Heading2" }),
-            new Paragraph({ text: `Cliente: ${relatorio.cliente || ""}` }),
-            new Paragraph({ text: `Empreendimento: ${relatorio.empreendimento || ""}` }),
-            new Paragraph({ text: `Endereço: ${relatorio.endereco || ""}` }),
-            new Paragraph({ text: `Cidade/UF: ${relatorio.cidade || ""} - ${relatorio.uf || ""}` }),
-            new Paragraph({ text: `Protocolo: ${relatorio.protocolo || ""}` }),
-            new Paragraph({ text: `Data da vistoria: ${relatorio.dataVistoria || ""}` }),
+            new DocxParagraph({ text: "IDENTIFICAÇÃO DO PROJETO", heading: "Heading2" }),
+            new DocxParagraph({ text: `Cliente: ${relatorio.cliente || ""}` }),
+            new DocxParagraph({ text: `Empreendimento: ${relatorio.empreendimento || ""}` }),
+            new DocxParagraph({ text: `Endereço: ${relatorio.endereco || ""}` }),
+            new DocxParagraph({ text: `Cidade/UF: ${relatorio.cidade || ""} - ${relatorio.uf || ""}` }),
+            new DocxParagraph({ text: `Protocolo: ${relatorio.protocolo || ""}` }),
+            new DocxParagraph({ text: `Data da vistoria: ${relatorio.dataVistoria || ""}` }),
             
-            new Paragraph({ text: "RESPONSÁVEIS TÉCNICOS", heading: "Heading2" }),
-            new Paragraph({ text: `Elaborado por: ${relatorio.elaboradoPor || ""}` }),
-            new Paragraph({ text: `Departamento: ${relatorio.departamento || ""}` }),
-            new Paragraph({ text: `Unidade: ${relatorio.unidade || ""}` }),
+            new DocxParagraph({ text: "RESPONSÁVEIS TÉCNICOS", heading: "Heading2" }),
+            new DocxParagraph({ text: `Elaborado por: ${relatorio.elaboradoPor || ""}` }),
+            new DocxParagraph({ text: `Departamento: ${relatorio.departamento || ""}` }),
+            new DocxParagraph({ text: `Unidade: ${relatorio.unidade || ""}` }),
             
-            new Paragraph({ text: "1. INTRODUÇÃO", heading: "Heading2" }),
-            new Paragraph({ text: introducaoTexto }),
+            new DocxParagraph({ text: "1. INTRODUÇÃO", heading: "Heading2" }),
+            new DocxParagraph({ text: introducaoTexto }),
             
-            new Paragraph({ text: "1.1 DADOS DO PRODUTO", heading: "Heading3" }),
-            new Paragraph({ text: `Modelo: ${relatorio.modeloTelha || ""} ${relatorio.espessura || ""}mm CRFS` }),
-            new Paragraph({ text: `Quantidade: ${relatorio.quantidade || ""}` }),
-            new Paragraph({ text: `Área coberta: ${relatorio.area || ""}m² (aproximadamente)` }),
+            new DocxParagraph({ text: "1.1 DADOS DO PRODUTO", heading: "Heading3" }),
+            new DocxParagraph({ text: `Modelo: ${relatorio.modeloTelha || ""} ${relatorio.espessura || ""}mm CRFS` }),
+            new DocxParagraph({ text: `Quantidade: ${relatorio.quantidade || ""}` }),
+            new DocxParagraph({ text: `Área coberta: ${relatorio.area || ""}m² (aproximadamente)` }),
             
-            new Paragraph({ text: "2. ANÁLISE TÉCNICA", heading: "Heading2" }),
-            new Paragraph({ text: TEMPLATE_ANALISE_TECNICA }),
+            new DocxParagraph({ text: "2. ANÁLISE TÉCNICA", heading: "Heading2" }),
+            new DocxParagraph({ text: TEMPLATE_ANALISE_TECNICA }),
             
-            new Paragraph({ text: "2.1 NÃO CONFORMIDADES IDENTIFICADAS", heading: "Heading3" }),
+            new DocxParagraph({ text: "2.1 NÃO CONFORMIDADES IDENTIFICADAS", heading: "Heading3" }),
             ...naoConformidadesParags,
             
-            new Paragraph({ text: "3. CONCLUSÃO", heading: "Heading2" }),
-            new Paragraph({ text: conclusaoTexto }),
+            new DocxParagraph({ text: "3. CONCLUSÃO", heading: "Heading2" }),
+            new DocxParagraph({ text: conclusaoTexto }),
             
-            new Paragraph({ text: "Saint-Gobain do Brasil Prod. Ind. e para Cons. Civil Ltda." }),
-            new Paragraph({ text: "Divisão Produtos Para Construção" }),
-            new Paragraph({ text: "Departamento de Assistência Técnica" }),
+            new DocxParagraph({ text: "Saint-Gobain do Brasil Prod. Ind. e para Cons. Civil Ltda." }),
+            new DocxParagraph({ text: "Divisão Produtos Para Construção" }),
+            new DocxParagraph({ text: "Departamento de Assistência Técnica" }),
             
-            new Paragraph({ text: relatorio.elaboradoPor || "" }),
-            new Paragraph({ text: `${relatorio.departamento || ""} - ${relatorio.unidade || ""}` }),
-            new Paragraph({ text: `CREA/CAU ${relatorio.numeroRegistro || ""}` }),
+            new DocxParagraph({ text: relatorio.elaboradoPor || "" }),
+            new DocxParagraph({ text: `${relatorio.departamento || ""} - ${relatorio.unidade || ""}` }),
+            new DocxParagraph({ text: `CREA/CAU ${relatorio.numeroRegistro || ""}` }),
           ]
         }
       ]
     });
 
     // Gerar blob do documento
-    return await Packer.toBlob(doc);
+    return await DocxPacker.toBlob(doc);
   } catch (error) {
     console.error("Erro no gerador alternativo:", error);
     throw new Error(`Falha no gerador de documento alternativo: ${error}`);
