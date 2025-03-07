@@ -47,14 +47,30 @@ export default function TestDownloadPage() {
       }],
     });
 
-    // Gerar o buffer do documento
-    const buffer = await Packer.toBuffer(doc);
-    
-    // Criar um Blob com o tipo MIME correto para DOCX usando nossa constante
-    const blob = new Blob([buffer], { type: DOCX_MIME_TYPE });
-    
-    console.log("Documento DOCX criado com sucesso");
-    return blob;
+    try {
+      // Usar o método correto para navegador: toBlobAsync em vez de toBuffer
+      // Este método é compatível com navegadores
+      const blob = await Packer.toBlob(doc);
+      console.log("Documento DOCX criado com sucesso");
+      return blob;
+    } catch (error) {
+      console.error("Erro ao gerar blob:", error);
+      
+      // Se falhar com toBlob, tentar métodos alternativos
+      try {
+        // Método alternativo usando Blob diretamente
+        const arrayBuffer = await Packer.toBase64String(doc);
+        const binaryString = window.atob(arrayBuffer);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        return new Blob([bytes], { type: DOCX_MIME_TYPE });
+      } catch (secondError) {
+        console.error("Erro em método alternativo:", secondError);
+        throw error;
+      }
+    }
   };
 
   // Método de download usando createObjectURL
@@ -165,6 +181,61 @@ export default function TestDownloadPage() {
       setIsLoading(false);
     }
   };
+  
+  // Método 5: Download via API do servidor
+  const downloadWithServerAPI = async () => {
+    try {
+      setIsLoading(true);
+      toast.info("Enviando documento para o servidor...");
+
+      const blob = await createBasicDocx();
+      const fileName = createUniqueFileName("server-download", "docx");
+      
+      // Converter o blob para Base64
+      const reader = new FileReader();
+      const base64Promise = new Promise<string>((resolve, reject) => {
+        reader.onload = () => {
+          const base64 = reader.result as string;
+          // Remover o prefixo "data:application/...;base64," para obter apenas o conteúdo Base64
+          const base64Data = base64.split(',')[1];
+          resolve(base64Data);
+        };
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(blob);
+      });
+      
+      const base64 = await base64Promise;
+      console.log("Documento convertido para Base64, enviando para o servidor...");
+      
+      // Enviar para o servidor
+      const response = await fetch('/api/download-document', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          docBuffer: base64,
+          fileName,
+          mimeType: blob.type
+        }),
+      });
+      
+      if (response.ok) {
+        // Baixar a resposta
+        const responseBlob = await response.blob();
+        saveAs(responseBlob, fileName);
+        console.log("Download via servidor concluído com sucesso");
+        toast.success("Download via servidor bem-sucedido!");
+      } else {
+        throw new Error(`Servidor retornou: ${response.status} ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error("Erro no download via servidor:", error);
+      toast.error(`Erro: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -207,6 +278,7 @@ export default function TestDownloadPage() {
             Testar Abertura em Nova Aba
           </Button>
         </div>
+        
         <div className="p-4 border bg-blue-50 rounded-lg">
           <h2 className="text-lg font-medium mb-2">Método 4: Utilidade Avançada</h2>
           <p className="mb-4 text-gray-700">Usa nossa nova função utilitária com múltiplos fallbacks</p>
@@ -217,6 +289,19 @@ export default function TestDownloadPage() {
             variant="default"
           >
             Testar Download com Utilitário Avançado
+          </Button>
+        </div>
+        
+        <div className="p-4 border bg-green-50 rounded-lg">
+          <h2 className="text-lg font-medium mb-2">Método 5: Download via API</h2>
+          <p className="mb-4 text-gray-700">Usa o servidor como intermediário para o download</p>
+          <Button 
+            onClick={downloadWithServerAPI}
+            disabled={isLoading}
+            className="w-full"
+            variant="destructive"
+          >
+            Testar Download via Servidor
           </Button>
         </div>
       </div>
