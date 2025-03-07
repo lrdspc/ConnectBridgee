@@ -140,7 +140,7 @@ export default function ClienteDetalhesPage() {
           </div>
           <div className="flex gap-2">
             <Button 
-              onClick={() => setLocation(`/nova-vistoria?clientId=${cliente.id}`)} 
+              onClick={() => setLocation(`/relatorio-vistoria?clientId=${cliente.id}`)} 
               variant="default"
             >
               <ClipboardCheck className="mr-2 h-4 w-4" /> Nova Vistoria
@@ -276,7 +276,7 @@ export default function ClienteDetalhesPage() {
                 <div className="mt-4 space-y-2">
                   <p className="text-sm text-muted-foreground">Deseja iniciar uma nova vistoria para este cliente?</p>
                   <Button 
-                    onClick={() => setLocation(`/nova-vistoria?clientId=${cliente.id}`)} 
+                    onClick={() => setLocation(`/relatorio-vistoria?clientId=${cliente.id}`)} 
                     variant="default"
                     className="px-8"
                   >

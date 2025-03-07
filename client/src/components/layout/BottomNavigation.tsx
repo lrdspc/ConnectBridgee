@@ -34,7 +34,7 @@ const BottomNavigation = () => {
     <div className="fixed bottom-0 left-0 right-0 z-50">
       {/* Botão central flutuante - Nova Vistoria - agora separado da nav bar */}
       <div className="absolute left-1/2 -translate-x-1/2 top-[-28px]">
-        <Link href="/nova-vistoria">
+        <Link href="/relatorio-vistoria">
           <a className="flex flex-col items-center">
             <div className="bg-primary text-white p-3 rounded-full shadow-lg flex items-center justify-center w-12 h-12 active:scale-95 transition-transform">
               <Plus className="h-5 w-5" />

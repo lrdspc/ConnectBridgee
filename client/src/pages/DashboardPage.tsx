@@ -274,7 +274,7 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-3">
-                  <Link href="/nova-vistoria">
+                  <Link href="/relatorio-vistoria">
                     <Button className="w-full bg-primary hover:bg-primary/90 h-auto py-3">
                       <FileText className="mr-2 h-4 w-4" /> 
                       <div className="flex flex-col items-start">
