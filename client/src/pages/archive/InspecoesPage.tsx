@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { DashboardLayoutNew } from '../layouts/DashboardLayoutNew';
+import { DashboardLayoutNew } from '../../layouts/DashboardLayoutNew';
 import { PageTransition } from '@/components/ui/loading-animation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

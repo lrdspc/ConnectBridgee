@@ -20,13 +20,13 @@ const BottomNavigation = () => {
     return location === path || (path !== '/' && location.startsWith(path));
   };
 
-  // Links para navegação inferior
+  // Links para navegação inferior - limitamos a 6 para não ficar apertado
   const navLinks = [
     { name: 'Início', path: '/', icon: <Home className="h-5 w-5" /> },
     { name: 'Clientes', path: '/clientes', icon: <Users className="h-5 w-5" /> },
     { name: 'Visitas', path: '/visitas', icon: <ClipboardCheck className="h-5 w-5" /> },
+    { name: 'Inspeções', path: '/inspecoes', icon: <FileText className="h-5 w-5" /> },
     { name: 'Relatórios', path: '/relatorios', icon: <FileText className="h-5 w-5" /> },
-    { name: 'Perfil', path: '/perfil', icon: <User className="h-5 w-5" /> },
     { name: 'Config.', path: '/configuracoes', icon: <Settings className="h-5 w-5" /> },
   ];
 
