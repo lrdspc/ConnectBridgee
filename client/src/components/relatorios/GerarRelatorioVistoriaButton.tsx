@@ -1,52 +1,71 @@
 
-import { Button } from "@/components/ui/button";
-import { FileText } from "lucide-react";
-import { useState } from "react";
-import GerarRelatorioVistoriaModal from "./GerarRelatorioVistoriaModal";
-import { RelatorioVistoria } from "../../../shared/relatorioVistoriaSchema";
-import { useMutation } from "@tanstack/react-query";
-import { atualizarRelatorioVistoria } from "@/lib/api";
+import React, { useState } from 'react';
+import { Button } from "@/components/ui/button"
+import { FileText } from "lucide-react"
+import { RelatorioVistoria } from 'shared/relatorioVistoriaSchema';
+import { GerarRelatorioVistoriaModal } from './GerarRelatorioVistoriaModal';
+import { useToast } from "@/components/ui/use-toast";
 
 interface GerarRelatorioVistoriaButtonProps {
   relatorio: RelatorioVistoria;
-  onSave?: (relatorio: RelatorioVistoria) => void;
+  disabled?: boolean;
 }
 
-export default function GerarRelatorioVistoriaButton({
+export function GerarRelatorioVistoriaButton({
   relatorio,
-  onSave
+  disabled = false
 }: GerarRelatorioVistoriaButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { toast } = useToast();
 
-  const salvarRelatorioMutation = useMutation({
-    mutationFn: (data: RelatorioVistoria) => atualizarRelatorioVistoria(data),
-    onSuccess: (data) => {
-      if (onSave) {
-        onSave(data);
-      }
-    },
-  });
+  const handleOpenModal = () => {
+    // Verificações básicas antes de abrir o modal
+    if (!relatorio.cliente) {
+      toast({
+        title: "Dados incompletos",
+        description: "Por favor, informe o nome do cliente antes de gerar o relatório.",
+        variant: "destructive",
+      });
+      return;
+    }
 
-  const handleSaveRelatorio = (relatorioAtualizado: RelatorioVistoria) => {
-    salvarRelatorioMutation.mutate(relatorioAtualizado);
+    if (!relatorio.dataVistoria) {
+      toast({
+        title: "Dados incompletos",
+        description: "Por favor, informe a data da vistoria antes de gerar o relatório.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (relatorio.naoConformidades.filter(nc => nc.selecionado).length === 0) {
+      toast({
+        title: "Nenhuma não conformidade selecionada",
+        description: "Selecione pelo menos uma não conformidade ou confirme que não há não conformidades.",
+        variant: "warning",
+      });
+      // Permitimos continuar mesmo sem não conformidades
+    }
+
+    setIsModalOpen(true);
   };
 
   return (
     <>
-      <Button
-        onClick={() => setIsModalOpen(true)}
-        variant="default"
-        size="sm"
-        className="gap-1"
+      <Button 
+        variant="default" 
+        className="flex items-center gap-2"
+        onClick={handleOpenModal}
+        disabled={disabled}
       >
-        <FileText size={16} /> Gerar Relatório
+        <FileText className="h-4 w-4" />
+        Gerar Relatório
       </Button>
 
-      <GerarRelatorioVistoriaModal
+      <GerarRelatorioVistoriaModal 
         relatorio={relatorio}
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleSaveRelatorio}
+        onOpenChange={setIsModalOpen}
       />
     </>
   );
