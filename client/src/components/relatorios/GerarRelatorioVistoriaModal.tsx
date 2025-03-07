@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader, Save, X } from "lucide-react";
 import { toast } from "sonner";
-import { RelatorioVistoria, modelosTelhas, espessurasTelhas, resultadoReclamacaoEnum } from "../../../shared/relatorioVistoriaSchema";
+import { RelatorioVistoria, modelosTelhas, espessurasTelhas, resultadoReclamacaoEnum } from "../../../shared/relatorioVistoriaSchema.js";
 import { generateRelatorioVistoria } from "@/lib/relatorioVistoriaGenerator";
 import { generateRelatorioVistoriaBrasil } from "@/lib/relatorioVistoriaBrasilGenerator";
 

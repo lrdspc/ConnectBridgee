@@ -20,12 +20,21 @@ function generateHeader() {
     children: [
       new Paragraph({
         alignment: AlignmentType.CENTER,
-        spacing: { before: 0, after: 200 },
+        spacing: { before: 120, after: 120 },
+        border: {
+          bottom: {
+            color: "999999",
+            size: 6,
+            style: BorderStyle.SINGLE,
+            space: 1,
+          },
+        },
         children: [
           new TextRun({
             text: "BRASILIT - SAINT-GOBAIN",
             bold: true,
-            size: 28,
+            size: 26, // 13pt
+            font: "Times New Roman",
           }),
         ],
       })
@@ -39,25 +48,42 @@ function generateFooter() {
     children: [
       new Paragraph({
         alignment: AlignmentType.CENTER,
+        spacing: { before: 120, after: 60 },
+        border: {
+          top: {
+            color: "999999",
+            size: 6,
+            style: BorderStyle.SINGLE,
+            space: 1,
+          },
+        },
         children: [
           new TextRun({
             text: "Saint-Gobain do Brasil Prod. Ind. e para Cons. Civil Ltda.",
+            size: 18, // 9pt
+            font: "Times New Roman",
           }),
         ],
       }),
       new Paragraph({
         alignment: AlignmentType.CENTER,
+        spacing: { before: 60, after: 60 },
         children: [
           new TextRun({
             text: "Divisão Produtos Para Construção",
+            size: 18, // 9pt
+            font: "Times New Roman",
           }),
         ],
       }),
       new Paragraph({
         alignment: AlignmentType.CENTER,
+        spacing: { before: 60, after: 60 },
         children: [
           new TextRun({
             text: "Departamento de Assistência Técnica",
+            size: 18, // 9pt
+            font: "Times New Roman",
           }),
         ],
       }),
@@ -769,11 +795,13 @@ async function generateFotosSection(relatorio: RelatorioVistoria): Promise<Parag
         // Adicionar mensagem de erro em vez da foto
         paragraphs.push(
           new Paragraph({
-            spacing: { before: 100, after: 200 },
+            spacing: { before: 120, after: 180 },
+            alignment: AlignmentType.CENTER,
             children: [
               new TextRun({
                 text: `[Não foi possível carregar a foto ${i+1}]`,
                 color: "FF0000",
+                font: "Times New Roman",
               }),
             ],
           })
