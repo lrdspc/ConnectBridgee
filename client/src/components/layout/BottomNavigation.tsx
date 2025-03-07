@@ -4,140 +4,210 @@ import {
   Users,
   ClipboardCheck, 
   Plus, 
-  Menu as MenuIcon,
-  X,
-  Settings,
+  FileText,
   User,
+  Settings,
   LogOut,
-  FileText
+  Menu as MenuIcon,
+  X
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
+import { 
+  Sheet, 
+  SheetContent, 
+  SheetTrigger,
+  SheetClose 
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const BottomNavigation = () => {
   const [location] = useLocation();
   const [showMenu, setShowMenu] = useState(false);
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
 
   const isActive = (path: string) => {
     return location === path || (path !== '/' && location.startsWith(path));
   };
 
+  // Links de navegação principal
+  const mainLinks = [
+    { name: 'Início', path: '/', icon: <Home className="h-5 w-5" /> },
+    { name: 'Clientes', path: '/clientes', icon: <Users className="h-5 w-5" /> },
+    { name: 'Visitas', path: '/visitas', icon: <ClipboardCheck className="h-5 w-5" /> },
+    { name: 'Relatórios', path: '/relatorios', icon: <FileText className="h-5 w-5" /> },
+  ];
+
+  // Links secundários para o menu
+  const secondaryLinks = [
+    { name: 'Perfil', path: '/perfil', icon: <User className="h-5 w-5" /> },
+    { name: 'Configurações', path: '/configuracoes', icon: <Settings className="h-5 w-5" /> },
+  ];
+
   return (
     <>
-      {/* Overlay quando o menu está aberto */}
-      {showMenu && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
-          onClick={() => setShowMenu(false)}
-        />
-      )}
-      
-      {/* Botão flutuante do menu no canto inferior direito */}
-      <div className="fixed bottom-4 right-4 z-50">
-        <div className="flex flex-col items-end gap-2">
-          {/* Menu hambúrguer quando aberto */}
-          {showMenu && (
-            <div className="bg-white rounded-lg shadow-xl overflow-hidden animate-in slide-in-from-bottom-5 w-48 mb-2">
-              <div className="p-2">
-                <Link href="/relatorios">
-                  <a 
-                    className={`flex items-center space-x-2 p-3 rounded-md ${isActive('/relatorios') ? 'bg-primary/10 text-primary' : 'hover:bg-gray-100 text-neutral-700'}`}
-                    onClick={() => setShowMenu(false)}
-                  >
-                    <FileText className="h-5 w-5" />
-                    <span className="text-sm font-medium">Relatórios</span>
+      {/* Barra de navegação inferior com design moderno */}
+      <div className="fixed bottom-0 left-0 right-0 z-50">
+        {/* Barra principal */}
+        <nav className="bg-white border-t border-gray-200 shadow py-2 px-4">
+          <div className="flex justify-around items-center relative">
+            {/* Lado esquerdo - 2 ícones */}
+            <div className="flex space-x-8">
+              {mainLinks.slice(0, 2).map(link => (
+                <Link key={link.path} href={link.path}>
+                  <a className={cn(
+                    "flex flex-col items-center justify-center transition-colors",
+                    isActive(link.path) ? "text-primary" : "text-gray-500 hover:text-gray-800"
+                  )}>
+                    <div className={cn(
+                      "p-1.5 rounded-full",
+                      isActive(link.path) ? "bg-primary/10" : ""
+                    )}>
+                      {link.icon}
+                    </div>
+                    <span className="text-[10px] mt-1 font-medium">{link.name}</span>
                   </a>
                 </Link>
-                
-                <Link href="/perfil">
-                  <a 
-                    className={`flex items-center space-x-2 p-3 rounded-md ${isActive('/perfil') ? 'bg-primary/10 text-primary' : 'hover:bg-gray-100 text-neutral-700'}`}
-                    onClick={() => setShowMenu(false)}
-                  >
-                    <User className="h-5 w-5" />
-                    <span className="text-sm font-medium">Perfil</span>
-                  </a>
-                </Link>
-                
-                <Link href="/configuracoes">
-                  <a 
-                    className={`flex items-center space-x-2 p-3 rounded-md ${isActive('/configuracoes') ? 'bg-primary/10 text-primary' : 'hover:bg-gray-100 text-neutral-700'}`}
-                    onClick={() => setShowMenu(false)}
-                  >
-                    <Settings className="h-5 w-5" />
-                    <span className="text-sm font-medium">Configurações</span>
-                  </a>
-                </Link>
-                
-                <div className="h-px bg-gray-200 my-2"></div>
-                
-                <button 
-                  onClick={() => { logout?.mutate?.(); setShowMenu(false); }}
-                  className="w-full flex items-center space-x-2 p-3 rounded-md text-red-600 hover:bg-red-50"
-                >
-                  <LogOut className="h-5 w-5" />
-                  <span className="text-sm font-medium">Sair</span>
-                </button>
-              </div>
+              ))}
             </div>
-          )}
-          
-          {/* Botão de navegação rápida */}
-          <div className="flex gap-2">
-            {/* Botão Nova Vistoria */}
-            <Link href="/nova-vistoria">
-              <a className="bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
-                <Plus className="h-6 w-6" />
-              </a>
-            </Link>
-            
-            {/* Botão de menu */}
-            <button 
-              onClick={() => setShowMenu(!showMenu)}
-              className="bg-primary text-white p-3 rounded-full flex items-center justify-center shadow-lg"
-            >
-              {showMenu ? <X className="h-5 w-5" /> : <MenuIcon className="h-5 w-5" />}
-            </button>
+
+            {/* Botão central maior - Nova Vistoria */}
+            <div className="absolute left-1/2 -translate-x-1/2 -top-5">
+              <Link href="/nova-vistoria">
+                <a className="flex flex-col items-center">
+                  <div className="bg-primary text-white p-3 rounded-full shadow-lg flex items-center justify-center w-14 h-14">
+                    <Plus className="h-6 w-6" />
+                  </div>
+                  <span className="text-[10px] font-semibold mt-1 text-primary">Nova Vistoria</span>
+                </a>
+              </Link>
+            </div>
+
+            {/* Lado direito - 2 ícones */}
+            <div className="flex space-x-8">
+              {mainLinks.slice(2, 4).map(link => (
+                <Link key={link.path} href={link.path}>
+                  <a className={cn(
+                    "flex flex-col items-center justify-center transition-colors",
+                    isActive(link.path) ? "text-primary" : "text-gray-500 hover:text-gray-800"
+                  )}>
+                    <div className={cn(
+                      "p-1.5 rounded-full",
+                      isActive(link.path) ? "bg-primary/10" : ""
+                    )}>
+                      {link.icon}
+                    </div>
+                    <span className="text-[10px] mt-1 font-medium">{link.name}</span>
+                  </a>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
+        </nav>
       </div>
-      
-      {/* Barra de navegação inferior com links principais */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow mt-auto">
-        <div className="flex items-center justify-center px-4 mx-auto h-16">
-          {/* Links principais */}
-          <div className="flex space-x-12">
-            <Link href="/">
-              <a className={`flex flex-col items-center justify-center ${isActive('/') ? 'text-primary' : 'text-neutral-500'}`}>
-                <div className={`p-1.5 rounded-lg ${isActive('/') ? 'bg-primary/10' : ''}`}>
-                  <Home className="h-5 w-5" />
-                </div>
-                <span className="text-[10px] mt-1">Início</span>
-              </a>
-            </Link>
+
+      {/* Menu de opções expandido (aba deslizante de baixo) */}
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className="fixed bottom-[88px] right-4 rounded-full shadow-md h-10 w-10 bg-white"
+          >
+            <MenuIcon className="h-5 w-5 text-primary" />
+          </Button>
+        </SheetTrigger>
+        <SheetContent side="bottom" className="p-0 rounded-t-xl max-h-[80vh]">
+          <div className="flex flex-col">
+            {/* Indicador de arraste */}
+            <div className="flex justify-center py-2">
+              <div className="w-12 h-1.5 bg-gray-300 rounded-full"></div>
+            </div>
             
-            <Link href="/clientes">
-              <a className={`flex flex-col items-center justify-center ${isActive('/clientes') ? 'text-primary' : 'text-neutral-500'}`}>
-                <div className={`p-1.5 rounded-lg ${isActive('/clientes') ? 'bg-primary/10' : ''}`}>
-                  <Users className="h-5 w-5" />
-                </div>
-                <span className="text-[10px] mt-1">Clientes</span>
-              </a>
-            </Link>
+            {/* Cabeçalho com informações do usuário */}
+            <div className="flex items-center px-5 py-4 border-b">
+              <Avatar className="h-12 w-12 border border-gray-200">
+                <AvatarImage src={user?.photoUrl} />
+                <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                  {user?.name?.charAt(0) || 'U'}
+                </AvatarFallback>
+              </Avatar>
+              <div className="ml-3 flex-1">
+                <p className="font-medium">{user?.name || 'Usuário'}</p>
+                <p className="text-sm text-gray-500">{user?.email || 'usuário@email.com'}</p>
+              </div>
+              <SheetClose asChild>
+                <Button variant="ghost" size="icon">
+                  <X className="h-5 w-5" />
+                </Button>
+              </SheetClose>
+            </div>
             
-            <Link href="/visitas">
-              <a className={`flex flex-col items-center justify-center ${isActive('/visitas') ? 'text-primary' : 'text-neutral-500'}`}>
-                <div className={`p-1.5 rounded-lg ${isActive('/visitas') ? 'bg-primary/10' : ''}`}>
-                  <ClipboardCheck className="h-5 w-5" />
-                </div>
-                <span className="text-[10px] mt-1">Visitas</span>
-              </a>
-            </Link>
+            {/* Grid de ações rápidas */}
+            <div className="grid grid-cols-2 gap-3 p-4">
+              {/* Link para Nova Vistoria em destaque */}
+              <SheetClose asChild>
+                <Link href="/nova-vistoria">
+                  <a className="bg-primary/10 border border-primary/20 text-primary rounded-lg p-4 flex flex-col items-center gap-2">
+                    <Plus className="h-6 w-6" />
+                    <span className="text-sm font-medium">Nova Vistoria</span>
+                  </a>
+                </Link>
+              </SheetClose>
+              
+              {/* Links principais */}
+              {mainLinks.map(link => (
+                <SheetClose asChild key={link.path}>
+                  <Link href={link.path}>
+                    <a className={cn(
+                      "border rounded-lg p-4 flex flex-col items-center gap-2",
+                      isActive(link.path) 
+                        ? "bg-primary/10 border-primary/20 text-primary" 
+                        : "bg-gray-50 border-gray-200 text-gray-700"
+                    )}>
+                      {link.icon}
+                      <span className="text-sm font-medium">{link.name}</span>
+                    </a>
+                  </Link>
+                </SheetClose>
+              ))}
+              
+              {/* Links secundários */}
+              {secondaryLinks.map(link => (
+                <SheetClose asChild key={link.path}>
+                  <Link href={link.path}>
+                    <a className={cn(
+                      "border rounded-lg p-4 flex flex-col items-center gap-2",
+                      isActive(link.path) 
+                        ? "bg-primary/10 border-primary/20 text-primary" 
+                        : "bg-gray-50 border-gray-200 text-gray-700"
+                    )}>
+                      {link.icon}
+                      <span className="text-sm font-medium">{link.name}</span>
+                    </a>
+                  </Link>
+                </SheetClose>
+              ))}
+            </div>
+            
+            {/* Botão de logout */}
+            <div className="px-4 pb-6 mt-2">
+              <SheetClose asChild>
+                <Button 
+                  onClick={() => logout.mutate()}
+                  variant="outline"
+                  className="w-full justify-center text-red-500 hover:text-red-600 hover:bg-red-50 border-red-100"
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  <span>Sair da Conta</span>
+                </Button>
+              </SheetClose>
+            </div>
           </div>
-        </div>
-      </nav>
+        </SheetContent>
+      </Sheet>
     </>
   );
 };

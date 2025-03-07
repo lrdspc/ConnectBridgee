@@ -26,7 +26,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import MobileMenu from '@/components/layout/MobileMenu';
+{/* Import MobileMenu removido - não é mais necessário */}
 import BottomNavigation from '@/components/layout/BottomNavigation';
 
 interface DashboardLayoutProps {
@@ -380,10 +380,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
         </main>
       </div>
 
-      {/* Menu deslizante para mobile */}
-      {isMobile && <MobileMenu open={open} setOpen={setOpen}/>} {/* Pass open and setOpen to MobileMenu */}
-      
-      {/* Navegação de rodapé no canto inferior direito */}
+      {/* Navegação de rodapé para mobile - design melhorado */}
       {isMobile && <BottomNavigation />}
     </div>
   );
