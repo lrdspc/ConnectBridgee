@@ -93,7 +93,6 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
     { name: 'Visitas', path: '/visitas', icon: <MapPin className="w-5 h-5" />, badge: null },
     { name: 'Inspeções', path: '/inspecoes', icon: <FileText className="w-5 h-5" />, badge: null },
     { name: 'Nova Vistoria', path: '/relatorio-vistoria', icon: <ClipboardCheck className="w-5 h-5" />, badge: "Novo", highlight: true },
-    { name: 'Vistoria FAR', path: '/vistoria-far', icon: <ClipboardList className="w-5 h-5" />, badge: "FAR", highlight: true },
     { name: 'Relatórios', path: '/relatorios', icon: <BarChart2 className="w-5 h-5" />, badge: null },
     { name: 'Meu Perfil', path: '/perfil', icon: <User className="w-5 h-5" />, badge: null },
   ];

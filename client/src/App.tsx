@@ -62,7 +62,6 @@ function App() {
             {/* Relatórios e Vistorias */}
             <Route path="/relatorios" component={RelatoriosPage} />
             <Route path="/relatorio-vistoria" component={RelatorioVistoriaPage} />
-            <Route path="/vistoria-far" component={VistoriaFARPage} />
             
             {/* Inspeções */}
             <Route path="/inspecoes" component={InspecoesPage} />

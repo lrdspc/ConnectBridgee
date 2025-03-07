@@ -2,12 +2,10 @@ import { Link, useLocation } from "wouter";
 import { 
   Home, 
   Users,
-  ClipboardCheck, 
+  MapPin, 
   Plus, 
-  FileText,
-  User,
-  Settings,
-  LogOut
+  BarChart2,
+  Settings
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
@@ -20,13 +18,12 @@ const BottomNavigation = () => {
     return location === path || (path !== '/' && location.startsWith(path));
   };
 
-  // Links para navegação inferior - limitamos a 6 para não ficar apertado
+  // Links para navegação inferior - limitamos a 5 para não ficar apertado
   const navLinks = [
     { name: 'Início', path: '/', icon: <Home className="h-5 w-5" /> },
     { name: 'Clientes', path: '/clientes', icon: <Users className="h-5 w-5" /> },
-    { name: 'Visitas', path: '/visitas', icon: <ClipboardCheck className="h-5 w-5" /> },
-    { name: 'Inspeções', path: '/inspecoes', icon: <FileText className="h-5 w-5" /> },
-    { name: 'Relatórios', path: '/relatorios', icon: <FileText className="h-5 w-5" /> },
+    { name: 'Visitas', path: '/visitas', icon: <MapPin className="h-5 w-5" /> },
+    { name: 'Relatórios', path: '/relatorios', icon: <BarChart2 className="h-5 w-5" /> },
     { name: 'Config.', path: '/configuracoes', icon: <Settings className="h-5 w-5" /> },
   ];
 
