@@ -1,15 +1,16 @@
 /**
- * Gerador de Relatórios DOCX com formatação exata conforme modelo Saint-Gobain Brasilit
+ * Gerador de Relatórios DOCX com formatação exata conforme modelo Brasilit
  * 
- * Esta versão foi desenvolvida para atender exatamente a formatação solicitada
- * de acordo com o documento de referência fornecido.
+ * Esta versão foi corrigida para corresponder ao formato exato do documento de referência
+ * com a estrutura de textos correta para validação jurídica.
  * 
  * Características:
- * - Formatação Arial 10pt
- * - Layout em tabelas conforme modelo original
- * - Cabeçalho com logo da Saint-Gobain
- * - Rodapé com logotipos das marcas
- * - Formatação de não conformidades conforme especificado
+ * - Formatação Times New Roman 12pt
+ * - Espaçamento de linha 1,5 conforme ABNT
+ * - Textos justificados
+ * - Cabeçalho Brasilit
+ * - Cores e estrutura exatas do modelo fornecido
+ * - Sem bordas em tabelas (layout limpo)
  */
 
 import { 
@@ -23,17 +24,19 @@ import {
   WidthType,
   BorderStyle,
   ShadingType,
-  Packer
+  Packer,
+  HeadingLevel,
+  VerticalAlign
 } from 'docx';
 import { RelatorioVistoria } from '@shared/relatorioVistoriaSchema';
 
 function log(...args: any[]) {
-  console.log("[SaintGobainGenerator]", ...args);
+  console.log("[BrasilitGenerator]", ...args);
 }
 
 /**
  * Gera um documento DOCX para o relatório de vistoria técnica
- * Formatação exata conforme modelo Saint-Gobain
+ * Formatação exata conforme modelo Brasilit
  * 
  * @param relatorio Dados do relatório de vistoria
  * @returns Promise<Blob> Documento DOCX gerado
@@ -724,17 +727,17 @@ export async function gerarRelatorioSaintGobainFix(relatorio: RelatorioVistoria 
     const doc = new Document({
       title: "Relatório de Vistoria Técnica",
       description: "Relatório de Vistoria Técnica gerado pelo sistema Brasilit",
-      creator: "Saint-Gobain Brasil",
+      creator: "Brasilit",
       styles: {
         default: {
           document: {
             run: {
-              font: "Arial",
-              size: 20 // 10pt
+              font: "Times New Roman",
+              size: 24 // 12pt
             },
             paragraph: {
               spacing: {
-                line: 276, // 1.15x line spacing
+                line: 360, // 1.5x line spacing
               }
             }
           }
@@ -745,24 +748,24 @@ export async function gerarRelatorioSaintGobainFix(relatorio: RelatorioVistoria 
           properties: {
             page: {
               margin: {
-                top: 567, // 1cm em twips
-                right: 567, // 1cm em twips
-                bottom: 567, // 1cm em twips
-                left: 567 // 1cm em twips
+                top: 1134, // 2.5cm em twips (1cm ≈ 567 twips)
+                right: 1134, // 2.5cm em twips
+                bottom: 1134, // 2.5cm em twips
+                left: 1361 // 3.0cm em twips para margem esquerda ABNT
               }
             }
           },
           children: [
-            // Cabeçalho com logo Saint-Gobain
+            // Cabeçalho com logo Brasilit
             new Paragraph({
               alignment: AlignmentType.CENTER,
               spacing: { after: 120 },
               children: [
                 new TextRun({
-                  text: "SAINT-GOBAIN",
+                  text: "BRASILIT",
                   bold: true,
-                  size: 24, // 12pt
-                  color: "ff0000" // vermelho para simular o logo
+                  size: 28, // 14pt
+                  color: "ff0000" // vermelho para o logo
                 })
               ]
             }),
@@ -772,9 +775,9 @@ export async function gerarRelatorioSaintGobainFix(relatorio: RelatorioVistoria 
               spacing: { after: 240 },
               children: [
                 new TextRun({
-                  text: "PRODUTOS PARA CONSTRUÇÃO",
-                  size: 20, 
-                  color: "0070c0" // azul para simular a descrição sob o logo
+                  text: "SOLUÇÕES PARA CONSTRUÇÃO",
+                  size: 24, // 12pt
+                  color: "0070c0" // azul para a descrição sob o logo
                 })
               ]
             }),
@@ -814,15 +817,15 @@ export async function gerarRelatorioSaintGobainFix(relatorio: RelatorioVistoria 
             // Tabela de conclusão
             tabelaConclusao,
             
-            // Rodapé com logos
+            // Espaço para assinaturas
             new Paragraph({
               alignment: AlignmentType.CENTER,
               spacing: { before: 360 },
               children: [
                 new TextRun({
-                  text: "[Logos das marcas Saint-Gobain]",
-                  size: 16,
-                  color: "808080"
+                  text: "Brasilit - Divisão de Assistência Técnica",
+                  size: 20,
+                  bold: true
                 })
               ]
             }),
