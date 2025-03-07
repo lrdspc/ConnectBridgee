@@ -22,6 +22,12 @@ const ClienteDetalhesPage = lazy(() => import('./pages/ClienteDetalhesPage'));
 // Páginas de relatórios - consolidadas em uma única página principal
 const RelatoriosPage = lazy(() => import('./pages/RelatoriosPage'));
 const RelatorioVistoriaPage = lazy(() => import('./pages/RelatorioVistoriaPage'));
+const VistoriaFARPage = lazy(() => import('./pages/VistoriaFARPage'));
+
+// Páginas de configurações e inspeções
+const ConfiguracoesPage = lazy(() => import('./pages/ConfiguracoesPage'));
+const InspecoesPage = lazy(() => import('./pages/archive/InspecoesPage'));
+const InspecaoDetalhesPage = lazy(() => import('./pages/archive/InspecaoDetalhesPage'));
 
 // Componente de loading para mostrar durante o carregamento das páginas
 const PageLoading = () => (
@@ -41,6 +47,7 @@ function App() {
             <Route path="/" component={DashboardPage} />
             <Route path="/perfil" component={ProfilePage} />
             <Route path="/rotas" component={RouteMapPage} />
+            <Route path="/configuracoes" component={ConfiguracoesPage} />
             
             {/* Visitas */}
             <Route path="/visitas" component={VisitListPage} />
@@ -51,9 +58,14 @@ function App() {
             <Route path="/clientes" component={ClientesPage} />
             <Route path="/clientes/:id" component={ClienteDetalhesPage} />
             
-            {/* Relatórios e Vistorias - apenas uma página de relatório */}
+            {/* Relatórios e Vistorias */}
             <Route path="/relatorios" component={RelatoriosPage} />
             <Route path="/relatorio-vistoria" component={RelatorioVistoriaPage} />
+            <Route path="/vistoria-far" component={VistoriaFARPage} />
+            
+            {/* Inspeções */}
+            <Route path="/inspecoes" component={InspecoesPage} />
+            <Route path="/inspecoes/:id" component={InspecaoDetalhesPage} />
             
             {/* Fallback para rota não encontrada */}
             <Route component={NotFound} />

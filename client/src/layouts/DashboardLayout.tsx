@@ -35,6 +35,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: 'Inspeções', path: '/inspecoes', icon: <FileText className="w-5 h-5" /> },
     { name: 'Relatórios', path: '/relatorios', icon: <BarChart2 className="w-5 h-5" /> },
     { name: 'Perfil', path: '/perfil', icon: <User className="w-5 h-5" /> },
+    { name: 'Configurações', path: '/configuracoes', icon: <Settings className="w-5 h-5" /> },
   ];
 
   return (
@@ -136,10 +137,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           )}
           
           <div className="flex-1 flex justify-end items-center gap-4">
-            <Button variant="outline" size="sm">
-              <Settings className="w-4 h-4 mr-2" />
-              Configurações
-            </Button>
+            {/* Espaço para notificações ou informações importantes */}
           </div>
         </header>
         
