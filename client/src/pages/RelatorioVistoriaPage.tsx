@@ -15,6 +15,7 @@ import {
 } from '@shared/relatorioVistoriaSchema';
 import { gerarRelatorioSimples } from '@/lib/relatorioVistoriaSimpleGeneratorNew';
 import { RelatorioExportButton } from '@/components/relatorios/RelatorioExportButton';
+import { ExportSaintGobainButton } from '@/components/relatorios/ExportSaintGobainButton';
 
 import { DashboardLayoutNew } from '@/layouts/DashboardLayoutNew';
 import { PageTransition } from '@/components/ui/loading-animation';

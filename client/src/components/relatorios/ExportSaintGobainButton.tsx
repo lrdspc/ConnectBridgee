@@ -1,10 +1,20 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { RelatorioVistoria } from "../../../shared/relatorioVistoriaSchema";
+import { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { gerarRelatorioSaintGobain } from "@/lib/relatorioVistoriaSaintGobainGenerator";
 import { FileDown, FileCheck } from "lucide-react";
-import { download } from 'filefy';
+// Usar método alternativo de download que não depende de bibliotecas externas
+const downloadBlob = (blob: Blob, fileName: string) => {
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", fileName);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
+};
 
 function log(...args: any[]) {
   console.log("[ExportSaintGobainButton]", ...args);
@@ -102,7 +112,7 @@ export function ExportSaintGobainButton({
       // Salvar o documento
       try {
         log("Salvando documento como", fileName);
-        download(blob, fileName, "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        downloadBlob(blob, fileName);
         log("Documento salvo com sucesso");
         
         // Notificar sucesso

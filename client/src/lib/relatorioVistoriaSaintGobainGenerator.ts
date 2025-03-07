@@ -52,7 +52,7 @@ function log(...args: any[]) {
  * @param relatorio Dados do relatório de vistoria
  * @returns Promise<Blob> Documento DOCX gerado
  */
-export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria): Promise<Blob> {
+export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | any): Promise<Blob> {
   try {
     log("Iniciando geração do relatório com formatação exata Saint-Gobain...");
     
@@ -609,7 +609,7 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria): P
     
     if (relatorio.naoConformidades && relatorio.naoConformidades.length > 0) {
       relatorio.naoConformidades.forEach((naoConf, index) => {
-        if (naoConf.selecionada) {
+        if (naoConf.selecionado) {
           naoConformidadesParagrafos.push(
             new Paragraph({
               alignment: AlignmentType.JUSTIFIED,
