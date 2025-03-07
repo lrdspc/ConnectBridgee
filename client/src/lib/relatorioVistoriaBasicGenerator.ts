@@ -501,7 +501,7 @@ export async function gerarRelatorioVistoriaBasico(relatorio: RelatorioVistoria)
             new Paragraph({
               children: [
                 new TextRun({
-                  text: relatorio.observacoesFinais || 
+                  text: relatorio.observacoesGerais || 
                     "Este relatório foi elaborado com base na inspeção técnica realizada no local, seguindo os procedimentos padrão da Brasilit.",
                   font: "Arial"
                 })

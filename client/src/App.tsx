@@ -58,12 +58,7 @@ function App() {
             <Route path="/teste-relatorio" component={TesteRelatorioPage} />
             
             {/* Redirecionar antiga rota FAR para a nova página consolidada */}
-            <Route path="/vistoria-far">
-              {() => {
-                window.location.href = "/nova-vistoria";
-                return null;
-              }}
-            </Route>
+            <Route path="/vistoria-far" component={RelatorioVistoriaPage} />
             
             {/* Fallback para rota não encontrada */}
             <Route component={NotFound} />
