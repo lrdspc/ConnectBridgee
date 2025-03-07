@@ -76,13 +76,62 @@ export function DashboardCustomizationModal({
     columns: 2
   });
   
-  // Lista de widgets disponíveis
+  // Lista de widgets disponíveis - Alinhados com os IDs usados no DashboardPage
   const availableWidgets: WidgetInfo[] = [
     {
-      id: 'visitsOverview',
-      name: 'Visitas Agendadas',
-      description: 'Resumo das próximas visitas programadas',
+      id: 'resumo',
+      name: 'Visitas de Hoje',
+      description: 'Resumo das visitas programadas para hoje',
       icon: <Calendar className="h-4 w-4 text-blue-500" />,
+      defaultEnabled: true
+    },
+    {
+      id: 'proxima_visita',
+      name: 'Próxima Visita',
+      description: 'Detalhes da próxima visita agendada',
+      icon: <Calendar className="h-4 w-4 text-blue-500" />,
+      defaultEnabled: true
+    },
+    {
+      id: 'acoes_rapidas',
+      name: 'Ações Rápidas',
+      description: 'Acesso rápido às funções mais usadas',
+      icon: <FileText className="h-4 w-4 text-indigo-500" />,
+      defaultEnabled: true
+    },
+    {
+      id: 'visitas_agendadas',
+      name: 'Visitas por Status',
+      description: 'Estatísticas de visitas por status',
+      icon: <Calendar className="h-4 w-4 text-blue-500" />,
+      defaultEnabled: true
+    },
+    {
+      id: 'grafico_semanal',
+      name: 'Gráfico Semanal',
+      description: 'Visitas por dia da semana',
+      icon: <AreaChart className="h-4 w-4 text-green-500" />,
+      defaultEnabled: true
+    },
+    {
+      id: 'rota_dia',
+      name: 'Rota do Dia',
+      description: 'Visualização da rota do dia',
+      icon: <MapPin className="h-4 w-4 text-red-500" />,
+      defaultEnabled: true
+    },
+    {
+      id: 'clima',
+      name: 'Previsão do Tempo',
+      description: 'Condições climáticas para visitas',
+      icon: <AlertCircle className="h-4 w-4 text-blue-400" />,
+      defaultEnabled: true
+    },
+    {
+      id: 'motivationWidget',
+      name: 'Motivação Diária',
+      description: 'Frases e dicas motivacionais',
+      icon: <Smile className="h-4 w-4 text-yellow-600" />,
       defaultEnabled: true
     },
     {
@@ -93,27 +142,6 @@ export function DashboardCustomizationModal({
       defaultEnabled: true
     },
     {
-      id: 'tasksWidget',
-      name: 'Tarefas Pendentes',
-      description: 'Lista de tarefas e afazeres do dia',
-      icon: <CheckSquare className="h-4 w-4 text-amber-500" />,
-      defaultEnabled: true
-    },
-    {
-      id: 'mapWidget',
-      name: 'Mapa de Roteiros',
-      description: 'Visualização da rota do dia',
-      icon: <MapPin className="h-4 w-4 text-red-500" />,
-      defaultEnabled: true
-    },
-    {
-      id: 'weatherWidget',
-      name: 'Previsão do Tempo',
-      description: 'Condições climáticas para visitas',
-      icon: <AlertCircle className="h-4 w-4 text-blue-400" />,
-      defaultEnabled: false
-    },
-    {
       id: 'timeTrackingWidget',
       name: 'Controle de Tempo',
       description: 'Tempo gasto em cada atividade',
@@ -121,38 +149,10 @@ export function DashboardCustomizationModal({
       defaultEnabled: false
     },
     {
-      id: 'reportsWidget',
-      name: 'Relatórios Recentes',
-      description: 'Últimos relatórios gerados',
-      icon: <FileText className="h-4 w-4 text-indigo-500" />,
-      defaultEnabled: true
-    },
-    {
-      id: 'teamWidget',
-      name: 'Equipe Online',
-      description: 'Membros da equipe disponíveis',
-      icon: <Users className="h-4 w-4 text-cyan-500" />,
-      defaultEnabled: false
-    },
-    {
       id: 'notesWidget',
       name: 'Bloco de Notas',
       description: 'Anotações rápidas e lembretes',
       icon: <MessageSquare className="h-4 w-4 text-yellow-500" />,
-      defaultEnabled: false
-    },
-    {
-      id: 'motivationWidget',
-      name: 'Motivação Diária',
-      description: 'Frases e dicas motivacionais',
-      icon: <Smile className="h-4 w-4 text-yellow-600" />,
-      defaultEnabled: true
-    },
-    {
-      id: 'tipsWidget',
-      name: 'Dicas e Sugestões',
-      description: 'Recomendações para melhorar produtividade',
-      icon: <Zap className="h-4 w-4 text-amber-600" />,
       defaultEnabled: false
     }
   ];
@@ -431,7 +431,7 @@ export function DashboardCustomizationModal({
               </div>
               
               <p className="text-sm text-muted-foreground mb-4">
-                Arraste os itens para reordenar os widgets na sua página inicial
+                Use os botões de seta para reordenar os widgets na sua página inicial
               </p>
               
               <div className="space-y-2">
@@ -444,7 +444,7 @@ export function DashboardCustomizationModal({
                     return (
                       <div
                         key={widget.id}
-                        className="flex items-center justify-between rounded-md border p-3 bg-card cursor-move"
+                        className="flex items-center justify-between rounded-md border p-3 bg-card"
                       >
                         <div className="flex items-center gap-3">
                           <div className="flex-shrink-0 w-8 flex justify-center">
