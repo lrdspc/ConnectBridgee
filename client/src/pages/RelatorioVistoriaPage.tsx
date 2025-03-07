@@ -53,6 +53,7 @@ import {
   Camera,
   Check,
   Clipboard,
+  Database,
   Download,
   FileText,
   HardHat,
