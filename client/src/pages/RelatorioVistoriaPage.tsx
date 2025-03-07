@@ -13,7 +13,7 @@ import {
   novoRelatorioVistoria,
   gerarRelatorioAleatorio
 } from '@shared/relatorioVistoriaSchema';
-import { gerarRelatorioSimples } from '@/lib/relatorioVistoriaSimpleGenerator';
+import { gerarRelatorioSimples } from '@/lib/relatorioVistoriaSimpleGeneratorNew';
 import { RelatorioExportButton } from '@/components/relatorios/RelatorioExportButton';
 
 import { DashboardLayoutNew } from '@/layouts/DashboardLayoutNew';
@@ -1333,15 +1333,17 @@ conforme a legislação em vigor.`;
                             <FileText className="h-4 w-4 mr-2" /> Atualizar Preview
                           </Button>
                           <RelatorioExportButton 
-                            relatorio={form.getValues()}
-                            label="Exportar DOCX"
+                            relatorio={form.getValues()} // Obter dados atuais do formulário
+                            label="Exportar DOCX (Atual)"
                             loadingLabel="Gerando..."
                             className="sm:w-auto w-full"
                             fileNamePrefix={`relatorio-vistoria-${form.getValues().protocolo || 'novo'}`}
                             onExportSuccess={(fileName) => {
+                              console.log("Dados enviados para exportação:", form.getValues());
                               toast({
                                 title: 'Documento Word gerado com sucesso!',
                                 description: 'O relatório foi exportado no formato DOCX com formatação ABNT.',
+                                variant: 'default'
                               });
                             }}
                           />
