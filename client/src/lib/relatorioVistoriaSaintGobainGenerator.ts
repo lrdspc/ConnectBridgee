@@ -56,9 +56,9 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
   try {
     log("Iniciando geração do relatório com formatação exata Saint-Gobain...");
     
-    // Preparar textos do relatório (aplicar templates padronizados para textos fixos)
+    // Preparar textos do relatório conforme modelo preciso da Saint-Gobain
     const introducaoTexto = relatorio.introducao || 
-      `A Área de Assistência Técnica foi solicitada para atender uma reclamação relacionada à permeabilidade de telhas de fibrocimento. As telhas instaladas são do modelo BRASILIT FIBROCIMENTO ONDULADA de 6 mm e instaladas com elementos complementares CBP3 - Cumeeira Articulada e parafusos. Tudo feito conforme segue especificações técnicas e norma institucional ISO 9001, bem como as normas técnicas da ABNT: NBR 15210-1, NBR15210-2 e NBR-7581/03.`;
+      `A Área de Assistência Técnica foi solicitada para atender uma reclamação relacionada à permeabilidade de telhas de fibrocimento. As telhas instaladas são do modelo BRASILIT FIBROCIMENTO ONDULADA de 6 mm e instaladas com elementos complementares CBP3 - Cumeeira Articulada e parafusos. Tudo conforme especificações técnicas e norma institucional ISO 9001, bem como as normas técnicas da ABNT: NBR 15210-1, NBR15210-2 e NBR 7581-3.`;
     
     // Criar tabela de informações básicas
     const tabelaDadosBasicos = new Table({
@@ -546,17 +546,19 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
       ],
     });
 
-    // Tabela de Análise/Introdução
+    // Tabela de Análise/Introdução - Sem bordas na tabela conforme referência
     const tabelaIntroducao = new Table({
       width: {
         size: 100,
         type: WidthType.PERCENTAGE,
       },
       borders: {
-        top: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
-        bottom: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
-        left: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
-        right: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
+        top: { style: BorderStyle.NONE },
+        bottom: { style: BorderStyle.NONE },
+        left: { style: BorderStyle.NONE },
+        right: { style: BorderStyle.NONE },
+        insideHorizontal: { style: BorderStyle.NONE },
+        insideVertical: { style: BorderStyle.NONE },
       },
       rows: [
         // Cabeçalho da tabela
@@ -644,7 +646,7 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
               bold: true
             }),
             new TextRun({
-              text: "ERVA INDICAÇÃO DO FABRICANTE (CACHIMBO/CARANGEJO);",
+              text: "ERRO NA INDICAÇÃO DO FABRICANTE (CACHIMBO/CARANGUEJO);",
               size: 20
             })
           ]
@@ -676,17 +678,19 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
       );
     }
     
-    // Tabela da conclusão  
+    // Tabela da conclusão - Sem bordas conforme referência
     const tabelaConclusao = new Table({
       width: {
         size: 100,
         type: WidthType.PERCENTAGE,
       },
       borders: {
-        top: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
-        bottom: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
-        left: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
-        right: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
+        top: { style: BorderStyle.NONE },
+        bottom: { style: BorderStyle.NONE },
+        left: { style: BorderStyle.NONE },
+        right: { style: BorderStyle.NONE },
+        insideHorizontal: { style: BorderStyle.NONE },
+        insideVertical: { style: BorderStyle.NONE },
       },
       rows: [
         // Cabeçalho da tabela
@@ -750,7 +754,7 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
                 new Paragraph({
                   children: [
                     new TextRun({
-                      text: "As telhas BRASILIT modelo FIBROCIMENTO ONDULADA possuem dez anos de garantia com relação a problemas de fabricação. A garantia Brasil está condicionada à correta aplicação do produto, seguindo sempre as instruções de instalação contidas no Manual de Montagem das Telhas Onduladas. Este manual pode ser encontrado no site Brasilit. Este guia técnico está sempre disponível em: http://www.brasilit.com.br.",
+                      text: "As telhas BRASILIT modelo FIBROCIMENTO ONDULADA possuem dez anos de garantia com relação a problemas de fabricação. A garantia Brasilit está condicionada à correta aplicação do produto, seguindo sempre as instruções de instalação contidas no Manual de Montagem das Telhas Onduladas. Este manual pode ser encontrado no site Brasilit. Este guia técnico está sempre disponível em: http://www.brasilit.com.br.",
                       size: 20,
                     }),
                   ],
@@ -768,7 +772,7 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
                 new Paragraph({
                   children: [
                     new TextRun({
-                      text: "Desde já agradecemos o nos colocamos à disposição para esclarecer quaisquer esclarecimentos que se fizeram necessários.",
+                      text: "Desde já agradecemos e nos colocamos à disposição para quaisquer esclarecimentos que se fizerem necessários.",
                       size: 20,
                     }),
                   ],
