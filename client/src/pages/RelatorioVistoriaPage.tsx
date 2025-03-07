@@ -467,6 +467,7 @@ export default function RelatorioVistoriaPage() {
   useEffect(() => {
     // Definir o resultado como IMPROCEDENTE ao montar o componente
     form.setValue("resultado", "IMPROCEDENTE");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
