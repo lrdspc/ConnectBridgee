@@ -299,41 +299,17 @@ conforme a legislação em vigor.`;
             }
           },
           children: [
-            // Cabeçalho com logo e informações da empresa - simulado com texto centralizado
-            new Paragraph({
-              children: [
-                new TextRun({ 
-                  text: "SAINT-GOBAIN DO BRASIL",
-                  bold: true,
-                  size: 28 // 14pt
-                })
-              ],
-              alignment: AlignmentType.CENTER,
-              spacing: { after: 120 }
-            }),
-            new Paragraph({
-              children: [
-                new TextRun({ 
-                  text: "DIVISÃO PRODUTOS PARA CONSTRUÇÃO - BRASILIT",
-                  bold: true,
-                  size: 24 // 12pt
-                })
-              ],
-              alignment: AlignmentType.CENTER,
-              spacing: { after: 240 } // Linha em branco após o subtítulo
-            }),
-            
-            // Título principal com formatação mais formal
+            // Título principal centralizado com formatação exata como na imagem de referência
             new Paragraph({
               children: [
                 new TextRun({ 
                   text: "RELATÓRIO DE VISTORIA TÉCNICA",
                   bold: true,
-                  size: 32 // 16pt - Aumentado para destaque
+                  size: 28 // 14pt - Tamanho exato conforme referência
                 })
               ],
               alignment: AlignmentType.CENTER,
-              spacing: { after: 480 } // Duas linhas em branco após o título
+              spacing: { after: 360 } // Espaçamento após o título conforme referência
             }),
             
             // INFORMAÇÕES GERAIS (sem título numerado)
