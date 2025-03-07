@@ -21,7 +21,7 @@ import {
   DialogFooter,
   DialogClose
 } from "@/components/ui/dialog";
-import { X, Camera, Image as ImageIcon, Trash2, Save, CheckCircle2, FileDown, FilePlus } from "lucide-react";
+import { X, Camera, Image as ImageIcon, Trash2, Save, CheckCircle2, FileDown, FilePlus, FileText } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LoadingAnimation } from "@/components/ui/loading-animation";
@@ -1591,6 +1591,19 @@ const VistoriaFARPage = () => {
                     onClick={() => setActiveTab("problemas")}
                   >
                     <span className="mr-2">&larr;</span> Voltar: Problemas
+                  </Button>
+                  
+                  <div className="flex-1"></div>
+                  
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    className="w-full md:w-auto"
+                    onClick={gerarDocumento}
+                    disabled={isSubmitting}
+                  >
+                    <FileText className="mr-2 h-4 w-4" />
+                    Gerar Documento
                   </Button>
                   
                   <Button
