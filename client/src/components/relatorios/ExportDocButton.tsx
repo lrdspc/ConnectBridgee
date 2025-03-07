@@ -7,7 +7,7 @@ import { generateRelatorioVistoriaBrasil } from "@/lib/relatorioVistoriaBrasilGe
 import { gerarRelatorioVistoriaDoc as gerarRelatorioVistoriaDocOriginal } from "@/lib/relatorioVistoriaDocGenerator";
 import { gerarRelatorioVistoriaDoc as gerarRelatorioVistoriaDocSimples } from "@/lib/relatorioVistoriaDocGeneratorSimple";
 import { gerarRelatorioVistoriaHTML } from "@/lib/relatorioVistoriaFallbackGenerator";
-import { gerarRelatorioVistoriaAlternativo } from "@/lib/relatorioVistoriaAlternativeGenerator";
+import { gerarRelatorioVistoriaBasico } from "@/lib/relatorioVistoriaBasicGenerator";
 
 // Logs para debug - Habilitado para ajudar na diagnóstico de problemas
 const DEBUG = true;
@@ -78,14 +78,14 @@ export function ExportDocButton({
       
       // Tentar gerar o documento usando várias estratégias em sequência
       try {
-        // Estratégia 1: Gerador DOCX alternativo com formatação ABNT
-        log("▶️ TENTATIVA 1: Usando gerador alternativo otimizado (formatação ABNT)");
-        const blob = await gerarRelatorioVistoriaAlternativo(relatorioPreparado);
+        // Estratégia 1: Gerador DOCX básico com formatação ABNT
+        log("▶️ TENTATIVA 1: Usando gerador básico otimizado (formatação ABNT)");
+        const blob = await gerarRelatorioVistoriaBasico(relatorioPreparado);
         saveDocFile(blob, fileName);
         toast.success("Relatório ABNT exportado com sucesso!");
         return; // Sair da função após sucesso
-      } catch (alternativeError) {
-        console.error("❌ Erro na geração alternativa:", alternativeError);
+      } catch (basicError) {
+        console.error("❌ Erro na geração básica:", basicError);
         
         // Notificar o usuário do problema na primeira tentativa
         toast.warning("Tentando método alternativo...", {duration: 2000});

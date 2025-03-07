@@ -480,9 +480,9 @@ export default function RelatorioVistoriaPage() {
       
       // Tentar gerar usando várias estratégias em sequência
       try {
-        // Estratégia 1: Gerador DOCX alternativo com formatação ABNT (mais confiável)
-        console.log('▶️ TENTATIVA 1: Usando gerador alternativo otimizado (formatação ABNT)');
-        const blob = await gerarRelatorioVistoriaAlternativo(formData);
+        // Estratégia 1: Gerador DOCX Básico com formatação ABNT (mais confiável)
+        console.log('▶️ TENTATIVA 1: Usando gerador básico otimizado (formatação ABNT)');
+        const blob = await gerarRelatorioVistoriaBasico(formData);
         saveDocFile(blob, fileName);
         toast({
           title: 'Documento gerado com sucesso!',

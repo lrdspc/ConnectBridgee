@@ -24,6 +24,10 @@ function log(...args: any[]) {
   if (DEBUG) console.log("[MinimalGenerator]", ...args);
 }
 
+// Aliases para as classes principais (para compatibilidade com código existente)
+const Paragraph = DocxParagraph;
+const TextRun = DocxTextRun;
+
 // Interface estendida para compatibilidade
 interface ExtendedRelatorioVistoria extends RelatorioVistoria {
   [key: string]: any; // Para permitir propriedades adicionais
