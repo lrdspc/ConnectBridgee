@@ -55,17 +55,43 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
   const naoConformidadesParagrafos: Paragraph[] = [];
   
   // Garantir que temos o array completo de não conformidades
-  const naoConformidadesCompletas = (relatorio.naoConformidades || [])
-    .map(ncId => {
-      // Se já temos os detalhes completos, usar diretamente
-      if (typeof ncId === 'object' && ncId.titulo && ncId.descricao) {
-        return ncId;
+  let naoConformidadesProcessadas = [];
+  
+  log("Processando não conformidades:", relatorio.naoConformidades);
+  
+  // Verificar o tipo de dados recebido e processar adequadamente
+  if (Array.isArray(relatorio.naoConformidades)) {
+    if (relatorio.naoConformidades.length > 0) {
+      // Verificar se estamos recebendo objetos completos ou apenas IDs
+      if (typeof relatorio.naoConformidades[0] === 'object') {
+        // Caso 1: Array de objetos completos (de formulários)
+        naoConformidadesProcessadas = relatorio.naoConformidades
+          .filter((nc: any) => nc.selecionado) // Filtrar apenas as selecionadas
+          .map((nc: any) => {
+            // Se o objeto já tem título e descrição, usá-los
+            if (nc.titulo && nc.descricao) {
+              return nc;
+            }
+            // Caso contrário, buscar na lista de disponíveis pelo ID
+            const completa = naoConformidadesDisponiveis.find(n => n.id === nc.id);
+            return completa || null;
+          })
+          .filter(Boolean); // Remover nulos
+      } else {
+        // Caso 2: Array de IDs ou números (dos botões diretos)
+        naoConformidadesProcessadas = relatorio.naoConformidades
+          .map((id: any) => {
+            const ncId = typeof id === 'string' || typeof id === 'number' ? id : null;
+            if (ncId === null) return null;
+            return naoConformidadesDisponiveis.find(n => n.id === ncId || n.id === Number(ncId));
+          })
+          .filter(Boolean); // Remover nulos
       }
-      // Caso contrário, buscar na lista de disponíveis
-      const id = typeof ncId === 'string' ? ncId : ncId.id;
-      return naoConformidadesDisponiveis.find(n => n.id === id);
-    })
-    .filter((nc): nc is (typeof naoConformidadesDisponiveis)[0] => nc !== undefined);
+    }
+  }
+  
+  log("Não conformidades processadas:", naoConformidadesProcessadas);
+  const naoConformidadesCompletas = naoConformidadesProcessadas;
 
   // Gerar parágrafos para cada não conformidade
   naoConformidadesCompletas.forEach((nc, idx) => {
