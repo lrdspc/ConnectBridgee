@@ -45,17 +45,19 @@ export function ExportDocButton({
       
       // Tentar gerar o documento usando várias estratégias em sequência
       try {
-        // Estratégia 1: Gerador DOCX minimalista - versão simplificada e confiável
-        console.log("Tentando geração com o gerador minimalista");
+        // Estratégia 1: Gerador DOCX minimalista com formatação ABNT
+        log("Tentando geração com o gerador minimalista (formatação ABNT)");
         const blob = await gerarRelatorioVistoriaMinimal(relatorio);
         
         // Salvar o arquivo DOCX
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `Relatório-${relatorio.protocolo || 'Vistoria'}.docx`;
+        const fileName = `Relatório-${relatorio.protocolo || 'Vistoria'}.docx`;
+        link.download = fileName;
         document.body.appendChild(link);
         link.click();
+        log("Download iniciado para arquivo:", fileName);
         
         // Limpar recursos
         setTimeout(() => {

@@ -27,7 +27,7 @@ interface ExtendedRelatorioVistoria extends RelatorioVistoria {
  */
 export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorioVistoria): Promise<Blob> {
   try {
-    console.log('Usando gerador minimalista para DOCX');
+    console.log('Usando gerador minimalista para DOCX com formatação ABNT');
     
     // Preparar não conformidades
     let naoConformidadesParags: Paragraph[] = [];
@@ -104,11 +104,82 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
       anosGarantiaTotal: relatorio.anosGarantiaTotal
     });
     
-    // Criar um documento seguindo a estrutura da visualização HTML
+    // Criar um documento seguindo as normas ABNT e usar fonte Arial
     const doc = new Document({
+      // Configurações globais do documento de acordo com ABNT
+      styles: {
+        default: {
+          document: {
+            run: {
+              font: "Arial",
+              size: 24, // 12pt (24 half-points)
+              color: "000000"
+            },
+            paragraph: {
+              spacing: {
+                line: 360, // Espaçamento entre linhas (1.5 de acordo com ABNT)
+                after: 240 // Espaçamento após cada parágrafo (padrão ABNT)
+              },
+              alignment: AlignmentType.JUSTIFIED // Texto justificado (ABNT)
+            }
+          },
+          heading1: {
+            run: {
+              font: "Arial",
+              size: 28, // 14pt
+              bold: true,
+              color: "000000"
+            },
+            paragraph: {
+              spacing: {
+                before: 360,
+                after: 240
+              },
+              alignment: AlignmentType.CENTER
+            }
+          },
+          heading2: {
+            run: {
+              font: "Arial",
+              size: 26, // 13pt
+              bold: true,
+              color: "000000"
+            },
+            paragraph: {
+              spacing: {
+                before: 360,
+                after: 240
+              }
+            }
+          },
+          heading3: {
+            run: {
+              font: "Arial",
+              size: 24, // 12pt
+              bold: true,
+              color: "000000"
+            },
+            paragraph: {
+              spacing: {
+                before: 360,
+                after: 240
+              }
+            }
+          }
+        }
+      },
       sections: [
         {
-          properties: {},
+          properties: {
+            page: {
+              margin: {
+                top: 1133, // 2cm - convertido para TWIPs (567 TWIPs = 1cm)
+                right: 850, // 1.5cm
+                bottom: 1133, // 2cm
+                left: 1700 // 3cm (norma ABNT para borda da esquerda)
+              }
+            }
+          },
           children: [
             // Título principal
             new Paragraph({
