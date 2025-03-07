@@ -1,72 +1,43 @@
-
 import React, { useState } from 'react';
-import { Button } from "@/components/ui/button"
-import { FileText } from "lucide-react"
-import { RelatorioVistoria } from 'shared/relatorioVistoriaSchema';
-import { GerarRelatorioVistoriaModal } from './GerarRelatorioVistoriaModal';
-import { useToast } from "@/components/ui/use-toast";
+import { Button } from '@/components/ui/button';
+import { FilePenLine } from 'lucide-react';
+import GerarRelatorioVistoriaModal from './GerarRelatorioVistoriaModal';
+import { novoRelatorioVistoria, RelatorioVistoria } from '../../../shared/relatorioVistoriaSchema';
 
 interface GerarRelatorioVistoriaButtonProps {
-  relatorio: RelatorioVistoria;
-  disabled?: boolean;
+  variant?: "default" | "outline" | "ghost" | "link" | "destructive" | "secondary";
+  relatorio?: RelatorioVistoria;
 }
 
-export function GerarRelatorioVistoriaButton({
-  relatorio,
-  disabled = false
-}: GerarRelatorioVistoriaButtonProps) {
+const GerarRelatorioVistoriaButton: React.FC<GerarRelatorioVistoriaButtonProps> = ({ 
+  variant = "default",
+  relatorio: relatorioInicial 
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { toast } = useToast();
+  const [relatorio, setRelatorio] = useState<RelatorioVistoria | undefined>(relatorioInicial);
 
   const handleOpenModal = () => {
-    // Verificações básicas antes de abrir o modal
-    if (!relatorio.cliente) {
-      toast({
-        title: "Dados incompletos",
-        description: "Por favor, informe o nome do cliente antes de gerar o relatório.",
-        variant: "destructive",
-      });
-      return;
+    // Se não houver um relatório inicial, criar um novo
+    if (!relatorio) {
+      setRelatorio(novoRelatorioVistoria());
     }
-
-    if (!relatorio.dataVistoria) {
-      toast({
-        title: "Dados incompletos",
-        description: "Por favor, informe a data da vistoria antes de gerar o relatório.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (relatorio.naoConformidades.filter(nc => nc.selecionado).length === 0) {
-      toast({
-        title: "Nenhuma não conformidade selecionada",
-        description: "Selecione pelo menos uma não conformidade ou confirme que não há não conformidades.",
-        variant: "warning",
-      });
-      // Permitimos continuar mesmo sem não conformidades
-    }
-
     setIsModalOpen(true);
   };
 
   return (
     <>
-      <Button 
-        variant="default" 
-        className="flex items-center gap-2"
-        onClick={handleOpenModal}
-        disabled={disabled}
-      >
-        <FileText className="h-4 w-4" />
-        Gerar Relatório
+      <Button variant={variant} onClick={handleOpenModal}>
+        <FilePenLine className="mr-2 h-4 w-4" />
+        Gerar Relatório de Vistoria
       </Button>
 
-      <GerarRelatorioVistoriaModal 
-        relatorio={relatorio}
+      <GerarRelatorioVistoriaModal
         isOpen={isModalOpen}
-        onOpenChange={setIsModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        relatorio={relatorio}
       />
     </>
   );
-}
+};
+
+export default GerarRelatorioVistoriaButton;

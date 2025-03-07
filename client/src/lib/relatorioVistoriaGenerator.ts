@@ -1,861 +1,241 @@
+import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, TabStopPosition, TabStopType, BorderStyle } from "docx";
+import { saveAs } from "file-saver";
+import { RelatorioVistoria } from "../../shared/relatorioVistoriaSchema";
+import { naoConformidadesDisponiveis } from "../../shared/relatorioVistoriaSchema";
 
-import {
-  Document,
-  Paragraph,
-  TextRun,
-  Table,
-  TableRow,
-  TableCell,
-  BorderStyle,
-  WidthType,
-  AlignmentType,
-  HeadingLevel,
-  PageNumber,
-  Header,
-  Footer,
-  ImageRun,
-  TabStopPosition,
-  TabStopType,
-  HorizontalPositionAlign,
-  SectionType,
-  PageOrientation,
-  convertInchesToTwip
-} from "docx";
-
-import { RelatorioVistoria } from "shared/relatorioVistoriaSchema";
-import { naoConformidadesDisponiveis } from "shared/relatorioVistoriaSchema";
-
-// Constantes para formatação
-const SPACING = {
-  after: 200,
-  before: 200
-};
-
-const BORDER = {
-  style: BorderStyle.SINGLE,
-  size: 1,
-  color: "000000"
-};
-
-// Função principal para gerar o documento
-export async function gerarRelatorioVistoria(relatorio: RelatorioVistoria): Promise<Blob> {
+export async function generateRelatorioVistoriaPDF(relatorio: RelatorioVistoria): Promise<void> {
   // Criar documento
   const doc = new Document({
     sections: [
       {
-        properties: {
-          page: {
-            margin: {
-              top: 1000,
-              right: 1000,
-              bottom: 1000,
-              left: 1000
-            }
-          }
-        },
-        headers: {
-          default: new Header({
-            children: [
-              new Paragraph({
-                alignment: AlignmentType.RIGHT,
-                children: [
-                  new ImageRun({
-                    data: await fetch('/brasilit-logo.png').then(res => res.arrayBuffer()),
-                    transformation: {
-                      width: 120,
-                      height: 40
-                    }
-                  })
-                ]
-              })
-            ]
-          })
-        },
-        footers: {
-          default: new Footer({
-            children: [
-              new Paragraph({
-                alignment: AlignmentType.CENTER,
-                children: [
-                  new TextRun({
-                    text: "Página ",
-                    size: 18
-                  }),
-                  new TextRun({
-                    children: [PageNumber.CURRENT],
-                    size: 18
-                  }),
-                  new TextRun({
-                    text: " de ",
-                    size: 18
-                  }),
-                  new TextRun({
-                    children: [PageNumber.TOTAL_PAGES],
-                    size: 18
-                  })
-                ]
-              })
-            ]
-          })
-        },
+        properties: {},
         children: [
-          // Título principal
+          // Título
           new Paragraph({
+            text: "RELATÓRIO DE VISTORIA TÉCNICA",
+            heading: HeadingLevel.HEADING_1,
             alignment: AlignmentType.CENTER,
-            spacing: { after: 300 },
-            children: [
-              new TextRun({
-                text: "RELATÓRIO DE VISTORIA TÉCNICA",
-                bold: true,
-                size: 32
-              })
-            ]
+            spacing: { after: 200, before: 200 },
+            bold: true
           }),
-          
-          // Linha horizontal
+
+          // Informações Gerais - Título
           new Paragraph({
-            children: [
-              new TextRun({
-                text: "                                                                                                           ",
-                border: {
-                  bottom: {
-                    color: "000000",
-                    space: 1,
-                    style: BorderStyle.SINGLE,
-                    size: 6,
-                  }
-                }
-              })
-            ],
-            spacing: { after: 300 }
+            text: "Informações Gerais",
+            heading: HeadingLevel.HEADING_2,
+            spacing: { after: 200 }
           }),
-          
-          // Tabela de Identificação do Projeto
-          createInfoTable("IDENTIFICAÇÃO DO PROJETO", [
-            { label: "Protocolo/FAR:", value: relatorio.protocolo || "[PROTOCOLO]" },
-            { label: "Data de vistoria:", value: relatorio.dataVistoria || "[DATA_VISTORIA]" },
-            { label: "Cliente:", value: relatorio.cliente || "[NOME_CLIENTE]" },
-            { label: "Empreendimento:", value: relatorio.empreendimento || "[TIPO_EMPREENDIMENTO]" },
-            { label: "Endereço:", value: relatorio.endereco || "[ENDERECO]" },
-            { label: "Cidade/UF:", value: `${relatorio.cidade || "[CIDADE]"} - ${relatorio.uf || "[UF]"}` },
-            { label: "Assunto:", value: relatorio.assunto || "[ASSUNTO]" }
-          ]),
-          
-          // Espaçamento entre tabelas
+
+          // Informações Gerais - Itens
+          createBulletItem(`Data de vistoria: ${relatorio.dataVistoria || "[Data da Vistoria]"}`),
+          createBulletItem(`Cliente: ${relatorio.cliente || "[Nome do Cliente]"}`),
+          createBulletItem(`Empreendimento: ${relatorio.empreendimento || "[Nome do Empreendimento]"}`),
+          createBulletItem(`Cidade: ${relatorio.cidade || "[Cidade]"}`),
+          createBulletItem(`Endereço: ${relatorio.endereco || "[Endereço]"}`),
+          createBulletItem(`FAR/Protocolo: ${relatorio.protocolo || "[Número do Protocolo]"}`),
+          createBulletItem(`Assunto: ${relatorio.assunto || "[Assunto]"}`),
+          createBulletItem(`Elaborado por: ${relatorio.elaboradoPor || "[Nome do Técnico]"}`),
+          createBulletItem(`Departamento: ${relatorio.departamento || "[Nome do Departamento]"}`),
+          createBulletItem(`Unidade: ${relatorio.unidade || "[Unidade]"}`),
+          createBulletItem(`Coordenador Responsável: ${relatorio.coordenador || "[Nome do Coordenador]"}`),
+          createBulletItem(`Gerente Responsável: ${relatorio.gerente || "[Nome do Gerente]"}`),
+          createBulletItem(`Regional: ${relatorio.regional || "[Nome da Regional]"}`),
+
+          // Introdução - Título
           new Paragraph({
+            text: "Introdução",
+            heading: HeadingLevel.HEADING_2,
+            spacing: { before: 400, after: 200 }
+          }),
+
+          // Introdução - Texto
+          new Paragraph({
+            text: `A Área de Assistência Técnica foi solicitada para atender uma reclamação relacionada ao surgimento de infiltrações nas telhas de fibrocimento: - Telha da marca BRASILIT modelo ONDULADA de ${relatorio.espessura || "5"}mm, produzidas com tecnologia CRFS - Cimento Reforçado com Fios Sintéticos - 100% sem amianto - cuja fabricação segue a norma internacional ISO 9933, bem como as normas técnicas da ABNT: NBR-15210-1, NBR-15210-2 e NBR-15210-3.`,
+            spacing: { after: 200 }
+          }),
+
+          new Paragraph({
+            text: `Em atenção a vossa solicitação, analisamos as evidências encontradas, para avaliar as manifestações patológicas reclamadas em telhas de nossa marca aplicada em sua cobertura conforme registro de reclamação protocolo FAR ${relatorio.protocolo || "[Número do Protocolo]"}.`,
+            spacing: { after: 200 }
+          }),
+
+          new Paragraph({
+            text: `O modelo de telha escolhido para a edificação foi: ${relatorio.modeloTelha || "Ondulada"} de ${relatorio.espessura || "6"}mm. Esse modelo, como os demais, possui a necessidade de seguir rigorosamente as orientações técnicas contidas no Guia Técnico de Telhas de Fibrocimento e Acessórios para Telhado — Brasilit para o melhor desempenho do produto, assim como a garantia do produto coberta por ${relatorio.anosGarantia || "5"} anos (ou ${relatorio.anosGarantiaSistemaCompleto || "dez"} anos para sistema completo).`,
+            spacing: { after: 200 }
+          }),
+
+          // Quantidade e modelo
+          createBulletItem("Quantidade e modelo:"),
+          createBulletItem(`${relatorio.quantidade || "[Número]"}: ${relatorio.modeloTelha || "Ondulada"} ${relatorio.espessura || "6"}mm CRFS.`, 1),
+          createBulletItem(`Área coberta: ${relatorio.area || "[Área]"}m² aproximadamente.`, 1),
+
+          // Análise Técnica - Título
+          new Paragraph({
+            text: "Análise Técnica",
+            heading: HeadingLevel.HEADING_2,
+            spacing: { before: 400, after: 200 }
+          }),
+
+          // Análise Técnica - Texto inicial
+          new Paragraph({
+            text: "Durante a visita técnica realizada no local, nossa equipe conduziu uma vistoria minuciosa da cobertura, documentando e analisando as condições de instalação e o estado atual das telhas. Após criteriosa avaliação das evidências coletadas em campo, identificamos alguns desvios nos procedimentos de manuseio e instalação em relação às especificações técnicas do fabricante, os quais são detalhados a seguir:",
+            spacing: { after: 200 }
+          }),
+
+          // Não conformidades detalhadas
+          ...generateNonConformitiesDetails(relatorio),
+
+          // Conclusão - Título
+          new Paragraph({
+            text: "Conclusão",
+            heading: HeadingLevel.HEADING_2,
+            spacing: { before: 400, after: 200 }
+          }),
+
+          // Conclusão - Texto
+          new Paragraph({
+            text: "Com base na análise técnica realizada, foram identificadas as seguintes não conformidades:",
+            spacing: { after: 200 }
+          }),
+
+          // Lista de não conformidades na conclusão
+          ...generateNonConformitiesList(relatorio),
+
+          new Paragraph({
+            text: `Em função das não conformidades constatadas no manuseio e instalação das chapas Brasilit, finalizamos o atendimento considerando a reclamação como ${relatorio.resultado === "PROCEDENTE" ? "PROCEDENTE" : "IMPROCEDENTE"}, onde os problemas reclamados se dão pelo incorreto manuseio e instalação das telhas e não a problemas relacionados à qualidade do material.`,
             spacing: { before: 200, after: 200 }
           }),
-          
-          // Tabela de Responsáveis Técnicos
-          createInfoTable("RESPONSÁVEIS TÉCNICOS", [
-            { label: "Elaborado por:", value: relatorio.elaboradoPor || "[NOME_TECNICO]" },
-            { label: "Departamento:", value: relatorio.departamento || "[DEPARTAMENTO]" },
-            { label: "Unidade:", value: relatorio.unidade || "[UNIDADE]" },
-            { label: "Coordenador:", value: relatorio.coordenador || "[NOME_COORDENADOR]" },
-            { label: "Gerente:", value: relatorio.gerente || "[NOME_GERENTE]" },
-            { label: "Regional:", value: relatorio.regional || "[REGIONAL]" }
-          ]),
-          
-          // Seção de Introdução
-          ...gerarSecaoIntroducao(relatorio),
-          
-          // Seção de Análise Técnica
-          ...gerarSecaoAnaliseTecnica(relatorio),
-          
-          // Seção de Conclusão
-          ...gerarSecaoConclusao(relatorio),
-          
+
+          new Paragraph({
+            text: `As telhas BRASILIT modelo FIBROCIMENTO ONDULADA possuem ${relatorio.anosGarantiaTotal || "dez"} anos de garantia com relação a problemas de fabricação. A garantia Brasilit está condicionada a correta aplicação do produto, seguindo rigorosamente as instruções de instalação contidas no Guia Técnico de Telhas de Fibrocimento e Acessórios para Telhado — Brasilit. Este guia técnico está sempre disponível em: [URL].`,
+            spacing: { after: 200 }
+          }),
+
+          new Paragraph({
+            text: "Ratificamos que os produtos Brasilit atendem as Normas da Associação Brasileira de Normas Técnicas — ABNT, específicas para cada linha de produto, e cumprimos as exigências legais de garantia de produtos conforme a legislação em vigor.",
+            spacing: { after: 200 }
+          }),
+
+          new Paragraph({
+            text: "Desde já, agradecemos e nos colocamos à disposição para quaisquer esclarecimentos que se fizerem necessário.",
+            spacing: { after: 400 }
+          }),
+
           // Assinatura
-          ...gerarSecaoAssinatura(relatorio)
-        ]
-      }
-    ]
-  });
+          new Paragraph({
+            text: "Atenciosamente,",
+            spacing: { after: 200 }
+          }),
 
-  // Retornar o documento como Blob
-  return await Packer.toBlob(doc);
-}
+          new Paragraph({
+            text: "Saint-Gobain do Brasil Prod. Ind. e para Cons. Civil Ltda.",
+            spacing: { after: 100 }
+          }),
 
-// Função para criar tabelas de informações
-function createInfoTable(title: string, rows: { label: string; value: string }[]): Table {
-  const tableRows = rows.map(row => 
-    new TableRow({
-      children: [
-        new TableCell({
-          width: {
-            size: 30,
-            type: WidthType.PERCENTAGE
-          },
-          children: [
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: row.label,
-                  bold: true,
-                  size: 24
-                })
-              ]
-            })
-          ],
-          borders: {
-            top: BORDER,
-            bottom: BORDER,
-            left: BORDER,
-            right: BORDER
-          }
-        }),
-        new TableCell({
-          width: {
-            size: 70,
-            type: WidthType.PERCENTAGE
-          },
-          children: [
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: row.value,
-                  size: 24
-                })
-              ]
-            })
-          ],
-          borders: {
-            top: BORDER,
-            bottom: BORDER,
-            left: BORDER,
-            right: BORDER
-          }
-        })
-      ]
-    })
-  );
+          new Paragraph({
+            text: "Divisão Produtos Para Construção",
+            spacing: { after: 100 }
+          }),
 
-  return new Table({
-    width: {
-      size: 100,
-      type: WidthType.PERCENTAGE
-    },
-    rows: [
-      new TableRow({
-        tableHeader: true,
-        children: [
-          new TableCell({
-            columnSpan: 2,
-            children: [
-              new Paragraph({
-                alignment: AlignmentType.CENTER,
-                children: [
-                  new TextRun({
-                    text: title,
-                    bold: true,
-                    size: 24
-                  })
-                ]
-              })
-            ],
-            borders: {
-              top: BORDER,
-              bottom: BORDER,
-              left: BORDER,
-              right: BORDER
-            }
-          })
-        ]
-      }),
-      ...tableRows
-    ]
-  });
-}
-
-// Função para gerar a seção de introdução
-function gerarSecaoIntroducao(relatorio: RelatorioVistoria): Paragraph[] {
-  const paragrafos: Paragraph[] = [];
-  
-  // Título da seção
-  paragrafos.push(
-    new Paragraph({
-      heading: HeadingLevel.HEADING_1,
-      spacing: { before: 400, after: 200 },
-      children: [
-        new TextRun({
-          text: "1. INTRODUÇÃO",
-          bold: true,
-          size: 28
-        })
-      ]
-    })
-  );
-  
-  // Conteúdo da introdução
-  const textoIntroducao = relatorio.introducao || 
-    `A Área de Assistência Técnica foi solicitada para atender uma reclamação relacionada ao surgimento de infiltrações nas telhas de fibrocimento: - Telha da marca BRASILIT modelo ${relatorio.modeloTelha} de ${relatorio.espessura}mm, produzidas com tecnologia CRFS - Cimento Reforçado com Fios Sintéticos - 100% sem amianto - cuja fabricação segue a norma internacional ISO 9933, bem como as normas técnicas da ABNT: NBR-15210-1, NBR-15210-2 e NBR-15210-3.
-
-Em atenção a vossa solicitação, analisamos as evidências encontradas, para avaliar as manifestações patológicas reclamadas em telhas de nossa marca aplicada em sua cobertura conforme registro de reclamação protocolo FAR ${relatorio.protocolo}.
-
-O modelo de telha escolhido para a edificação foi: ${relatorio.modeloTelha} de ${relatorio.espessura}mm. Esse modelo, como os demais, possui a necessidade de seguir rigorosamente as orientações técnicas contidas no Guia Técnico de Telhas de Fibrocimento e Acessórios para Telhado — Brasilit para o melhor desempenho do produto, assim como a garantia do produto coberta por ${relatorio.anosGarantia} anos (ou ${relatorio.anosGarantiaSistemaCompleto} anos para sistema completo).`;
-
-  // Adicionar os parágrafos da introdução
-  textoIntroducao.split('\n\n').forEach(paragrafo => {
-    paragrafos.push(
-      new Paragraph({
-        spacing: SPACING,
-        children: [
-          new TextRun({
-            text: paragrafo,
-            size: 24
-          })
-        ]
-      })
-    );
-  });
-  
-  // Subseção: Dados do Produto
-  paragrafos.push(
-    new Paragraph({
-      heading: HeadingLevel.HEADING_2,
-      spacing: { before: 300, after: 200 },
-      children: [
-        new TextRun({
-          text: "1.1 DADOS DO PRODUTO",
-          bold: true,
-          size: 26
-        })
-      ]
-    })
-  );
-  
-  // Tabela com dados do produto
-  paragrafos.push(
-    new Table({
-      width: {
-        size: 100,
-        type: WidthType.PERCENTAGE
+          new Paragraph({
+            text: "Departamento de Assistência Técnica",
+            spacing: { after: 100 }
+          }),
+        ],
       },
-      rows: [
-        new TableRow({
-          tableHeader: true,
-          children: [
-            new TableCell({
-              width: { size: 30, type: WidthType.PERCENTAGE },
-              children: [
-                new Paragraph({
-                  alignment: AlignmentType.CENTER,
-                  children: [
-                    new TextRun({
-                      text: "Especificação",
-                      bold: true,
-                      size: 24
-                    })
-                  ]
-                })
-              ],
-              borders: {
-                top: BORDER,
-                bottom: BORDER,
-                left: BORDER,
-                right: BORDER
-              }
-            }),
-            new TableCell({
-              width: { size: 70, type: WidthType.PERCENTAGE },
-              children: [
-                new Paragraph({
-                  alignment: AlignmentType.CENTER,
-                  children: [
-                    new TextRun({
-                      text: "Detalhe",
-                      bold: true,
-                      size: 24
-                    })
-                  ]
-                })
-              ],
-              borders: {
-                top: BORDER,
-                bottom: BORDER,
-                left: BORDER,
-                right: BORDER
-              }
-            })
-          ]
-        }),
-        new TableRow({
-          children: [
-            new TableCell({
-              children: [
-                new Paragraph({
-                  children: [
-                    new TextRun({
-                      text: "Quantidade:",
-                      bold: true,
-                      size: 24
-                    })
-                  ]
-                })
-              ],
-              borders: {
-                top: BORDER,
-                bottom: BORDER,
-                left: BORDER,
-                right: BORDER
-              }
-            }),
-            new TableCell({
-              children: [
-                new Paragraph({
-                  children: [
-                    new TextRun({
-                      text: `${relatorio.quantidade}`,
-                      size: 24
-                    })
-                  ]
-                })
-              ],
-              borders: {
-                top: BORDER,
-                bottom: BORDER,
-                left: BORDER,
-                right: BORDER
-              }
-            })
-          ]
-        }),
-        new TableRow({
-          children: [
-            new TableCell({
-              children: [
-                new Paragraph({
-                  children: [
-                    new TextRun({
-                      text: "Modelo:",
-                      bold: true,
-                      size: 24
-                    })
-                  ]
-                })
-              ],
-              borders: {
-                top: BORDER,
-                bottom: BORDER,
-                left: BORDER,
-                right: BORDER
-              }
-            }),
-            new TableCell({
-              children: [
-                new Paragraph({
-                  children: [
-                    new TextRun({
-                      text: `${relatorio.modeloTelha} ${relatorio.espessura}mm CRFS`,
-                      size: 24
-                    })
-                  ]
-                })
-              ],
-              borders: {
-                top: BORDER,
-                bottom: BORDER,
-                left: BORDER,
-                right: BORDER
-              }
-            })
-          ]
-        }),
-        new TableRow({
-          children: [
-            new TableCell({
-              children: [
-                new Paragraph({
-                  children: [
-                    new TextRun({
-                      text: "Área coberta:",
-                      bold: true,
-                      size: 24
-                    })
-                  ]
-                })
-              ],
-              borders: {
-                top: BORDER,
-                bottom: BORDER,
-                left: BORDER,
-                right: BORDER
-              }
-            }),
-            new TableCell({
-              children: [
-                new Paragraph({
-                  children: [
-                    new TextRun({
-                      text: `${relatorio.area}m² (aproximadamente)`,
-                      size: 24
-                    })
-                  ]
-                })
-              ],
-              borders: {
-                top: BORDER,
-                bottom: BORDER,
-                left: BORDER,
-                right: BORDER
-              }
-            })
-          ]
-        })
-      ]
-    })
-  );
-  
-  // Texto adicional após a tabela
-  paragrafos.push(
-    new Paragraph({
-      spacing: { before: 200, after: 200 },
-      children: [
-        new TextRun({
-          text: "A análise do caso segue os requisitos presentes na norma ABNT NBR 7196: Telhas de fibrocimento sem amianto — Execução de coberturas e fechamentos laterais —Procedimento e Guia Técnico de Telhas de Fibrocimento e Acessórios para Telhado — Brasilit.",
-          size: 24
-        })
-      ]
-    })
-  );
-  
-  return paragrafos;
+    ],
+  });
+
+  // Gerar o blob e salvar o arquivo
+  Packer.toBlob(doc).then((blob) => {
+    saveAs(blob, `Relatorio_Vistoria_${relatorio.protocolo || "FAR"}.docx`);
+  });
 }
 
-// Função para gerar a seção de análise técnica
-function gerarSecaoAnaliseTecnica(relatorio: RelatorioVistoria): Paragraph[] {
-  const paragrafos: Paragraph[] = [];
-  
-  // Título da seção
-  paragrafos.push(
-    new Paragraph({
-      heading: HeadingLevel.HEADING_1,
-      spacing: { before: 400, after: 200 },
-      children: [
-        new TextRun({
-          text: "2. ANÁLISE TÉCNICA",
-          bold: true,
-          size: 28
-        })
-      ]
-    })
-  );
-  
-  // Conteúdo da análise técnica
-  const textoAnalise = relatorio.analiseTecnica || 
-    "Durante a visita técnica realizada no local, nossa equipe conduziu uma vistoria minuciosa da cobertura, documentando e analisando as condições de instalação e o estado atual das telhas. Após criteriosa avaliação das evidências coletadas em campo, identificamos os seguintes desvios nos procedimentos de manuseio e instalação em relação às especificações técnicas do fabricante:";
-  
-  // Adicionar os parágrafos da análise
-  textoAnalise.split('\n\n').forEach(paragrafo => {
-    paragrafos.push(
-      new Paragraph({
-        spacing: SPACING,
-        children: [
-          new TextRun({
-            text: paragrafo,
-            size: 24
-          })
-        ]
-      })
-    );
+// Função auxiliar para criar itens com bullet points
+function createBulletItem(text: string, level: number = 0): Paragraph {
+  return new Paragraph({
+    text: text,
+    bullet: { level },
+    indent: level > 0 ? { left: 720 * (level + 1) } : undefined,
+    spacing: { after: 100 }
   });
-  
-  // Subseção: Não Conformidades
-  paragrafos.push(
-    new Paragraph({
-      heading: HeadingLevel.HEADING_2,
-      spacing: { before: 300, after: 200 },
-      children: [
-        new TextRun({
-          text: "2.1 NÃO CONFORMIDADES IDENTIFICADAS",
-          bold: true,
-          size: 26
-        })
-      ]
-    })
-  );
-  
-  // Listar não conformidades
-  const naoConformidadesSelecionadas = relatorio.naoConformidades.filter(nc => nc.selecionado);
-  
-  if (naoConformidadesSelecionadas.length > 0) {
-    naoConformidadesSelecionadas.forEach((nc, index) => {
+}
+
+// Função para gerar os detalhes completos das não conformidades selecionadas
+function generateNonConformitiesDetails(relatorio: RelatorioVistoria): Paragraph[] {
+  const paragraphs: Paragraph[] = [];
+  const naosConformidadesSelecionadas = relatorio.naoConformidades.filter(nc => nc.selecionado);
+
+  // Gerar texto completo de cada não conformidade
+  naosConformidadesSelecionadas.forEach((nc, index) => {
+    const ncDetalhada = naoConformidadesDisponiveis.find(item => item.id === nc.id);
+
+    if (ncDetalhada) {
       // Título da não conformidade
-      paragrafos.push(
+      paragraphs.push(
         new Paragraph({
+          text: `${index + 1}. ${ncDetalhada.titulo}`,
           spacing: { before: 200, after: 100 },
-          children: [
-            new TextRun({
-              text: `${index + 1}. ${nc.titulo}`,
-              bold: true,
-              size: 24
-            })
-          ]
+          bold: true
         })
       );
-      
-      // Descrição da não conformidade
-      const descricao = nc.descricao || naoConformidadesDisponiveis.find(item => item.id === nc.id)?.descricao || "";
-      
-      paragrafos.push(
+
+      // Conteúdo completo das não conformidades
+      const descricaoCompleta = getFullNonConformityDescription(ncDetalhada.id);
+
+      paragraphs.push(
         new Paragraph({
-          spacing: { before: 100, after: 200 },
-          indent: {
-            left: convertInchesToTwip(0.25)
-          },
-          children: [
-            new TextRun({
-              text: descricao,
-              size: 24
-            })
-          ]
+          text: descricaoCompleta,
+          spacing: { after: 200 }
         })
       );
-    });
-  } else {
-    paragrafos.push(
-      new Paragraph({
-        spacing: SPACING,
-        children: [
-          new TextRun({
-            text: "Não foram identificadas não conformidades durante a vistoria técnica.",
-            size: 24
-          })
-        ]
-      })
-    );
-  }
-  
-  // Adicionar imagens das fotos se existirem
-  if (relatorio.fotos && relatorio.fotos.length > 0) {
-    paragrafos.push(
-      new Paragraph({
-        heading: HeadingLevel.HEADING_2,
-        spacing: { before: 300, after: 200 },
-        children: [
-          new TextRun({
-            text: "2.2 REGISTRO FOTOGRÁFICO",
-            bold: true,
-            size: 26
-          })
-        ]
-      })
-    );
-    
-    // Esta parte será implementada se necessário para incluir as fotos no documento
-    // Para simplicidade, não estamos incluindo o código para processar imagens
-    // pois isso exigiria manipulação complexa de imagens no cliente
-  }
-  
-  return paragrafos;
-}
-
-// Função para gerar a seção de conclusão
-function gerarSecaoConclusao(relatorio: RelatorioVistoria): Paragraph[] {
-  const paragrafos: Paragraph[] = [];
-  
-  // Título da seção
-  paragrafos.push(
-    new Paragraph({
-      heading: HeadingLevel.HEADING_1,
-      spacing: { before: 400, after: 200 },
-      children: [
-        new TextRun({
-          text: "3. CONCLUSÃO",
-          bold: true,
-          size: 28
-        })
-      ]
-    })
-  );
-  
-  // Texto introdutório da conclusão
-  paragrafos.push(
-    new Paragraph({
-      spacing: SPACING,
-      children: [
-        new TextRun({
-          text: "Com base na análise técnica realizada, foram identificadas as seguintes não conformidades:",
-          size: 24
-        })
-      ]
-    })
-  );
-  
-  // Lista de não conformidades na conclusão
-  const naoConformidadesSelecionadas = relatorio.naoConformidades.filter(nc => nc.selecionado);
-  
-  if (naoConformidadesSelecionadas.length > 0) {
-    // Criar lista de marcadores com não conformidades
-    naoConformidadesSelecionadas.forEach((nc, index) => {
-      paragrafos.push(
-        new Paragraph({
-          spacing: { before: 100, after: 100 },
-          bullet: {
-            level: 0
-          },
-          children: [
-            new TextRun({
-              text: nc.titulo,
-              size: 24
-            })
-          ]
-        })
-      );
-    });
-  } else {
-    paragrafos.push(
-      new Paragraph({
-        spacing: SPACING,
-        children: [
-          new TextRun({
-            text: "Não foram identificadas não conformidades durante a vistoria técnica.",
-            size: 24
-          })
-        ]
-      })
-    );
-  }
-  
-  // Texto da conclusão
-  const textoConclusao = relatorio.conclusao || 
-    `Em função das não conformidades constatadas no manuseio e instalação das chapas Brasilit, finalizamos o atendimento considerando a reclamação como ${relatorio.resultado}, onde os problemas reclamados se dão pelo incorreto manuseio e instalação das telhas e não a problemas relacionados à qualidade do material.
-    
-As telhas BRASILIT modelo FIBROCIMENTO ${relatorio.modeloTelha.toUpperCase()} possuem ${relatorio.anosGarantiaTotal} anos de garantia com relação a problemas de fabricação. A garantia Brasilit está condicionada a correta aplicação do produto, seguindo rigorosamente as instruções de instalação contidas no Guia Técnico de Telhas de Fibrocimento e Acessórios para Telhado — Brasilit. Este guia técnico está sempre disponível em: http://www.brasilit.com.br.
-
-Ratificamos que os produtos Brasilit atendem as Normas da Associação Brasileira de Normas Técnicas — ABNT, específicas para cada linha de produto, e cumprimos as exigências legais de garantia de produtos conforme a legislação em vigor.
-
-Desde já, agradecemos e nos colocamos à disposição para quaisquer esclarecimentos que se fizerem necessário.`;
-  
-  // Adicionar os parágrafos da conclusão
-  textoConclusao.split('\n\n').forEach(paragrafo => {
-    paragrafos.push(
-      new Paragraph({
-        spacing: SPACING,
-        children: [
-          new TextRun({
-            text: paragrafo.trim(),
-            size: 24
-          })
-        ]
-      })
-    );
+    }
   });
-  
-  return paragrafos;
+
+  return paragraphs;
 }
 
-// Função para gerar a seção de assinatura
-function gerarSecaoAssinatura(relatorio: RelatorioVistoria): Paragraph[] {
-  const paragrafos: Paragraph[] = [];
-  
-  // Linha de "Atenciosamente"
-  paragrafos.push(
-    new Paragraph({
-      spacing: { before: 400, after: 200 },
-      children: [
-        new TextRun({
-          text: "Atenciosamente,",
-          size: 24
+// Função para gerar a lista numerada das não conformidades na conclusão
+function generateNonConformitiesList(relatorio: RelatorioVistoria): Paragraph[] {
+  const paragraphs: Paragraph[] = [];
+  const naosConformidadesSelecionadas = relatorio.naoConformidades.filter(nc => nc.selecionado);
+
+  naosConformidadesSelecionadas.forEach((nc, index) => {
+    const ncCompleta = naoConformidadesDisponiveis.find(item => item.id === nc.id);
+
+    if (ncCompleta) {
+      paragraphs.push(
+        new Paragraph({
+          text: `${index + 1}. ${ncCompleta.titulo}`,
+          spacing: { after: 100 },
+          bullet: { level: 0 }
         })
-      ]
-    })
-  );
-  
-  // Linha horizontal para assinatura
-  paragrafos.push(
-    new Paragraph({
-      spacing: { before: 800, after: 200 },
-      children: [
-        new TextRun({
-          text: "___________________________________________",
-          size: 24
-        })
-      ],
-      alignment: AlignmentType.CENTER
-    })
-  );
-  
-  // Nome do técnico e informações
-  paragrafos.push(
-    new Paragraph({
-      alignment: AlignmentType.CENTER,
-      spacing: { after: 100 },
-      children: [
-        new TextRun({
-          text: relatorio.elaboradoPor || "[NOME_TECNICO]",
-          size: 24
-        })
-      ]
-    })
-  );
-  
-  paragrafos.push(
-    new Paragraph({
-      alignment: AlignmentType.CENTER,
-      spacing: { after: 100 },
-      children: [
-        new TextRun({
-          text: `${relatorio.departamento || "[DEPARTAMENTO]"} - ${relatorio.unidade || "[UNIDADE]"}`,
-          size: 24
-        })
-      ]
-    })
-  );
-  
-  paragrafos.push(
-    new Paragraph({
-      alignment: AlignmentType.CENTER,
-      spacing: { after: 100 },
-      children: [
-        new TextRun({
-          text: `CREA/CAU ${relatorio.numeroRegistro || "[NUMERO_REGISTRO]"}`,
-          size: 24
-        })
-      ]
-    })
-  );
-  
-  // Rodapé com informação da empresa
-  paragrafos.push(
-    new Paragraph({
-      spacing: { before: 800, after: 200 },
-      alignment: AlignmentType.CENTER,
-      children: [
-        new TextRun({
-          text: "Saint-Gobain do Brasil Prod. Ind. e para Cons. Civil Ltda.",
-          bold: true,
-          size: 20
-        })
-      ]
-    })
-  );
-  
-  paragrafos.push(
-    new Paragraph({
-      alignment: AlignmentType.CENTER,
-      spacing: { after: 100 },
-      children: [
-        new TextRun({
-          text: "Divisão Produtos Para Construção",
-          size: 20
-        })
-      ]
-    })
-  );
-  
-  paragrafos.push(
-    new Paragraph({
-      alignment: AlignmentType.CENTER,
-      spacing: { after: 100 },
-      children: [
-        new TextRun({
-          text: "Departamento de Assistência Técnica",
-          size: 20
-        })
-      ]
-    })
-  );
-  
-  return paragrafos;
+      );
+    }
+  });
+
+  return paragraphs;
+}
+
+// Função para obter a descrição completa das não conformidades conforme o texto exato fornecido
+function getFullNonConformityDescription(id: number): string {
+  const descriptions: { [key: number]: string } = {
+    1: "Durante a inspeção, foi constatado que as telhas estão sendo armazenadas de forma inadequada, em desacordo com as recomendações técnicas do fabricante. As telhas BRASILIT devem ser armazenadas em local plano, firme, coberto e seco, protegidas das intempéries. O empilhamento deve ser feito horizontalmente, com as telhas apoiadas sobre caibros ou pontaletes de madeira espaçados no máximo a cada 50cm, garantindo um apoio uniforme. A altura máxima da pilha não deve ultrapassar 200 telhas. É fundamental manter uma distância mínima de 1 metro entre as pilhas para facilitar a circulação. O não cumprimento destas diretrizes pode resultar em deformações, trincas ou quebras das telhas, comprometendo sua integridade e desempenho futuro.",
+    2: "Foi identificada a presença de cargas permanentes não previstas sobre as telhas, incluindo equipamentos, estruturas ou instalações. Esta situação é extremamente prejudicial à integridade do sistema de cobertura, pois as telhas BRASILIT são dimensionadas para suportar apenas as cargas previstas em projeto, como seu próprio peso, a ação dos ventos e eventuais cargas acidentais de manutenção. A sobrecarga permanente pode causar deformações, trincas e até mesmo a ruptura das telhas, além de comprometer a estrutura de apoio. É imprescindível a remoção imediata dessas cargas e, caso necessário, deve-se prever uma estrutura independente para suportar equipamentos ou instalações, seguindo as orientações de um profissional habilitado.",
+    3: "A inspeção revelou que os cortes de canto das telhas não foram executados corretamente ou estão ausentes. O corte de canto é um procedimento técnico obrigatório que consiste na remoção de um quadrado de 11x11cm nos cantos das telhas onde haverá sobreposição. Este procedimento é fundamental para evitar a sobreposição de quatro espessuras de telha em um mesmo ponto, o que criaria um desnível prejudicial ao escoamento da água e à vedação do telhado. A ausência ou execução incorreta do corte de canto pode resultar em infiltrações, goteiras e deterioração precoce do sistema de cobertura. É necessário realizar os cortes seguindo rigorosamente as especificações técnicas do fabricante.",
+    4: "Foi constatado que a estrutura de apoio das telhas apresenta desalinhamento significativo em relação aos parâmetros técnicos aceitáveis. Este desalinhamento compromete diretamente o assentamento correto das telhas, afetando o caimento, a sobreposição e a vedação do sistema de cobertura. A estrutura deve estar perfeitamente alinhada e nivelada, com as terças paralelas entre si e perpendiculares à linha de maior caimento do telhado. O desalinhamento pode causar problemas graves como: infiltrações devido à sobreposição irregular das telhas, concentração inadequada de águas pluviais, comprometimento da estética do telhado e possível redução da vida útil do sistema. É necessária a correção do alinhamento da estrutura por profissional habilitado, seguindo as especificações de projeto e as recomendações técnicas do fabricante.",
+    5: "Durante a vistoria, foi identificado que a fixação das telhas não atende às especificações técnicas do fabricante. A fixação adequada das telhas BRASILIT é fundamental para garantir a segurança e o desempenho do sistema de cobertura. As telhas devem ser fixadas com parafusos com rosca soberba Ø 8mm x 110mm ou ganchos com rosca Ø 8mm, sempre acompanhados de conjunto de vedação (arruela metálica e arruela de vedação em PVC). Os pontos de fixação devem seguir rigorosamente o esquema recomendado pelo fabricante, considerando a 2ª e a 4ª crista de onda nas extremidades e terças intermediárias. O reaperto dos parafusos deve ser verificado periodicamente. A fixação inadequada pode resultar em deslocamento das telhas, infiltrações e, em casos extremos, arrancamento das telhas pela ação dos ventos, comprometendo a segurança dos usuários.",
+    6: "A inspeção técnica identificou que a inclinação do telhado está abaixo do mínimo recomendado nas especificações do fabricante. A inclinação é um fator crítico para o desempenho do sistema de cobertura, pois garante o escoamento adequado das águas pluviais e evita o acúmulo de sujeira. Para telhas BRASILIT, a inclinação mínima varia de acordo com o modelo: para telhas onduladas, deve ser de 15° (27%); para telhas estruturais, 10° (17,6%); e para telhas de fibrocimento planas, 25° (46,6%). A inclinação inadequada pode resultar em infiltrações, acúmulo de águas pluviais, proliferação de fungos e algas, e redução significativa da vida útil do telhado. É necessária a adequação da estrutura para atender à inclinação mínima requerida.",
+    7: "Durante a vistoria, foram identificadas marcas evidentes de caminhamento direto sobre as telhas, caracterizando uso inadequado do sistema de cobertura. As telhas BRASILIT não são projetadas para suportar tráfego direto, mesmo que eventual. O caminhamento incorreto pode causar trincas, deformações e comprometer a integridade das telhas. Para acesso à cobertura durante manutenções ou inspeções, é obrigatório o uso de tábuas ou pranchas apropriadas, apoiadas sobre as terças ou caibros, distribuindo as cargas de maneira adequada. Estas tábuas devem ter largura mínima de 20cm e espessura adequada para suportar o peso sem deformação. É fundamental estabelecer procedimentos seguros de acesso à cobertura e treinar as equipes de manutenção.",
+    8: "Foi constatado que o balanço livre do beiral está em desacordo com as especificações técnicas do fabricante. O balanço do beiral é a distância entre a última terça e a extremidade da telha, sendo um elemento crucial para o correto funcionamento do sistema de cobertura. Para telhas BRASILIT, o balanço máximo permitido varia de acordo com o modelo e comprimento da telha: para telhas de até 1,83m, o balanço máximo é de 25cm; para telhas de 2,13m até 2,44m, 40cm; e para telhas acima de 3,05m, 50cm. O balanço excessivo pode causar deformações nas telhas, infiltrações e comprometer a estabilidade do beiral. O balanço insuficiente pode resultar em transbordamento de águas pluviais e danos à fachada. É necessário readequar o balanço do beiral seguindo rigorosamente as especificações do fabricante.",
+    9: "A análise técnica revelou que a quantidade de apoios e/ou o vão livre entre eles está em desconformidade com as especificações do fabricante. Esta situação é crítica para a segurança e desempenho do sistema de cobertura. Para telhas BRASILIT, o número mínimo de apoios e o vão máximo permitido são determinados pelo modelo e espessura da telha: para telhas onduladas de 6mm, o vão máximo é de 1,69m com 3 apoios; para telhas de 8mm, 1,99m com 3 apoios; e para telhas estruturais, conforme especificação própria do modelo. O não atendimento a estes parâmetros pode resultar em deformações excessivas, trincas, infiltrações e, em casos extremos, colapso do sistema. É imprescindível a correção do espaçamento entre apoios e/ou adição de apoios intermediários para adequação às normas técnicas.",
+    10: "Foi identificado que o recobrimento entre as telhas não atende às especificações mínimas estabelecidas pelo fabricante. O recobrimento adequado é fundamental para garantir a estanqueidade do sistema de cobertura. Para telhas BRASILIT, o recobrimento longitudinal deve ser de 14cm para inclinações até 15° e 20cm para inclinações menores que 15°. O recobrimento lateral deve ser de 1¼ onda para telhas onduladas. A não conformidade no recobrimento pode resultar em infiltrações generalizadas, principalmente em períodos de chuva intensa ou com ventos fortes. Além disso, o recobrimento inadequado pode comprometer a fixação das telhas e sua resistência a esforços de sucção causados pelo vento. É necessária a correção dos recobrimentos, o que pode implicar na remontagem parcial ou total do telhado.",
+    11: "A vistoria constatou que a montagem das telhas foi executada em sentido contrário ao tecnicamente recomendado. O sentido correto de montagem das telhas BRASILIT deve considerar os ventos predominantes da região, iniciando-se a colocação no sentido contrário a estes ventos. Este procedimento é fundamental para evitar que a água da chuva seja forçada contra os recobrimentos pelo vento. A montagem no sentido incorreto pode resultar em infiltrações significativas, principalmente durante chuvas com ventos fortes, comprometendo a estanqueidade do sistema e podendo causar danos ao interior da edificação. A correção desta não conformidade geralmente requer a remontagem completa do telhado.",
+    12: "Foi identificada a utilização de cumeeiras cerâmicas em conjunto com as telhas de fibrocimento BRASILIT, caracterizando uma incompatibilidade técnica grave. As cumeeiras cerâmicas possuem características físicas e dimensionais diferentes das telhas de fibrocimento, resultando em vedação inadequada e alto risco de infiltrações. Além disso, o peso específico diferente dos materiais pode causar deformações e trincas nas telhas. É obrigatório o uso exclusivo de cumeeiras e peças complementares específicas para telhas de fibrocimento BRASILIT, que são projetadas para garantir a perfeita compatibilidade dimensional e vedação do sistema. A substituição das cumeeiras cerâmicas por peças apropriadas é necessária para garantir o desempenho adequado da cobertura.",
+    13: "Durante a inspeção, foi constatado o uso inadequado de argamassa em substituição às peças complementares originais BRASILIT. Esta prática é tecnicamente incorreta e compromete seriamente o desempenho do sistema de cobertura. A argamassa não possui as características necessárias para acompanhar as movimentações térmicas e estruturais do telhado, resultando em trincas e infiltrações. Além disso, o peso adicional da argamassa pode sobrecarregar a estrutura e as telhas. As peças complementares BRASILIT são especialmente projetadas para garantir a vedação adequada e acompanhar as movimentações do sistema, sendo sua utilização obrigatória. É necessária a remoção completa da argamassa e substituição por peças complementares originais apropriadas.",
+    14: "A análise técnica identificou que os acessórios complementares (rufos, calhas, pingadeiras etc.) não estão fixados de acordo com as especificações técnicas do fabricante. A fixação adequada destes elementos é crucial para o desempenho do sistema de cobertura. Os rufos devem ser fixados à estrutura e nunca diretamente nas telhas, com sobreposição mínima de 5cm sobre as telhas e vedação apropriada. As calhas devem ter dimensionamento adequado, inclinação mínima de 0,5% e estar corretamente fixadas à estrutura. O espaçamento entre os suportes deve seguir as especificações do fabricante. A fixação inadequada pode resultar em infiltrações, transbordamentos, oxidação da estrutura e danos ao sistema de cobertura. É necessária a revisão completa da fixação dos acessórios complementares, seguindo rigorosamente as recomendações técnicas."
+  };
+
+  return descriptions[id] || "Descrição não disponível";
 }
