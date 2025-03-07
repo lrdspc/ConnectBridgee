@@ -3,11 +3,7 @@ import { Button } from "@/components/ui/button";
 import { FileText, FileDown, AlertTriangle, Loader2 } from "lucide-react";
 import type { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { toast } from "sonner";
-import { generateRelatorioVistoriaBrasil } from "@/lib/relatorioVistoriaBrasilGenerator";
-import { gerarRelatorioVistoriaDoc as gerarRelatorioVistoriaDocOriginal } from "@/lib/relatorioVistoriaDocGenerator";
-import { gerarRelatorioVistoriaDoc as gerarRelatorioVistoriaDocSimples } from "@/lib/relatorioVistoriaDocGeneratorSimple";
-import { gerarRelatorioVistoriaHTML } from "@/lib/relatorioVistoriaFallbackGenerator";
-import { gerarRelatorioVistoriaBasico } from "@/lib/relatorioVistoriaBasicGenerator";
+import { gerarRelatorioSimples } from "@/lib/relatorioVistoriaSimpleGenerator";
 
 // Logs para debug - Habilitado para ajudar na diagnóstico de problemas
 const DEBUG = true;
@@ -76,58 +72,11 @@ export function ExportDocButton({
       // Definir nome do arquivo
       const fileName = `Relatório-${relatorioPreparado.protocolo || 'Vistoria'}-ABNT.docx`;
       
-      // Tentar gerar o documento usando várias estratégias em sequência
-      try {
-        // Estratégia 1: Gerador DOCX básico com formatação ABNT
-        log("▶️ TENTATIVA 1: Usando gerador básico otimizado (formatação ABNT)");
-        const blob = await gerarRelatorioVistoriaBasico(relatorioPreparado);
-        saveDocFile(blob, fileName);
-        toast.success("Relatório ABNT exportado com sucesso!");
-        return; // Sair da função após sucesso
-      } catch (basicError) {
-        console.error("❌ Erro na geração básica:", basicError);
-        
-        // Notificar o usuário do problema na primeira tentativa
-        toast.warning("Tentando método alternativo...", {duration: 2000});
-        
-        // Se falhar, tentar próxima estratégia
-        try {
-          // Estratégia 2: Gerador DOCX simples
-          log("▶️ TENTATIVA 2: Usando gerador simples com formatação ABNT");
-          const blob = await gerarRelatorioVistoriaDocSimples(relatorioPreparado);
-          saveDocFile(blob, fileName);
-          toast.success("Relatório ABNT exportado com sucesso!");
-          return; // Sair da função após sucesso
-        } catch (simplesError) {
-          console.error("❌ Erro na geração simples:", simplesError);
-          
-          // Notificar o usuário da segunda falha
-          toast.warning("Tentando método de emergência...", {duration: 2000});
-          
-          // Se falhar, tentar última estratégia
-          try {
-            // Estratégia 3: Gerador DOCX completo (original)
-            log("▶️ TENTATIVA 3: Usando gerador completo com formatação ABNT");
-            const blob = await gerarRelatorioVistoriaDocOriginal(relatorioPreparado);
-            saveDocFile(blob, fileName);
-            toast.success("Relatório ABNT exportado com sucesso!");
-            return; // Sair da função após sucesso
-          } catch (originalError) {
-            console.error("❌ Erro na geração original:", originalError);
-            
-            // Se todas as tentativas DOCX falharem, tentar HTML como último recurso
-            try {
-              log("▶️ TENTATIVA FINAL: Exportando como HTML (fallback de emergência)");
-              await gerarRelatorioVistoriaHTML(relatorioPreparado);
-              toast.success("Relatório exportado como HTML para visualização!");
-              return;
-            } catch (htmlError) {
-              console.error("❌ Todas as tentativas falharam:", htmlError);
-              throw new Error("Não foi possível gerar o documento após múltiplas tentativas");
-            }
-          }
-        }
-      }
+      // Usar o gerador que funciona corretamente
+      log("Gerando relatório com o gerador simplificado");
+      const blob = await gerarRelatorioSimples(relatorioPreparado);
+      saveDocFile(blob, fileName);
+      toast.success("Relatório ABNT exportado com sucesso!");
     } catch (error) {
       console.error("Erro ao exportar documento:", error);
       toast.error(`Erro ao exportar documento: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
