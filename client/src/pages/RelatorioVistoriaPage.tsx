@@ -1383,13 +1383,27 @@ conforme a legislação em vigor.`;
                             relatorio={form.getValues()} // Obter dados atuais do formulário
                             label="Exportar DOCX (Atual)"
                             loadingLabel="Gerando..."
-                            className="sm:w-auto w-full"
+                            className="sm:w-auto w-full mr-2"
                             fileNamePrefix={`relatorio-vistoria-${form.getValues().protocolo || 'novo'}`}
                             onExportSuccess={(fileName) => {
                               console.log("Dados enviados para exportação:", form.getValues());
                               toast({
                                 title: 'Documento Word gerado com sucesso!',
                                 description: 'O relatório foi exportado no formato DOCX com formatação ABNT.',
+                                variant: 'default'
+                              });
+                            }}
+                          />
+                          
+                          <ExportSaintGobainButton
+                            relatorio={form.getValues()}
+                            label="Exportar Saint-Gobain"
+                            className="sm:w-auto w-full bg-blue-600 text-white hover:bg-blue-700"
+                            fileNamePrefix={`SG-vistoria-${form.getValues().protocolo || 'novo'}`}
+                            onExportSuccess={(fileName) => {
+                              toast({
+                                title: 'Documento Saint-Gobain gerado!',
+                                description: 'O relatório foi exportado no formato exato do Saint-Gobain Brasil.',
                                 variant: 'default'
                               });
                             }}

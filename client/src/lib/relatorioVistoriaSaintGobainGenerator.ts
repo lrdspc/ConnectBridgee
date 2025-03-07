@@ -608,7 +608,7 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
     const naoConformidadesParagrafos: Paragraph[] = [];
     
     if (relatorio.naoConformidades && relatorio.naoConformidades.length > 0) {
-      relatorio.naoConformidades.forEach((naoConf, index) => {
+      relatorio.naoConformidades.forEach((naoConf: { selecionado: boolean; titulo: string; descricao: string }, index: number) => {
         if (naoConf.selecionado) {
           naoConformidadesParagrafos.push(
             new Paragraph({
