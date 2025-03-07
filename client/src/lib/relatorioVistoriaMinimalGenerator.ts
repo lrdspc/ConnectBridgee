@@ -54,9 +54,11 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
               children: [
                 new TextRun({
                   text: `${index + 1}. ${nc.titulo}`,
-                  bold: true
+                  bold: true,
+                  font: "Arial"
                 })
-              ]
+              ],
+              spacing: { after: 20 } // Espaçamento reduzido
             })
           );
           
@@ -64,26 +66,38 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
             new Paragraph({
               children: [
                 new TextRun({
-                  text: nc.descricao
+                  text: nc.descricao,
+                  font: "Arial"
                 })
               ],
-              spacing: { after: 300 }
+              alignment: AlignmentType.JUSTIFIED,
+              spacing: { after: 60 } // Espaçamento reduzido
             })
           );
         });
       } else {
         naoConformidadesParags.push(
           new Paragraph({
-            text: "Não foram identificadas não conformidades.",
-            spacing: { after: 300 }
+            children: [
+              new TextRun({
+                text: "Não foram identificadas não conformidades.",
+                font: "Arial"
+              })
+            ],
+            spacing: { after: 80 }
           })
         );
       }
     } else {
       naoConformidadesParags.push(
         new Paragraph({
-          text: "Não foram identificadas não conformidades.",
-          spacing: { after: 300 }
+          children: [
+            new TextRun({
+              text: "Não foram identificadas não conformidades.",
+              font: "Arial"
+            })
+          ],
+          spacing: { after: 80 }
         })
       );
     }
@@ -108,6 +122,9 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
     // Com espaçamento reduzido para caber mais informações na primeira página
     const doc = new Document({
       // Configurações globais do documento de acordo com ABNT
+      creator: "Brasilit Assistência Técnica",
+      title: `Relatório de Vistoria Técnica - ${relatorio.cliente || ""}`,
+      description: "Relatório de Vistoria Técnica realizada em telhas e produtos Brasilit",
       styles: {
         default: {
           document: {
@@ -119,7 +136,7 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
             paragraph: {
               spacing: {
                 line: 276, // Espaçamento entre linhas (1.15 - reduzido para caber mais conteúdo)
-                after: 120 // Espaçamento após cada parágrafo (reduzido)
+                after: 100 // Espaçamento após cada parágrafo (reduzido ainda mais)
               },
               alignment: AlignmentType.JUSTIFIED // Texto justificado (ABNT)
             }
