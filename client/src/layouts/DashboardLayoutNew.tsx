@@ -91,7 +91,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
     { name: 'Dashboard', path: '/', icon: <Home className="w-5 h-5" />, badge: null },
     { name: 'Clientes', path: '/clientes', icon: <Users className="w-5 h-5" />, badge: null },
     { name: 'Visitas', path: '/visitas', icon: <MapPin className="w-5 h-5" />, badge: null },
-    { name: 'Nova Vistoria', path: '/nova-vistoria', icon: <ClipboardCheck className="w-5 h-5" />, badge: null },
+    { name: 'Nova Vistoria', path: '/nova-vistoria', icon: <ClipboardCheck className="w-5 h-5" />, badge: "Novo", highlight: true },
     { name: 'Relatórios', path: '/relatorios', icon: <FileText className="w-5 h-5" />, badge: null },
     { name: 'Meu Perfil', path: '/perfil', icon: <User className="w-5 h-5" />, badge: null },
   ];
@@ -268,6 +268,9 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
                                 location === item.path 
                                   ? "bg-primary/10 text-primary font-medium" 
                                   : "text-gray-700 hover:bg-gray-100",
+                                (item as any).highlight && !location.includes(item.path)
+                                  ? "border border-primary/30 bg-primary/5" 
+                                  : "",
                                 sidebarCollapsed && "justify-center"
                               )}
                             >
