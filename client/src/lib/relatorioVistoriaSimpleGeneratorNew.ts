@@ -148,10 +148,10 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
           properties: {
             page: {
               margin: {
-                top: 720,  // 2,5 cm (aproximadamente)
-                right: 720, // 2,5 cm
-                bottom: 720, // 2,5 cm
-                left: 864, // 3,0 cm
+                top: 1008,  // 3,5 cm (aproximadamente)
+                right: 864, // 3,0 cm
+                bottom: 864, // 3,0 cm
+                left: 1008, // 3,5 cm
               },
               size: {
                 width: 11906, // A4 width (210mm em twip)
@@ -161,14 +161,27 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
           },
           children: [
             // Cabeçalho
+            // Cabeçalho com nome da empresa
             new Paragraph({
-              alignment: AlignmentType.CENTER,
+              alignment: AlignmentType.LEFT,
+              spacing: { before: 0, after: 120 },
+              children: [
+                new TextRun({
+                  text: "SAINT-GOBAIN BRASIL",
+                  bold: true,
+                  size: 24, // 12pt
+                }),
+              ],
+            }),
+            
+            // Linha de divisão
+            new Paragraph({
+              alignment: AlignmentType.LEFT,
               spacing: { before: 0, after: 240 },
               children: [
                 new TextRun({
-                  text: "BRASILIT - SAINT-GOBAIN",
-                  bold: true,
-                  size: 28, // 14pt
+                  text: "Divisão Brasilit - Assistência Técnica",
+                  size: 24, // 12pt
                 }),
               ],
             }),
@@ -270,6 +283,111 @@ export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promi
                 }),
                 new TextRun({
                   text: relatorio.protocolo || "(Número do Protocolo)",
+                  size: 24
+                })
+              ],
+              spacing: { after: 240 }
+            }),
+            
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Assunto: ",
+                  bold: true,
+                  size: 24
+                }),
+                new TextRun({
+                  text: relatorio.assunto || "AT - BRA - PERMEABILIDADE - Telhado com vazamento Geral",
+                  size: 24
+                })
+              ],
+              spacing: { after: 240 }
+            }),
+            
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Elaborado por: ",
+                  bold: true,
+                  size: 24
+                }),
+                new TextRun({
+                  text: relatorio.elaboradoPor || "Técnico Teste",
+                  size: 24
+                })
+              ],
+              spacing: { after: 240 }
+            }),
+            
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Departamento: ",
+                  bold: true,
+                  size: 24
+                }),
+                new TextRun({
+                  text: relatorio.departamento || "Assistência Técnica",
+                  size: 24
+                })
+              ],
+              spacing: { after: 240 }
+            }),
+            
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Unidade: ",
+                  bold: true,
+                  size: 24
+                }),
+                new TextRun({
+                  text: relatorio.unidade || "PR",
+                  size: 24
+                })
+              ],
+              spacing: { after: 240 }
+            }),
+            
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Coordenador Responsável: ",
+                  bold: true,
+                  size: 24
+                }),
+                new TextRun({
+                  text: relatorio.coordenador || "Marlon Weingartner",
+                  size: 24
+                })
+              ],
+              spacing: { after: 240 }
+            }),
+            
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Gerente Responsável: ",
+                  bold: true,
+                  size: 24
+                }),
+                new TextRun({
+                  text: relatorio.gerente || "Elisabeth Kudo",
+                  size: 24
+                })
+              ],
+              spacing: { after: 240 }
+            }),
+            
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: "Regional: ",
+                  bold: true,
+                  size: 24
+                }),
+                new TextRun({
+                  text: relatorio.regional || "Sul",
                   size: 24
                 })
               ],
