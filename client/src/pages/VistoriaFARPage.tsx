@@ -571,12 +571,15 @@ const VistoriaFARPage = () => {
     
     setIsGeneratingDoc(true);
     try {
-      // Criar o objeto de relatório no formato esperado pelo gerador
-      const farReport = {
+      // Criar o objeto de relatório no formato esperado pelo gerador, incluindo todos os campos obrigatórios
+      const farReport: FARReport = {
         ...formData,
         id: `FAR-${formData.farProtocolo || new Date().getTime()}`,
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        status: "completed",
+        assinadoPor: formData.elaboradoPor,
+        assinadoEm: new Date().toISOString()
       };
       
       // Gerar o documento Word
@@ -1539,6 +1542,26 @@ const VistoriaFARPage = () => {
                     onClick={() => setActiveTab("problemas")}
                   >
                     <span className="mr-2">&larr;</span> Voltar: Problemas
+                  </Button>
+                  
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full md:w-auto"
+                    onClick={handleDownloadDoc}
+                    disabled={isGeneratingDoc || isSubmitting}
+                  >
+                    {isGeneratingDoc ? (
+                      <>
+                        <LoadingAnimation size="sm" className="mr-2" />
+                        Gerando documento...
+                      </>
+                    ) : (
+                      <>
+                        <FileDown className="mr-2 h-4 w-4" />
+                        Baixar Documento
+                      </>
+                    )}
                   </Button>
                   
                   <Button
