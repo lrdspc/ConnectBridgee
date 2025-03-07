@@ -350,13 +350,20 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
               spacing: { after: 120 }
             }),
             
-            // 3.1 DADOS DO PRODUTO
+            // 1.1 DADOS DO PRODUTO
             new Paragraph({
-              text: "1.1 DADOS DO PRODUTO",
-              heading: HeadingLevel.HEADING_3,
-              spacing: { before: 200, after: 200 }
+              children: [
+                new TextRun({
+                  text: "1.1 DADOS DO PRODUTO",
+                  bold: true,
+                  size: 22, // 11pt
+                  font: "Arial"
+                })
+              ],
+              spacing: { before: 80, after: 40 }
             }),
             
+            // Dados do produto com espaçamento reduzido
             new Paragraph({
               children: [
                 new TextRun({ text: "Quantidade: ", bold: true, font: "Arial" }),
@@ -365,7 +372,7 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
                   font: "Arial"
                 })
               ],
-              spacing: { after: 100 }
+              spacing: { after: 40 }
             }),
             new Paragraph({
               children: [
@@ -377,7 +384,7 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
                   font: "Arial"
                 })
               ],
-              spacing: { after: 100 }
+              spacing: { after: 40 }
             }),
             new Paragraph({
               children: [
@@ -389,93 +396,175 @@ export async function gerarRelatorioVistoriaMinimal(relatorio: ExtendedRelatorio
                   font: "Arial"
                 })
               ],
-              spacing: { after: 300 }
+              spacing: { after: 120 }
             }),
             
-            // 4. ANÁLISE TÉCNICA
+            // 2. ANÁLISE TÉCNICA
             new Paragraph({
-              text: "2. ANÁLISE TÉCNICA",
-              heading: HeadingLevel.HEADING_2,
-              spacing: { before: 300, after: 200 }
+              children: [
+                new TextRun({
+                  text: "2. ANÁLISE TÉCNICA",
+                  bold: true,
+                  size: 24, // 12pt
+                  font: "Arial"
+                })
+              ],
+              spacing: { before: 120, after: 80 }
             }),
             
             new Paragraph({
-              text: TEMPLATE_ANALISE_TECNICA,
-              spacing: { after: 200 }
+              children: [
+                new TextRun({
+                  text: TEMPLATE_ANALISE_TECNICA,
+                  font: "Arial"
+                })
+              ],
+              alignment: AlignmentType.JUSTIFIED,
+              spacing: { after: 120 }
             }),
             
-            // 4.1 NÃO CONFORMIDADES
+            // 2.1 NÃO CONFORMIDADES
             new Paragraph({
-              text: "2.1 NÃO CONFORMIDADES IDENTIFICADAS",
-              heading: HeadingLevel.HEADING_3,
-              spacing: { before: 200, after: 200 }
+              children: [
+                new TextRun({
+                  text: "2.1 NÃO CONFORMIDADES IDENTIFICADAS",
+                  bold: true,
+                  size: 22, // 11pt
+                  font: "Arial"
+                })
+              ],
+              spacing: { before: 80, after: 40 }
             }),
             
             ...naoConformidadesParags,
             
-            // 5. CONCLUSÃO
+            // 3. CONCLUSÃO
             new Paragraph({
-              text: "3. CONCLUSÃO",
-              heading: HeadingLevel.HEADING_2,
-              spacing: { before: 300, after: 200 }
+              children: [
+                new TextRun({
+                  text: "3. CONCLUSÃO",
+                  bold: true,
+                  size: 24, // 12pt
+                  font: "Arial"
+                })
+              ],
+              spacing: { before: 120, after: 80 }
             }),
             
             new Paragraph({
-              text: "Com base na análise técnica realizada, foram identificadas as seguintes não conformidades:",
-              spacing: { after: 200 }
+              children: [
+                new TextRun({
+                  text: "Com base na análise técnica realizada, foram identificadas as seguintes não conformidades:",
+                  font: "Arial"
+                })
+              ],
+              spacing: { after: 80 }
             }),
             
             ...naoConformidadesParags.filter((_, i) => i % 2 === 0), // Apenas os títulos (parágrafos pares)
             
             new Paragraph({
-              text: conclusaoTexto,
-              spacing: { after: 200 }
+              children: [
+                new TextRun({
+                  text: conclusaoTexto,
+                  font: "Arial"
+                })
+              ],
+              alignment: AlignmentType.JUSTIFIED,
+              spacing: { after: 80 }
             }),
             
             new Paragraph({
-              text: relatorio.recomendacao || '',
-              spacing: { after: 200 }
+              children: [
+                new TextRun({
+                  text: relatorio.recomendacao || '',
+                  font: "Arial"
+                })
+              ],
+              alignment: AlignmentType.JUSTIFIED,
+              spacing: { after: 80 }
             }),
             
             new Paragraph({
-              text: "Desde já, agradecemos e nos colocamos à disposição para quaisquer esclarecimentos que se fizerem necessário.",
-              spacing: { after: 200 }
+              children: [
+                new TextRun({
+                  text: "Desde já, agradecemos e nos colocamos à disposição para quaisquer esclarecimentos que se fizerem necessário.",
+                  font: "Arial"
+                })
+              ],
+              spacing: { after: 80 }
             }),
             
             new Paragraph({
-              text: "Atenciosamente,",
-              spacing: { after: 400 }
+              children: [
+                new TextRun({
+                  text: "Atenciosamente,",
+                  font: "Arial"
+                })
+              ],
+              spacing: { after: 120 }
             }),
             
-            // Assinatura
+            // Assinatura com espaçamento reduzido
             new Paragraph({
-              text: "Saint-Gobain do Brasil Prod. Ind. e para Cons. Civil Ltda.",
-              spacing: { before: 400, after: 100 }
-            }),
-            
-            new Paragraph({
-              text: "Divisão Produtos Para Construção",
-              spacing: { after: 100 }
-            }),
-            
-            new Paragraph({
-              text: "Departamento de Assistência Técnica",
-              spacing: { after: 400 }
-            }),
-            
-            new Paragraph({
-              text: `${relatorio.elaboradoPor}`,
-              spacing: { after: 100 }
+              children: [
+                new TextRun({
+                  text: "Saint-Gobain do Brasil Prod. Ind. e para Cons. Civil Ltda.",
+                  font: "Arial"
+                })
+              ],
+              spacing: { before: 120, after: 40 }
             }),
             
             new Paragraph({
-              text: `${relatorio.departamento} - ${relatorio.unidade}`,
-              spacing: { after: 100 }
+              children: [
+                new TextRun({
+                  text: "Divisão Produtos Para Construção",
+                  font: "Arial"
+                })
+              ],
+              spacing: { after: 40 }
             }),
             
             new Paragraph({
-              text: `CREA/CAU ${relatorio.numeroRegistro || ""}`,
-              spacing: { after: 100 }
+              children: [
+                new TextRun({
+                  text: "Departamento de Assistência Técnica",
+                  font: "Arial"
+                })
+              ],
+              spacing: { after: 120 }
+            }),
+            
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: `${relatorio.elaboradoPor}`,
+                  font: "Arial",
+                  bold: true
+                })
+              ],
+              spacing: { after: 40 }
+            }),
+            
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: `${relatorio.departamento} - ${relatorio.unidade}`,
+                  font: "Arial"
+                })
+              ],
+              spacing: { after: 40 }
+            }),
+            
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: `CREA/CAU ${relatorio.numeroRegistro || ""}`,
+                  font: "Arial"
+                })
+              ],
+              spacing: { after: 40 }
             }),
           ]
         }
