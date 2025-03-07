@@ -183,7 +183,11 @@ export default function RelatorioVistoriaPage() {
     setIsGeneratingPreview(true);
     
     try {
-      const formData = form.getValues();
+      // Clonar o formulário para não afetar os valores originais
+      const formData = {...form.getValues()};
+      
+      // Garantir que estamos usando IMPROCEDENTE sempre
+      formData.resultado = "IMPROCEDENTE";
       
       // Gerar textos a partir dos templates
       // Introdução
@@ -195,9 +199,9 @@ export default function RelatorioVistoriaPage() {
         anosGarantiaSistemaCompleto: formData.anosGarantiaSistemaCompleto
       });
       
-      // Conclusão
+      // Conclusão - sempre usando IMPROCEDENTE 
       const conclusaoTexto = aplicarTemplateConclusao({
-        resultado: formData.resultado,
+        resultado: "IMPROCEDENTE",
         modeloTelha: formData.modeloTelha,
         anosGarantiaTotal: formData.anosGarantiaTotal
       });
@@ -384,6 +388,9 @@ export default function RelatorioVistoriaPage() {
   // Submissão do formulário
   const onSubmit = (data: RelatorioVistoria) => {
     try {
+      // Garantir que o resultado é sempre IMPROCEDENTE
+      data.resultado = "IMPROCEDENTE";
+      
       console.log('Dados do formulário:', data);
       
       toast({
@@ -415,7 +422,9 @@ export default function RelatorioVistoriaPage() {
   const baixarRelatorioDocx = async () => {
     try {
       setIsGeneratingDocx(true);
-      const formData = form.getValues();
+      
+      // Clonar os dados do formulário para não afetar o estado
+      const formData = {...form.getValues()};
       
       // Aplicar os templates para os textos fixos antes de gerar o documento
       formData.introducao = aplicarTemplateIntroducao({
@@ -428,11 +437,30 @@ export default function RelatorioVistoriaPage() {
       
       formData.analiseTecnica = TEMPLATE_ANALISE_TECNICA;
       
+      // Forçar resultado como IMPROCEDENTE
+      formData.resultado = "IMPROCEDENTE";
+      
       formData.conclusao = aplicarTemplateConclusao({
-        resultado: formData.resultado,
+        resultado: "IMPROCEDENTE", // Forçar IMPROCEDENTE
         modeloTelha: formData.modeloTelha,
         anosGarantiaTotal: formData.anosGarantiaTotal
       });
+      
+      // Filtrar não conformidades selecionadas e usar as versões completas
+      const naoConformidadesSelecionadas = formData.naoConformidades
+        .filter(nc => nc.selecionado)
+        .map(nc => {
+          const completa = naoConformidadesDisponiveis.find(item => item.id === nc.id);
+          return {
+            id: nc.id,
+            titulo: completa?.titulo || '',
+            descricao: completa?.descricao || '',
+            selecionado: true
+          };
+        });
+      
+      // Substituir as não conformidades com as versões completas
+      formData.naoConformidades = naoConformidadesSelecionadas;
       
       // Gerar o documento usando a biblioteca docx
       const blob = await gerarRelatorioVistoriaDoc(formData);
