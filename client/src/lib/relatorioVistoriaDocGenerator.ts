@@ -14,7 +14,9 @@ import {
   Header,
   PageNumber,
   SectionType,
-  Packer
+  Packer,
+  LevelFormat,
+  NumberFormat
 } from 'docx';
 import { RelatorioVistoria, naoConformidadesDisponiveis } from '@shared/relatorioVistoriaSchema';
 
@@ -101,84 +103,142 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
     })
   );
   
-  // Seção de identificação
+  // Seção de informações gerais
   mainContent.push(
     new Paragraph({
-      text: "IDENTIFICAÇÃO DO PROJETO",
+      text: "Informações Gerais",
       heading: HeadingLevel.HEADING_2,
-      spacing: { before: 400, after: 200 }
+      spacing: { before: 300, after: 200 }
     })
   );
   
-  // Adicionar tabelas e outros conteúdos
+  // Lista de informações gerais com bullets
   mainContent.push(
     new Paragraph({
+      bullet: { level: 0 },
+      children: [
+        new TextRun({ text: "Data de vistoria: " }),
+        new TextRun({ text: relatorio.dataVistoria || "[Data da Vistoria]" })
+      ]
+    })
+  );
+  
+  mainContent.push(
+    new Paragraph({
+      bullet: { level: 0 },
       children: [
         new TextRun({ text: "Cliente: " }),
-        new TextRun({ text: relatorio.cliente || "", bold: true })
+        new TextRun({ text: relatorio.cliente || "[Nome do Cliente]" })
       ]
     })
   );
   
   mainContent.push(
     new Paragraph({
+      bullet: { level: 0 },
       children: [
-        new TextRun({ text: "Protocolo: " }),
-        new TextRun({ text: relatorio.protocolo || "", bold: true })
+        new TextRun({ text: "Empreendimento: " }),
+        new TextRun({ text: relatorio.empreendimento || "[Nome do Empreendimento]" })
       ]
     })
   );
   
   mainContent.push(
     new Paragraph({
+      bullet: { level: 0 },
       children: [
-        new TextRun({ text: "Data da Vistoria: " }),
-        new TextRun({ text: relatorio.dataVistoria || "", bold: true })
+        new TextRun({ text: "Cidade: " }),
+        new TextRun({ text: relatorio.cidade || "[Cidade]" })
       ]
     })
   );
   
   mainContent.push(
     new Paragraph({
+      bullet: { level: 0 },
       children: [
         new TextRun({ text: "Endereço: " }),
-        new TextRun({ text: relatorio.endereco || "", bold: true })
+        new TextRun({ text: relatorio.endereco || "[Endereço]" })
       ]
     })
   );
   
   mainContent.push(
     new Paragraph({
+      bullet: { level: 0 },
       children: [
-        new TextRun({ text: "Cidade/UF: " }),
-        new TextRun({ text: `${relatorio.cidade || ""} - ${relatorio.uf || ""}`, bold: true })
+        new TextRun({ text: "FAR/Protocolo: " }),
+        new TextRun({ text: relatorio.protocolo || "[Número do Protocolo]" })
       ]
     })
   );
   
-  // Seção de responsáveis técnicos
   mainContent.push(
     new Paragraph({
-      text: "RESPONSÁVEIS TÉCNICOS",
-      heading: HeadingLevel.HEADING_2,
-      spacing: { before: 400, after: 200 }
+      bullet: { level: 0 },
+      children: [
+        new TextRun({ text: "Assunto: " }),
+        new TextRun({ text: relatorio.assunto || "[Assunto]" })
+      ]
     })
   );
   
   mainContent.push(
     new Paragraph({
+      bullet: { level: 0 },
       children: [
         new TextRun({ text: "Elaborado por: " }),
-        new TextRun({ text: relatorio.elaboradoPor || "", bold: true })
+        new TextRun({ text: relatorio.elaboradoPor || "[Nome do Técnico]" })
       ]
     })
   );
   
   mainContent.push(
     new Paragraph({
+      bullet: { level: 0 },
       children: [
-        new TextRun({ text: "Unidade/Departamento: " }),
-        new TextRun({ text: `${relatorio.unidade || ""} / ${relatorio.departamento || ""}`, bold: true })
+        new TextRun({ text: "Departamento: " }),
+        new TextRun({ text: relatorio.departamento || "[Nome do Departamento]" })
+      ]
+    })
+  );
+  
+  mainContent.push(
+    new Paragraph({
+      bullet: { level: 0 },
+      children: [
+        new TextRun({ text: "Unidade: " }),
+        new TextRun({ text: relatorio.unidade || "[Unidade]" })
+      ]
+    })
+  );
+  
+  mainContent.push(
+    new Paragraph({
+      bullet: { level: 0 },
+      children: [
+        new TextRun({ text: "Coordenador Responsável: " }),
+        new TextRun({ text: relatorio.coordenador || "[Nome do Coordenador]" })
+      ]
+    })
+  );
+  
+  mainContent.push(
+    new Paragraph({
+      bullet: { level: 0 },
+      children: [
+        new TextRun({ text: "Gerente Responsável: " }),
+        new TextRun({ text: relatorio.gerente || "[Nome do Gerente]" })
+      ]
+    })
+  );
+  
+  mainContent.push(
+    new Paragraph({
+      bullet: { level: 0 },
+      children: [
+        new TextRun({ text: "Regional: " }),
+        new TextRun({ text: relatorio.regional || "[Nome da Regional]" })
       ]
     })
   );
@@ -186,62 +246,55 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   // Seção de introdução
   mainContent.push(
     new Paragraph({
-      text: "1. INTRODUÇÃO",
+      text: "Introdução",
       heading: HeadingLevel.HEADING_2,
       spacing: { before: 400, after: 200 }
     })
   );
   
+  // Texto padrão de introdução com detalhes sobre a tecnologia das telhas
+  const textoIntroducao = relatorio.introducao || 
+    `A Área de Assistência Técnica foi solicitada para atender uma reclamação relacionada ao surgimento de infiltrações nas telhas de fibrocimento: - Telha da marca BRASILIT modelo ${relatorio.modeloTelha?.toUpperCase() || "ONDULADA"} de ${relatorio.espessura || "6"}mm, produzidas com tecnologia CRFS - Cimento Reforçado com Fios Sintéticos - 100% sem amianto - cuja fabricação segue a norma internacional ISO 9933, bem como as normas técnicas da ABNT: NBR-15210-1, NBR-15210-2 e NBR-15210-3.
+
+Em atenção a vossa solicitação, analisamos as evidências encontradas, para avaliar as manifestações patológicas reclamadas em telhas de nossa marca aplicada em sua cobertura conforme registro de reclamação protocolo FAR ${relatorio.protocolo || "[Número do Protocolo]"}.
+
+O modelo de telha escolhido para a edificação foi: ${relatorio.modeloTelha || "Ondulada"} de ${relatorio.espessura || "6"}mm. Esse modelo, como os demais, possui a necessidade de seguir rigorosamente as orientações técnicas contidas no Guia Técnico de Telhas de Fibrocimento e Acessórios para Telhado — Brasilit para o melhor desempenho do produto, assim como a garantia do produto coberta por ${relatorio.anosGarantia || "5"} anos (ou ${relatorio.anosGarantiaSistemaCompleto || "dez"} anos para sistema completo).`;
+  
   mainContent.push(
     new Paragraph({
       children: [
-        new TextRun({ text: relatorio.introducao || "Não informado." })
+        new TextRun({ text: textoIntroducao })
       ],
       spacing: { after: 200 }
     })
   );
   
-  // Dados do produto
+  // Informações sobre quantidade e área
   mainContent.push(
     new Paragraph({
-      text: "1.1 DADOS DO PRODUTO",
-      heading: HeadingLevel.HEADING_3,
-      spacing: { before: 200, after: 200 }
-    })
-  );
-  
-  mainContent.push(
-    new Paragraph({
+      bullet: { level: 0 },
       children: [
-        new TextRun({ text: "Modelo: " }),
-        new TextRun({ 
-          text: `${relatorio.modeloTelha || ""} ${relatorio.espessura || ""}mm CRFS`, 
-          bold: true 
-        })
+        new TextRun({ text: "Quantidade e modelo:" })
       ]
     })
   );
   
   mainContent.push(
     new Paragraph({
+      bullet: { level: 0 },
+      indent: { left: 720 },
       children: [
-        new TextRun({ text: "Quantidade: " }),
-        new TextRun({ 
-          text: relatorio.quantidade?.toString() || "0", 
-          bold: true 
-        })
+        new TextRun({ text: `${relatorio.quantidade || "[Número]"}: ${relatorio.modeloTelha || "Ondulada"} ${relatorio.espessura || "6"}mm CRFS.` })
       ]
     })
   );
   
   mainContent.push(
     new Paragraph({
+      bullet: { level: 0 },
+      indent: { left: 720 },
       children: [
-        new TextRun({ text: "Área coberta: " }),
-        new TextRun({ 
-          text: `${relatorio.area || "0"}m² (aproximadamente)`, 
-          bold: true 
-        })
+        new TextRun({ text: `Área coberta: ${relatorio.area || "[Área]"}m² aproximadamente.` })
       ]
     })
   );
@@ -249,27 +302,22 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   // Análise técnica
   mainContent.push(
     new Paragraph({
-      text: "2. ANÁLISE TÉCNICA",
+      text: "Análise Técnica",
       heading: HeadingLevel.HEADING_2,
       spacing: { before: 400, after: 200 }
     })
   );
   
+  // Texto padrão da análise técnica
+  const textoAnaliseTecnica = relatorio.analiseTecnica || 
+    `Durante a visita técnica realizada no local, nossa equipe conduziu uma vistoria minuciosa da cobertura, documentando e analisando as condições de instalação e o estado atual das telhas. Após criteriosa avaliação das evidências coletadas em campo, identificamos alguns desvios nos procedimentos de manuseio e instalação em relação às especificações técnicas do fabricante, os quais são detalhados a seguir:`;
+  
   mainContent.push(
     new Paragraph({
       children: [
-        new TextRun({ text: relatorio.analiseTecnica || "Não informado." })
+        new TextRun({ text: textoAnaliseTecnica })
       ],
       spacing: { after: 200 }
-    })
-  );
-  
-  // Não conformidades
-  mainContent.push(
-    new Paragraph({
-      text: "2.1 NÃO CONFORMIDADES IDENTIFICADAS",
-      heading: HeadingLevel.HEADING_3,
-      spacing: { before: 200, after: 200 }
     })
   );
   
@@ -278,22 +326,20 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   
   if (naosConformidadesSelecionadas.length > 0) {
     // Usar as descrições completas das não conformidades disponíveis (importadas no topo do arquivo)
-    
-    naosConformidadesSelecionadas.forEach((nc: {id: number, titulo: string, descricao?: string, selecionado: boolean}) => {
+    naosConformidadesSelecionadas.forEach((nc: {id: number, titulo: string, descricao?: string, selecionado: boolean}, index: number) => {
       // Buscar a não conformidade completa a partir dos dados disponíveis
       const ncCompleta = naoConformidadesDisponiveis.find((item: {id: number, titulo: string, descricao: string}) => item.id === nc.id);
       
-      // Título com formatação em negrito
+      // Título com formatação numérica
       mainContent.push(
         new Paragraph({
-          bullet: { level: 0 },
           children: [
             new TextRun({ 
-              text: ncCompleta?.titulo || nc.titulo || "", 
+              text: `${index + 1}. ${ncCompleta?.titulo || nc.titulo || ""}`, 
               bold: true
             })
           ],
-          spacing: { after: 100 }
+          spacing: { before: 200, after: 100 }
         })
       );
       
@@ -305,7 +351,6 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
               text: ncCompleta?.descricao || nc.descricao || "Descrição não disponível" 
             })
           ],
-          indent: { left: 720 },
           spacing: { after: 200 }
         })
       );
@@ -314,7 +359,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
     mainContent.push(
       new Paragraph({
         children: [
-          new TextRun({ text: "Não foram identificadas não conformidades." })
+          new TextRun({ text: "Não foram identificadas não conformidades durante a análise técnica." })
         ],
         spacing: { after: 200 }
       })
@@ -324,44 +369,32 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   // Conclusão
   mainContent.push(
     new Paragraph({
-      text: "3. CONCLUSÃO",
+      text: "Conclusão",
       heading: HeadingLevel.HEADING_2,
       spacing: { before: 400, after: 200 }
     })
   );
   
-  if (relatorio.conclusao) {
-    mainContent.push(
-      new Paragraph({
-        children: [
-          new TextRun({ text: relatorio.conclusao })
-        ],
-        spacing: { after: 200 }
-      })
-    );
-  }
+  // Texto introdutório da conclusão
+  mainContent.push(
+    new Paragraph({
+      children: [
+        new TextRun({ text: "Com base na análise técnica realizada, foram identificadas as seguintes não conformidades:" })
+      ],
+      spacing: { after: 200 }
+    })
+  );
   
-  // Lista de não conformidades na conclusão (apenas títulos)
-  // Usamos a mesma lista filtrada anteriormente
+  // Lista numerada das não conformidades na conclusão
   if (naosConformidadesSelecionadas.length > 0) {
-    // Texto introdutório para a lista de não conformidades
-    mainContent.push(
-      new Paragraph({
-        children: [
-          new TextRun({ 
-            text: "Não conformidades identificadas que comprometem a reclamação:", 
-            bold: true 
-          })
-        ],
-        spacing: { before: 200, after: 120 }
-      })
-    );
-    
-    // Lista apenas com os títulos das não conformidades
-    naosConformidadesSelecionadas.forEach((nc: {id: number, titulo: string, descricao?: string, selecionado: boolean}) => {
+    // Lista com os títulos das não conformidades com formatação numerada
+    naosConformidadesSelecionadas.forEach((nc: {id: number, titulo: string, descricao?: string, selecionado: boolean}, index: number) => {
       mainContent.push(
         new Paragraph({
-          bullet: { level: 0 },
+          numbering: {
+            reference: "naoConformidades",
+            level: 0,
+          },
           children: [
             new TextRun({ text: nc.titulo || "" })
           ],
@@ -370,33 +403,63 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
       );
     });
     
-    mainContent.push(
-      new Paragraph({
-        spacing: { after: 200 }
-      })
-    );
+    // Parágrafo de conclusão com base no resultado
+    if (relatorio.resultado === "IMPROCEDENTE") {
+      mainContent.push(
+        new Paragraph({
+          children: [
+            new TextRun({ 
+              text: "Em função das não conformidades constatadas no manuseio e instalação das chapas Brasilit, finalizamos o atendimento considerando a reclamação como IMPROCEDENTE, onde os problemas reclamados se dão pelo incorreto manuseio e instalação das telhas e não a problemas relacionados à qualidade do material.",
+              bold: false
+            })
+          ],
+          spacing: { before: 200, after: 200 }
+        })
+      );
+    } else {
+      mainContent.push(
+        new Paragraph({
+          children: [
+            new TextRun({ 
+              text: "Após análise das evidências técnicas coletadas, finalizamos o atendimento considerando a reclamação como PROCEDENTE. Recomendamos o seguinte procedimento para resolução do problema apresentado.",
+              bold: false
+            })
+          ],
+          spacing: { before: 200, after: 200 }
+        })
+      );
+    }
   }
   
-  // Resultado
+  // Informações sobre garantia
   mainContent.push(
     new Paragraph({
       children: [
         new TextRun({ 
-          text: `Resultado da análise: ${relatorio.resultado}`,
-          bold: true
+          text: `As telhas BRASILIT modelo ${relatorio.modeloTelha?.toUpperCase() || "FIBROCIMENTO ONDULADA"} possuem ${relatorio.anosGarantiaTotal || "dez"} anos de garantia com relação a problemas de fabricação. A garantia Brasilit está condicionada a correta aplicação do produto, seguindo rigorosamente as instruções de instalação contidas no Guia Técnico de Telhas de Fibrocimento e Acessórios para Telhado — Brasilit. Este guia técnico está sempre disponível em: [URL].`
         })
       ],
       spacing: { after: 200 }
     })
   );
   
-  // Garantia
+  // Texto final
   mainContent.push(
     new Paragraph({
       children: [
         new TextRun({ 
-          text: `As telhas BRASILIT modelo ${relatorio.modeloTelha?.toUpperCase() || ""} ` +
-                `possuem ${relatorio.anosGarantiaTotal || ""} anos de garantia total.`
+          text: "Ratificamos que os produtos Brasilit atendem as Normas da Associação Brasileira de Normas Técnicas — ABNT, específicas para cada linha de produto, e cumprimos as exigências legais de garantia de produtos conforme a legislação em vigor."
+        })
+      ],
+      spacing: { after: 200 }
+    })
+  );
+  
+  mainContent.push(
+    new Paragraph({
+      children: [
+        new TextRun({ 
+          text: "Desde já, agradecemos e nos colocamos à disposição para quaisquer esclarecimentos que se fizerem necessário."
         })
       ],
       spacing: { after: 200 }
@@ -404,6 +467,15 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   );
   
   // Assinatura
+  mainContent.push(
+    new Paragraph({
+      children: [
+        new TextRun({ text: "Atenciosamente," })
+      ],
+      spacing: { after: 150 }
+    })
+  );
+  
   mainContent.push(
     new Paragraph({
       children: [
@@ -419,7 +491,20 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   mainContent.push(
     new Paragraph({
       children: [
-        new TextRun({ text: relatorio.elaboradoPor || "" })
+        new TextRun({ 
+          text: "Divisão Produtos Para Construção"
+        })
+      ],
+      spacing: { after: 80 }
+    })
+  );
+  
+  mainContent.push(
+    new Paragraph({
+      children: [
+        new TextRun({ 
+          text: "Departamento de Assistência Técnica"
+        })
       ],
       spacing: { after: 80 }
     })
@@ -427,6 +512,28 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   
   // Preparar seções do documento
   const sections = [];
+  
+  // Definir a numeração para as não conformidades
+  const numbering = {
+    config: [
+      {
+        reference: "naoConformidades",
+        levels: [
+          {
+            level: 0,
+            format: "decimal",
+            text: "%1.",
+            alignment: AlignmentType.START,
+            style: {
+              paragraph: {
+                indent: { left: 720, hanging: 260 }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  };
   
   // Primeira seção - conteúdo principal
   sections.push({
@@ -497,7 +604,10 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   }
   
   // Criar o documento com todas as seções
-  const doc = new Document({ sections });
+  const doc = new Document({ 
+    sections,
+    numbering
+  });
   
   // Retornar o blob
   return Packer.toBlob(doc);
