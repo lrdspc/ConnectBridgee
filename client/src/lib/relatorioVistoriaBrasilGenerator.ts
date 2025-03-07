@@ -68,14 +68,14 @@ function generateFooter() {
 // Função para gerar a seção de título
 function generateTitulo(): Paragraph {
   return new Paragraph({
-    heading: HeadingLevel.HEADING_1,
     alignment: AlignmentType.CENTER,
-    spacing: { before: 300, after: 300 },
+    spacing: { before: 0, after: 480 }, // Duas linhas em branco após o título (240 twips = 1 linha)
     children: [
       new TextRun({
         text: "RELATÓRIO DE VISTORIA TÉCNICA",
         bold: true,
-        size: 28,
+        size: 24, // Tamanho 12pt (24 half-points = 12pt)
+        font: "Times New Roman",
       }),
     ],
   });
@@ -310,12 +310,14 @@ function generateIntroducao(relatorio: RelatorioVistoria): Paragraph[] {
   // Título da seção
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 400, after: 200 },
+      spacing: { before: 240, after: 240 }, // Uma linha em branco antes e depois
+      alignment: AlignmentType.LEFT,
       children: [
         new TextRun({
           text: "Introdução",
           bold: true,
-          size: 24,
+          size: 24, // 12pt
+          font: "Times New Roman",
         }),
       ],
     })
@@ -416,12 +418,14 @@ function generateAnaliseTecnica(relatorio: RelatorioVistoria): Paragraph[] {
   // Título da seção
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 400, after: 200 },
+      spacing: { before: 240, after: 240 }, // Uma linha em branco antes e depois
+      alignment: AlignmentType.LEFT,
       children: [
         new TextRun({
           text: "Análise Técnica",
           bold: true,
-          size: 24,
+          size: 24, // 12pt
+          font: "Times New Roman",
         }),
       ],
     })
@@ -503,12 +507,14 @@ function generateConclusao(relatorio: RelatorioVistoria): Paragraph[] {
   // Título da seção
   paragraphs.push(
     new Paragraph({
-      spacing: { before: 400, after: 200 },
+      spacing: { before: 240, after: 240 }, // Uma linha em branco antes e depois
+      alignment: AlignmentType.LEFT,
       children: [
         new TextRun({
           text: "Conclusão",
           bold: true,
-          size: 24,
+          size: 24, // 12pt
+          font: "Times New Roman",
         }),
       ],
     })
@@ -614,12 +620,14 @@ async function generateFotosSection(relatorio: RelatorioVistoria): Promise<Parag
     // Título da seção
     paragraphs.push(
       new Paragraph({
-        spacing: { before: 400, after: 200 },
+        spacing: { before: 240, after: 240 }, // Uma linha em branco antes e depois
+        alignment: AlignmentType.LEFT,
         children: [
           new TextRun({
             text: "Anexo Fotográfico",
             bold: true,
-            size: 24,
+            size: 24, // 12pt
+            font: "Times New Roman",
           }),
         ],
       })
@@ -730,6 +738,25 @@ function generateAssinatura(relatorio: RelatorioVistoria): Paragraph[] {
 // Função principal para gerar o relatório
 export async function generateRelatorioVistoriaBrasil(relatorio: RelatorioVistoria): Promise<Blob> {
   const doc = new Document({
+    styles: {
+      paragraphStyles: [
+        {
+          id: "Normal",
+          name: "Normal",
+          run: {
+            font: "Times New Roman",
+            size: 24, // 12 pontos (24 half-points)
+          },
+          paragraph: {
+            spacing: { 
+              line: 360, // Espaçamento 1,5 linhas (240 = 1 linha)
+              after: 160 // 8 pontos de espaço após parágrafo (20 twips = 1 ponto)
+            },
+            alignment: AlignmentType.JUSTIFIED // Texto justificado por padrão
+          }
+        },
+      ],
+    },
     sections: [
       {
         headers: {
@@ -741,10 +768,14 @@ export async function generateRelatorioVistoriaBrasil(relatorio: RelatorioVistor
         properties: {
           page: {
             margin: {
-              top: 1000,  // Margens em twips (1440 twips = 1 polegada)
-              right: 1000,
-              bottom: 1000,
-              left: 1000,
+              top: 720,  // 2,5 cm (aproximadamente)
+              right: 720, // 2,5 cm
+              bottom: 720, // 2,5 cm
+              left: 864, // 3,0 cm
+            },
+            size: {
+              width: 11906, // A4 width (210mm em twip)
+              height: 16838, // A4 height (297mm em twip)
             },
           },
         },
