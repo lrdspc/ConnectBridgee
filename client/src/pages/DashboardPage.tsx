@@ -158,11 +158,40 @@ export default function DashboardPage() {
       return;
     }
     
-    // Atualizar o estado com as novas configurações
-    setDashboardConfig(newConfig);
+    // Verificar se widgetOrder existe
+    if (!newConfig.widgetOrder || newConfig.widgetOrder.length === 0) {
+      console.warn('Ordem de widgets não definida, usando ordem padrão');
+      
+      // Definir ordem padrão se não existir
+      newConfig.widgetOrder = [
+        'resumo',
+        'proxima_visita',
+        'acoes_rapidas',
+        'visitas_agendadas',
+        'grafico_semanal',
+        'rota_dia',
+        'clima',
+        'motivationWidget',
+        'performanceChart'
+      ];
+    }
     
     // Manter o viewMode independente do layout para não conflitar tipos
     // Podemos usar o layout para ajustar espaçamento, mas não alterar visualização grid/list
+    
+    console.log('Configuração final a ser aplicada:', newConfig);
+    
+    // Atualizar o estado com as novas configurações
+    setDashboardConfig(prev => ({
+      ...prev,
+      ...newConfig,
+      // Garantir que essas propriedades existam
+      visibleWidgets: {
+        ...prev.visibleWidgets,
+        ...newConfig.visibleWidgets
+      },
+      widgetOrder: [...newConfig.widgetOrder]
+    }));
     
     // Salvar no localStorage com um try/catch para segurança
     try {

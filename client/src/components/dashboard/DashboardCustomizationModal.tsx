@@ -233,8 +233,33 @@ export function DashboardCustomizationModal({
       }
     });
     
+    // Garantir que widgetOrder existe
+    if (!localConfig.widgetOrder || localConfig.widgetOrder.length === 0) {
+      localConfig.widgetOrder = availableWidgets.map(widget => widget.id);
+    }
+    
+    // Garantir que todos os widgets estão na ordem (incluindo novos)
+    const existingWidgetIds = localConfig.widgetOrder;
+    const allWidgetIds = availableWidgets.map(w => w.id);
+    
+    // Adicionar widgets que não estão na ordem
+    const missingWidgetIds = allWidgetIds.filter(id => !existingWidgetIds.includes(id));
+    if (missingWidgetIds.length > 0) {
+      localConfig.widgetOrder = [...existingWidgetIds, ...missingWidgetIds];
+    }
+    
+    // Criar uma cópia limpa do objeto para evitar modificações indesejadas
+    const finalConfig = {
+      visibleWidgets: {...localConfig.visibleWidgets},
+      widgetOrder: [...localConfig.widgetOrder],
+      layout: localConfig.layout,
+      columns: localConfig.columns
+    };
+    
+    console.log('Configuração final a ser salva:', finalConfig);
+    
     // Chamar a função de callback para atualizar o estado principal
-    onConfigChange(localConfig);
+    onConfigChange(finalConfig);
     
     toast({
       title: "Personalização salva",
