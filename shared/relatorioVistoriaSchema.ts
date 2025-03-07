@@ -282,11 +282,10 @@ export function gerarRelatorioAleatorio(): RelatorioVistoria {
     anosGarantiaSistemaCompleto: "10",
     anosGarantiaTotal: "10",
     
-    introducao: "Foi realizada vistoria técnica na data supracitada, para análise da reclamação do cliente referente a problemas de vazamento no telhado. Durante a inspeção, foram constatadas diversas não conformidades em relação às especificações técnicas de instalação dos produtos Brasilit.",
-    
-    analiseTecnica: "Durante a inspeção técnica realizada, foram identificadas as não conformidades listadas neste relatório. As telhas apresentavam instalação inadequada, com recobrimentos insuficientes e fixação irregular, resultando nos problemas relatados pelo cliente. A estrutura de apoio também apresentava irregularidades em relação ao espaçamento e alinhamento.",
-    
-    conclusao: "Com base nas análises realizadas, concluímos que os problemas apresentados são decorrentes de falhas na instalação e não de defeitos no produto.",
+    // Os textos fixos devem permanecer vazios para que o template seja usado
+    introducao: "",
+    analiseTecnica: "",
+    conclusao: "",
     
     recomendacao: "Recomendamos a correção das não conformidades identificadas neste relatório, seguindo rigorosamente as especificações técnicas do fabricante disponíveis no site da Brasilit. É essencial que as telhas sejam instaladas por profissionais qualificados e que todas as recomendações técnicas sejam observadas para garantir o desempenho adequado do produto.",
     
