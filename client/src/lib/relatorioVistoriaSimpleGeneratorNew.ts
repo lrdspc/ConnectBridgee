@@ -1,11 +1,11 @@
 /**
- * Gerador SIMPLIFICADO de Relatórios DOCX com formatação exata conforme PDF de referência
+ * Gerador SIMPLIFICADO de Relatórios DOCX com formatação formal para laudo técnico
  * 
  * Esta versão foi desenvolvida para atender exatamente a formatação solicitada
  * de acordo com o documento PDF de referência fornecido.
  * 
  * Características:
- * - Formatação Times New Roman 12pt
+ * - Formatação Times New Roman 12pt (fonte formal para documentos jurídicos)
  * - Espaçamento entre linhas 1,5
  * - Margens ABNT (superior, inferior e direita: 2,5cm; esquerda: 3,0cm)
  * - Espaçamento exato entre parágrafos conforme o modelo
@@ -35,14 +35,14 @@ function log(...args: any[]) {
 
 /**
  * Gera um documento DOCX para o relatório de vistoria técnica
- * Formatação exata conforme PDF de referência
+ * Formatação formal para laudo técnico/jurídico
  * 
  * @param relatorio Dados do relatório de vistoria
  * @returns Blob do documento DOCX gerado
  */
 export async function gerarRelatorioSimples(relatorio: RelatorioVistoria): Promise<Blob> {
   try {
-    log("Iniciando geração de relatório conforme PDF de referência");
+    log("Iniciando geração de relatório com formatação formal para laudo técnico");
     
     // === PREPARAÇÃO DOS TEXTOS ===
     
@@ -196,7 +196,7 @@ conforme a legislação em vigor.`;
             id: "Normal",
             name: "Normal",
             run: {
-              font: "Times New Roman", // Fonte mais formal para documentos jurídicos
+              font: "Times New Roman", // Fonte formal para documentos jurídicos
               size: 24 // 12pt
             },
             paragraph: {
@@ -323,7 +323,7 @@ conforme a legislação em vigor.`;
               spacing: { after: 240 } // Linha em branco após o subtítulo
             }),
             
-            // Título principal com formatação mais formal
+            // Título principal com formatação formal
             new Paragraph({
               children: [
                 new TextRun({ 
@@ -447,15 +447,10 @@ conforme a legislação em vigor.`;
               spacing: { before: 360, after: 240 },
               border: {
                 bottom: {
-                  color: "000000",
-                  size: 6,
+                  color: "000000", // Preto
+                  size: 6, // 1/2 pt
                   space: 1,
                   style: BorderStyle.SINGLE
-                }
-                bottom: {
-                  color: "C0C0C0", // Cinza claro
-                  size: 6, // 1/2 pt
-                  space: 1
                 }
               }
             }),
@@ -520,15 +515,10 @@ conforme a legislação em vigor.`;
               spacing: { before: 360, after: 240 },
               border: {
                 bottom: {
-                  color: "000000",
-                  size: 6,
+                  color: "000000", // Preto
+                  size: 6, // 1/2 pt
                   space: 1,
                   style: BorderStyle.SINGLE
-                }
-                bottom: {
-                  color: "C0C0C0", // Cinza claro
-                  size: 6, // 1/2 pt
-                  space: 1
                 }
               }
             }),

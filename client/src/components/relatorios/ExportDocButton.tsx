@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { FileText, FileDown, AlertTriangle, Loader2 } from "lucide-react";
 import type { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { toast } from "sonner";
-import { gerarRelatorioSimples } from "@/lib/relatorioVistoriaSimpleGenerator";
+import { gerarRelatorioSimples } from "@/lib/relatorioVistoriaSimpleGeneratorNew";
 
 // Logs para debug - Habilitado para ajudar na diagnóstico de problemas
 const DEBUG = true;
