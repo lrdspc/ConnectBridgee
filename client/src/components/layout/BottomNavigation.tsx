@@ -68,6 +68,9 @@ const BottomNavigation = () => {
                       {link.icon}
                     </div>
                     <span className="text-[10px] mt-1 font-medium">{link.name}</span>
+                    {isActive(link.path) && (
+                      <div className="w-1 h-1 bg-primary rounded-full mt-1"></div>
+                    )}
                   </a>
                 </Link>
               ))}
@@ -77,7 +80,7 @@ const BottomNavigation = () => {
             <div className="absolute left-1/2 -translate-x-1/2 -top-5">
               <Link href="/nova-vistoria">
                 <a className="flex flex-col items-center">
-                  <div className="bg-primary text-white p-3 rounded-full shadow-lg flex items-center justify-center w-14 h-14">
+                  <div className="bg-primary text-white p-3 rounded-full shadow-lg flex items-center justify-center w-14 h-14 active:scale-95 transition-transform">
                     <Plus className="h-6 w-6" />
                   </div>
                   <span className="text-[10px] font-semibold mt-1 text-primary">Nova Vistoria</span>
@@ -100,6 +103,9 @@ const BottomNavigation = () => {
                       {link.icon}
                     </div>
                     <span className="text-[10px] mt-1 font-medium">{link.name}</span>
+                    {isActive(link.path) && (
+                      <div className="w-1 h-1 bg-primary rounded-full mt-1"></div>
+                    )}
                   </a>
                 </Link>
               ))}
@@ -114,7 +120,7 @@ const BottomNavigation = () => {
           <Button 
             variant="outline" 
             size="icon" 
-            className="fixed bottom-[88px] right-4 rounded-full shadow-md h-10 w-10 bg-white"
+            className="fixed bottom-[88px] right-4 rounded-full shadow-md h-10 w-10 bg-white border-primary/20 hover:bg-primary/5 transition-colors"
           >
             <MenuIcon className="h-5 w-5 text-primary" />
           </Button>

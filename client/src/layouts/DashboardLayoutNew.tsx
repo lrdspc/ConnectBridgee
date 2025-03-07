@@ -103,7 +103,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
     }
   };
 
-  const [open, setOpen] = useState(false); // Added state for mobile menu
+  // Estado do menu mobile removido - agora gerenciado pelo componente BottomNavigation
 
   return (
     <div className="h-screen flex flex-col bg-gray-50">
@@ -147,7 +147,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
 
         {/* Ações e perfil do usuário - versão simplificada para mobile */}
         <div className="flex items-center gap-2">
-          {/* Em mobile mostramos o menu hambúrguer, perfil e notificações */}
+          {/* Em mobile mostramos apenas as notificações e o perfil */}
           {isMobile ? (
             <>
               <Button variant="ghost" size="icon" className="relative">
@@ -162,14 +162,6 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
                   {user?.name?.charAt(0) || 'U'}
                 </AvatarFallback>
               </Avatar>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="ml-1" 
-                onClick={() => setOpen(true)}
-              >
-                <MenuIcon className="h-6 w-6" />
-              </Button>
             </>
           ) : (
             <>
@@ -369,7 +361,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
         {/* Conteúdo principal */}
         <main 
           ref={mainRef}
-          className="flex-1 overflow-auto bg-gray-50 pb-16"
+          className="flex-1 overflow-auto bg-gray-50 pb-24"
         >
           {/* Espaçador para compensar o cabeçalho fixo em mobile */}
           {isMobile && <div className="h-16" />}
