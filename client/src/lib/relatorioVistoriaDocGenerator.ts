@@ -537,7 +537,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
   );
 
   // Lista de não conformidades na conclusão (apenas os títulos, numerados sequencialmente)
-  naoConformidades.forEach((nc, index) => {
+  naoConformidades.forEach((nc: NaoConformidade, index: number) => {
     children.push(
       new Paragraph({
         spacing: { after: 240 },
@@ -554,7 +554,7 @@ export async function gerarRelatorioVistoriaDoc(relatorio: RelatorioVistoria): P
 
   // Parágrafos da conclusão
   const paragrafosConclusao = relatorio.conclusao?.split('\n\n') || [];
-  paragrafosConclusao.forEach((paragrafo) => {
+  paragrafosConclusao.forEach((paragrafo: string) => {
     children.push(
       new Paragraph({
         spacing: { after: 240 },
