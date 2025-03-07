@@ -22,7 +22,7 @@ const ClienteDetalhesPage = lazy(() => import('./pages/ClienteDetalhesPage'));
 // Páginas principais de relatórios - reduzidas e consolidadas
 const RelatoriosPage = lazy(() => import('./pages/RelatoriosPage'));
 const RelatorioVistoriaPage = lazy(() => import('./pages/RelatorioVistoriaPage'));
-const TesteRelatorioPage = lazy(() => import('./pages/TesteRelatorioPage'));
+const TesteRelatorioPage = lazy(() => import('./pages/TesteRelatorioPageSimple'));
 
 // Componente de loading para mostrar durante o carregamento das páginas
 const PageLoading = () => (
