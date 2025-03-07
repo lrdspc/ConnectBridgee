@@ -591,9 +591,10 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
             new TableCell({
               children: [
                 new Paragraph({
+                  alignment: AlignmentType.JUSTIFIED,
                   children: [
                     new TextRun({
-                      text: introducaoTexto,
+                      text: "A Área de Assistência Técnica foi solicitada para atender uma reclamação relacionada à permeabilidade de telhas de fibrocimento. As telhas instaladas são do modelo BRASILIT FIBROCIMENTO ONDULADA de 6 mm e instaladas com elementos complementares CBP3 - Cumeeira Articulada e parafusos. Tudo conforme especificações técnicas e norma institucional ISO 9001, bem como as normas técnicas da ABNT: NBR 15210-1, NBR15210-2 e NBR 7581-3.",
                       size: 20,
                     }),
                   ],
@@ -633,7 +634,7 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
         }
       });
     } else {
-      // Adicionar não conformidades padrão do modelo
+      // Adicionar não conformidades padrão do modelo conforme o texto original
       naoConformidadesParagrafos.push(
         new Paragraph({
           alignment: AlignmentType.JUSTIFIED,
@@ -641,12 +642,12 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
           bullet: { level: 0 },
           children: [
             new TextRun({
-              text: "CORTE DE CANTO NÃO REALIZADO: ",
+              text: "Armazenagem Incorreta: ",
               size: 20,
               bold: true
             }),
             new TextRun({
-              text: "ERRO NA INDICAÇÃO DO FABRICANTE (CACHIMBO/CARANGUEJO);",
+              text: "Durante a inspeção, foi constatado que as telhas estão sendo armazenadas de forma inadequada, em desacordo com as recomendações técnicas do fabricante. As telhas BRASILIT devem ser armazenadas em local plano, firme, coberto e seco, protegidas das intempéries. O empilhamento deve ser feito horizontalmente, com as telhas apoiadas sobre caibros ou pontaletes de madeira espaçados no máximo a cada 50cm, garantindo um apoio uniforme.",
               size: 20
             })
           ]
@@ -657,9 +658,13 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
           bullet: { level: 0 },
           children: [
             new TextRun({
-              text: "FIXAÇÃO IRREGULAR DAS TELHAS; ",
+              text: "Inclinação da Telha Inferior ao Recomendado: ",
               size: 20,
               bold: true
+            }),
+            new TextRun({
+              text: "A inspeção técnica identificou que a inclinação do telhado está abaixo do mínimo recomendado nas especificações do fabricante. A inclinação é um fator crítico para o desempenho do sistema de cobertura, pois garante o escoamento adequado das águas pluviais e evita o acúmulo de sujeira.",
+              size: 20
             })
           ]
         }),
@@ -669,9 +674,45 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
           bullet: { level: 0 },
           children: [
             new TextRun({
-              text: "CAMINHAMENTO DIRETO NO TELHADO.",
+              text: "Balanço Livre do Beiral Incorreto: ",
               size: 20,
               bold: true
+            }),
+            new TextRun({
+              text: "Foi constatado que o balanço livre do beiral está em desacordo com as especificações técnicas do fabricante. O balanço do beiral é a distância entre a última terça e a extremidade da telha, sendo um elemento crucial para o correto funcionamento do sistema de cobertura.",
+              size: 20
+            })
+          ]
+        }),
+        new Paragraph({
+          alignment: AlignmentType.JUSTIFIED,
+          spacing: { after: 120 },
+          bullet: { level: 0 },
+          children: [
+            new TextRun({
+              text: "Recobrimento Incorreto: ",
+              size: 20,
+              bold: true
+            }),
+            new TextRun({
+              text: "Foi identificado que o recobrimento entre as telhas não atende às especificações mínimas estabelecidas pelo fabricante. O recobrimento adequado é fundamental para garantir a estanqueidade do sistema de cobertura.",
+              size: 20
+            })
+          ]
+        }),
+        new Paragraph({
+          alignment: AlignmentType.JUSTIFIED,
+          spacing: { after: 120 },
+          bullet: { level: 0 },
+          children: [
+            new TextRun({
+              text: "Sentido de Montagem Incorreto: ",
+              size: 20,
+              bold: true
+            }),
+            new TextRun({
+              text: "A vistoria constatou que a montagem das telhas foi executada em sentido contrário ao tecnicamente recomendado. O sentido correto de montagem das telhas BRASILIT deve considerar os ventos predominantes da região, iniciando-se a colocação no sentido contrário a estes ventos.",
+              size: 20
             })
           ]
         })
@@ -723,6 +764,7 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
             new TableCell({
               children: [
                 new Paragraph({
+                  alignment: AlignmentType.JUSTIFIED,
                   children: [
                     new TextRun({
                       text: "A patologia reclamante da infiltração das telhas de fibrocimento modelo 6 mm CRFS se deve a erros construtivos e irregularidades nas telhas causadas pelo seguinte fator de instalação:",
@@ -732,6 +774,7 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
                   spacing: { after: 120 },
                 }),
                 new Paragraph({
+                  alignment: AlignmentType.JUSTIFIED,
                   children: [
                     new TextRun({
                       text: "CORTE DE CANTO NÃO REALIZADO:",
@@ -743,6 +786,7 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
                 }),
                 ...naoConformidadesParagrafos,
                 new Paragraph({
+                  alignment: AlignmentType.JUSTIFIED,
                   children: [
                     new TextRun({
                       text: "Em função das não conformidades constatadas na montagem e instalação das chapas Brasilit, finalizamos o atendimento considerando a reclamação como IMPROCEDENTE, tendo em vista que os problemas apresentados são relacionados à instalação das telhas e não a problemas relacionados à qualidade do material.",
@@ -752,6 +796,7 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
                   spacing: { after: 120 },
                 }),
                 new Paragraph({
+                  alignment: AlignmentType.JUSTIFIED,
                   children: [
                     new TextRun({
                       text: "As telhas BRASILIT modelo FIBROCIMENTO ONDULADA possuem dez anos de garantia com relação a problemas de fabricação. A garantia Brasilit está condicionada à correta aplicação do produto, seguindo sempre as instruções de instalação contidas no Manual de Montagem das Telhas Onduladas. Este manual pode ser encontrado no site Brasilit. Este guia técnico está sempre disponível em: http://www.brasilit.com.br.",
@@ -761,6 +806,7 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
                   spacing: { after: 120 },
                 }),
                 new Paragraph({
+                  alignment: AlignmentType.JUSTIFIED,
                   children: [
                     new TextRun({
                       text: "Ratificamos que os produtos Brasilit atendem às Normas da Associação Brasileira de Normas Técnicas (ABNT) e são devidamente certificados e cumprem os requisitos legais de garantia de produtos conforme a legislação em vigor.",
@@ -770,6 +816,7 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
                   spacing: { after: 120 },
                 }),
                 new Paragraph({
+                  alignment: AlignmentType.JUSTIFIED,
                   children: [
                     new TextRun({
                       text: "Desde já agradecemos e nos colocamos à disposição para quaisquer esclarecimentos que se fizerem necessários.",
@@ -779,6 +826,7 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
                   spacing: { after: 200 },
                 }),
                 new Paragraph({
+                  alignment: AlignmentType.JUSTIFIED,
                   children: [
                     new TextRun({
                       text: "Atenciosamente,",
