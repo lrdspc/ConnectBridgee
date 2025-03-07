@@ -113,8 +113,8 @@ export default function RelatoriosPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [, setLocation] = useLocation();
   
-  const navegarParaVistoriaFAR = () => {
-    setLocation("/vistoria-far");
+  const navegarParaNovaVistoria = () => {
+    setLocation("/nova-vistoria");
   };
 
   // Filtrar relatórios
@@ -182,10 +182,10 @@ export default function RelatoriosPage() {
             <Button 
               size="lg" 
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md" 
-              onClick={navegarParaVistoriaFAR}
+              onClick={navegarParaNovaVistoria}
             >
               <FileText className="mr-2 h-5 w-5" />
-              Nova Vistoria FAR
+              Nova Vistoria
             </Button>
             <Button onClick={() => setLocation('/relatorios/modelos')}>
               <FileText className="mr-2 h-4 w-4" /> Modelos de Relatórios
