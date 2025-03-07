@@ -511,27 +511,24 @@ export function GerarRelatorioVistoriaModal({
               
               {/* Campos para textos fixos removidos conforme instrução */}
               
+              {/* NOTA: Campos para textos fixos foram removidos conforme a instrução */}
+              {/* Os textos de conclusão, análise técnica e introdução vêm do template, não do formulário */}
+              
+              <div className="bg-muted p-4 rounded-lg my-4">
+                <p className="text-sm font-medium mb-2 text-muted-foreground">Lembrete importante:</p>
+                <p className="text-sm text-muted-foreground">Os textos completos como introdução, análise técnica e conclusão vêm do <strong>template fixo</strong> e não são editáveis aqui.</p>
+                <p className="text-sm text-muted-foreground mt-2">Apenas selecione o <strong>Resultado da Reclamação</strong> acima para determinar se é procedente ou improcedente.</p>
+              </div>
+              
+              {/* Mantido apenas os campos opcionais de recomendação e observações */}
               <div className="space-y-2">
-                <Label htmlFor="recomendacao">Recomendações (opcional)</Label>
-                <Textarea
+                <Label htmlFor="recomendacao">Recomendações Específicas (opcional)</Label>
+                <Input
                   id="recomendacao"
                   name="recomendacao"
                   value={relatorio.recomendacao || ""}
                   onChange={handleInputChange}
-                  placeholder="Recomendações técnicas específicas"
-                  rows={4}
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="observacoesGerais">Observações Gerais (opcional)</Label>
-                <Textarea
-                  id="observacoesGerais"
-                  name="observacoesGerais"
-                  value={relatorio.observacoesGerais || ""}
-                  onChange={handleInputChange}
-                  placeholder="Observações gerais sobre a vistoria"
-                  rows={4}
+                  placeholder="Ex: Substituição de X telhas / Refazer vedação"
                 />
               </div>
             </TabsContent>
