@@ -480,8 +480,8 @@ export default function RelatorioVistoriaPage() {
       
       // Tentar gerar usando várias estratégias em sequência
       try {
-        // Estratégia 1: Gerador DOCX minimalista com formatação ABNT
-        console.log('▶️ TENTATIVA 1: Usando gerador minimalista (formatação ABNT)');
+        // Estratégia 1: Gerador DOCX minimalista com formatação ABNT (implementação essencial)
+        console.log('▶️ TENTATIVA 1: Usando gerador essencial otimizado (formatação ABNT)');
         const blob = await gerarRelatorioVistoriaMinimal(formData);
         saveDocFile(blob, fileName);
         toast({
@@ -490,12 +490,12 @@ export default function RelatorioVistoriaPage() {
         });
         return; // Sair após sucesso
       } catch (minimalError) {
-        console.error('❌ Erro na geração minimalista:', minimalError);
+        console.error('❌ Erro na geração essencial:', minimalError);
         
         // Notificar o usuário do problema na primeira tentativa
         toast({
           title: 'Tentando método alternativo...',
-          description: 'O primeiro método falhou, tentando outro...',
+          description: 'O gerador essencial falhou, tentando gerador simples...',
           variant: 'default'
         });
         
