@@ -475,40 +475,18 @@ export async function gerarFARReportDoc(relatorio: FARReport): Promise<Blob> {
   // Lista de problemas na conclusão
   mainContent.push(...gerarListaProblemasSimples(relatorio));
   
-  // Texto da conclusão
-  if (relatorio.conclusao) {
-    mainContent.push(
-      new Paragraph({
-        children: [
-          new TextRun({ text: relatorio.conclusao })
-        ],
-        spacing: { after: 200 }
-      })
-    );
+  // Texto da conclusão com resultado integrado (conforme modelo)
+  let resultadoTexto = "";
+  if (relatorio.resultado === "PROCEDENTE") {
+    resultadoTexto = "Em função das não conformidades constatadas na fabricação das chapas Brasilit, finalizamos o atendimento considerando a reclamação como PROCEDENTE, onde os problemas reclamados se dão por problemas relacionados à qualidade do material.";
+  } else {
+    resultadoTexto = "Em função das não conformidades constatadas no manuseio e instalação das chapas Brasilit, finalizamos o atendimento considerando a reclamação como IMPROCEDENTE, onde os problemas reclamados se dão pelo incorreto manuseio e instalação das telhas e não a problemas relacionados à qualidade do material.";
   }
-  
-  // Resultado da análise
-  mainContent.push(
-    new Paragraph({
-      text: "RESULTADO DA ANÁLISE",
-      heading: HeadingLevel.HEADING_2,
-      spacing: { after: 120 }
-    })
-  );
-  
+
   mainContent.push(
     new Paragraph({
       children: [
-        new TextRun({ 
-          text: "Após análise técnica, a reclamação foi considerada: ", 
-          size: 24
-        }),
-        new TextRun({ 
-          text: relatorio.resultado || "IMPROCEDENTE", 
-          bold: true, 
-          size: 28,
-          color: relatorio.resultado === "PROCEDENTE" ? "FF0000" : "000000" // Vermelho para PROCEDENTE
-        })
+        new TextRun({ text: resultadoTexto })
       ],
       spacing: { after: 200 }
     })
