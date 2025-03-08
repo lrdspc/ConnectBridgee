@@ -94,7 +94,7 @@ export function ExportSaintGobainButtonFix({
   variant = "outline",
   size = "default",
   className = "",
-  label = "Exportar DOC (Saint-Gobain)",
+  label = "Exportar Brasilit",
   loadingLabel = "Gerando documento...",
   onExportSuccess,
   onExportError,
@@ -121,7 +121,7 @@ export function ExportSaintGobainButtonFix({
       // Criar nome do arquivo com data
       const now = new Date();
       const dateStr = `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}`;
-      const fileName = `${fileNamePrefix}_SaintGobain_${relatorio.cliente || 'Cliente'}_${dateStr}.docx`;
+      const fileName = `${fileNamePrefix}_Brasilit_${relatorio.cliente || 'Cliente'}_${dateStr}.docx`;
       
       // Download do arquivo
       downloadBlob(blob, fileName);

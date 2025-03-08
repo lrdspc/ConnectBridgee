@@ -492,17 +492,17 @@ export async function gerarRelatorioSaintGobainFix(relatorio: RelatorioVistoria 
       naoConformidadesParagrafos.push(
         new Paragraph({
           alignment: AlignmentType.JUSTIFIED,
-          spacing: { after: 120 },
+          spacing: { after: 200 },
           bullet: { level: 0 },
           children: [
             new TextRun({
               text: "Armazenagem Incorreta: ",
-              size: 20,
+              size: 24,
               bold: true
             }),
             new TextRun({
-              text: "Durante a inspeção, foi constatado que as telhas estão sendo armazenadas de forma inadequada, em desacordo com as recomendações técnicas do fabricante. As telhas BRASILIT devem ser armazenadas em local plano, firme, coberto e seco, protegidas das intempéries. O empilhamento deve ser feito horizontalmente, com as telhas apoiadas sobre caibros ou pontaletes de madeira espaçados no máximo a cada 50cm, garantindo um apoio uniforme.",
-              size: 20
+              text: "Durante a inspeção, foi constatado que as telhas foram armazenadas de forma inadequada, em desacordo com as recomendações técnicas do fabricante. As telhas BRASILIT devem ser armazenadas em local plano, firme, coberto e seco, protegidas das intempéries. O empilhamento deve ser feito horizontalmente, com as telhas apoiadas sobre caibros ou pontaletes de madeira espaçados no máximo a cada 50cm, garantindo um apoio uniforme.",
+              size: 24
             })
           ]
         }),
@@ -622,21 +622,21 @@ export async function gerarRelatorioSaintGobainFix(relatorio: RelatorioVistoria 
                   children: [
                     new TextRun({
                       text: "Com base na análise técnica realizada, foram identificadas as seguintes não conformidades:",
-                      size: 20,
+                      size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
                 new Paragraph({
                   alignment: AlignmentType.JUSTIFIED,
                   children: [
                     new TextRun({
                       text: "CORTE DE CANTO NÃO REALIZADO:",
-                      size: 20,
+                      size: 24,
                       bold: true,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
                 ...naoConformidadesParagrafos,
                 new Paragraph({
@@ -644,74 +644,66 @@ export async function gerarRelatorioSaintGobainFix(relatorio: RelatorioVistoria 
                   children: [
                     new TextRun({
                       text: `Em função das não conformidades constatadas na montagem e instalação das chapas Brasilit, finalizamos o atendimento considerando a reclamação como ${resultado}, tendo em vista que os problemas apresentados são relacionados à instalação das telhas e não a problemas relacionados à qualidade do material.`,
-                      size: 20,
+                      size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
                 new Paragraph({
                   alignment: AlignmentType.JUSTIFIED,
                   children: [
                     new TextRun({
                       text: `As telhas BRASILIT modelo FIBROCIMENTO ONDULADA possuem ${anosGarantiaTotal} anos de garantia com relação a problemas de fabricação. A garantia Brasilit está condicionada à correta aplicação do produto, seguindo sempre as instruções de instalação contidas no Manual de Montagem das Telhas Onduladas. Este manual pode ser encontrado no site Brasilit. Este guia técnico está sempre disponível em: http://www.brasilit.com.br.`,
-                      size: 20,
+                      size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
                 new Paragraph({
                   alignment: AlignmentType.JUSTIFIED,
                   children: [
                     new TextRun({
                       text: "Ratificamos que os produtos Brasilit atendem às Normas da Associação Brasileira de Normas Técnicas — ABNT, específicas para cada linha de produto, e cumprimos as exigências legais de garantia de produtos conforme a legislação em vigor.",
-                      size: 20,
+                      size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
                 new Paragraph({
                   alignment: AlignmentType.JUSTIFIED,
                   children: [
                     new TextRun({
                       text: "Desde já, agradecemos e nos colocamos à disposição para quaisquer esclarecimentos que se fizerem necessários.",
-                      size: 20,
+                      size: 24,
                     }),
                   ],
-                  spacing: { after: 200 },
+                  spacing: { after: 240 },
                 }),
                 new Paragraph({
                   alignment: AlignmentType.JUSTIFIED,
                   children: [
                     new TextRun({
                       text: "Atenciosamente,",
-                      size: 20,
+                      size: 24,
                     }),
                   ],
-                  spacing: { after: 200 },
+                  spacing: { after: 240 },
                 }),
                 new Paragraph({
                   children: [
                     new TextRun({
-                      text: "Saint-Gobain do Brasil Prod. Ind. e para Const. Civil Ltda.",
-                      size: 20,
+                      text: "Brasilit - Divisão de Produtos para Construção",
+                      size: 24,
                       bold: true,
                     }),
                   ],
-                }),
-                new Paragraph({
-                  children: [
-                    new TextRun({
-                      text: "Divisão Produtos Para Construção",
-                      size: 20,
-                      bold: true,
-                    }),
-                  ],
+                  spacing: { after: 120 },
                 }),
                 new Paragraph({
                   children: [
                     new TextRun({
                       text: "Departamento de Assistência Técnica",
-                      size: 20,
+                      size: 24,
                       bold: true,
                     }),
                   ],
@@ -723,7 +715,7 @@ export async function gerarRelatorioSaintGobainFix(relatorio: RelatorioVistoria 
       ],
     });
     
-    // Criação do documento final
+    // Criação do documento final com formatação correta
     const doc = new Document({
       title: "Relatório de Vistoria Técnica",
       description: "Relatório de Vistoria Técnica gerado pelo sistema Brasilit",
@@ -738,7 +730,8 @@ export async function gerarRelatorioSaintGobainFix(relatorio: RelatorioVistoria 
             paragraph: {
               spacing: {
                 line: 360, // 1.5x line spacing
-              }
+              },
+              alignment: AlignmentType.JUSTIFIED
             }
           }
         }
