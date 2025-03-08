@@ -82,19 +82,19 @@ export default function RelatorioVistoriaPage() {
   const [fotos, setFotos] = useState<{ id: string; dataUrl: string; descricao?: string; timestamp: string }[]>([]);
   const [previewHTML, setPreviewHTML] = useState<string>('');
   const [isGeneratingPreview, setIsGeneratingPreview] = useState(false);
-
+  
   // Obter o ID do cliente a partir dos parâmetros de consulta
   const [location] = useLocation();
   const searchParams = new URLSearchParams(location.split('?')[1] || '');
   const clientId = searchParams.get('clientId');
   const { visits } = useVisits();
-
+  
   // Inicializar o formulário com valores padrão
   const form = useForm<RelatorioVistoria>({
     resolver: zodResolver(relatorioVistoriaSchema),
     defaultValues: novoRelatorioVistoria(),
   });
-
+  
   // Carregar dados do cliente quando o clientId estiver disponível
   useEffect(() => {
     if (clientId && visits) {
@@ -104,7 +104,7 @@ export default function RelatorioVistoriaPage() {
         form.setValue('cliente', clientVisit.clientName);
         form.setValue('endereco', clientVisit.address);
         form.setValue('protocolo', `VISTORIA-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000)}`);
-
+        
         // Se a cidade/UF estiver disponível no endereço, tentar extrair
         const addressParts = clientVisit.address.split(',');
         if (addressParts.length > 1) {
@@ -115,7 +115,7 @@ export default function RelatorioVistoriaPage() {
             form.setValue('uf', cityUfMatch[2].trim());
           }
         }
-
+        
         toast({
           title: 'Dados do cliente carregados',
           description: 'O formulário foi pré-preenchido com os dados do cliente selecionado.',
@@ -124,10 +124,10 @@ export default function RelatorioVistoriaPage() {
       }
     }
   }, [clientId, visits, form, toast]);
-
+  
   const watchNaoConformidades = form.watch('naoConformidades');
   const watchResultado = form.watch('resultado');
-
+  
   // Função para lidar com o upload de fotos
   const handleFotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -142,7 +142,7 @@ export default function RelatorioVistoriaPage() {
               timestamp: new Date().toISOString()
             };
             setFotos(prev => [...prev, novaFoto]);
-
+            
             // Atualizar o campo de fotos no formulário
             const fotosCampo = form.getValues('fotos') || [];
             form.setValue('fotos', [...fotosCampo, novaFoto]);
@@ -152,11 +152,11 @@ export default function RelatorioVistoriaPage() {
       });
     }
   };
-
+  
   // Função para atualizar a descrição de uma foto
   const handleFotoDescricaoChange = (id: string, descricao: string) => {
     setFotos(prev => prev.map(f => f.id === id ? { ...f, descricao } : f));
-
+    
     // Atualizar também no formulário
     const fotosCampo = form.getValues('fotos') || [];
     form.setValue(
@@ -164,16 +164,16 @@ export default function RelatorioVistoriaPage() {
       fotosCampo.map(f => f.id === id ? { ...f, descricao } : f)
     );
   };
-
+  
   // Função para remover uma foto
   const handleRemoverFoto = (id: string) => {
     setFotos(prev => prev.filter(f => f.id !== id));
-
+    
     // Atualizar também no formulário
     const fotosCampo = form.getValues('fotos') || [];
     form.setValue('fotos', fotosCampo.filter(f => f.id !== id));
   };
-
+  
   // Função para alternar o estado de seleção de uma não conformidade
   const toggleNaoConformidade = (id: number) => {
     const naoConformidadesAtualizadas = watchNaoConformidades.map(nc => 
@@ -181,18 +181,18 @@ export default function RelatorioVistoriaPage() {
     );
     form.setValue('naoConformidades', naoConformidadesAtualizadas);
   };
-
+  
   // Função para gerar uma visualização do relatório
   const gerarPreviewRelatorio = () => {
     setIsGeneratingPreview(true);
-
+    
     try {
       // Clonar o formulário para não afetar os valores originais
       const formData = {...form.getValues()};
-
+      
       // Garantir que estamos usando IMPROCEDENTE sempre
       formData.resultado = "IMPROCEDENTE";
-
+      
       // Textos fixos com substituição de variáveis
       const introducaoTexto = `A Área de Assistência Técnica foi solicitada para atender uma reclamação
 relacionada ao surgimento de infiltrações nas telhas de fibrocimento: -
@@ -212,7 +212,7 @@ orientações técnicas contidas no Guia Técnico de Telhas de Fibrocimento
 e Acessórios para Telhado - Brasilit para o melhor desempenho do
 produto, assim como a garantia do produto coberta por ${formData.anosGarantia} anos (ou ${formData.anosGarantiaSistemaCompleto}
 anos para sistema completo).`;
-
+      
       // Texto fixo da análise técnica
       const analiseTecnicaTexto = `Durante a visita técnica realizada no local, nossa equipe conduziu uma
 vistoria minuciosa da cobertura, documentando e analisando as condições
@@ -220,7 +220,7 @@ de instalação e o estado atual das telhas. Após criteriosa avaliação das
 evidências coletadas em campo, identificamos alguns desvios nos
 procedimentos de manuseio e instalação em relação às especificações
 técnicas do fabricante, os quais são detalhados a seguir.`;
-
+      
       // Conclusão - sempre como IMPROCEDENTE
       const conclusaoTexto = `Com base na análise técnica realizada, foram identificadas as não conformidades listadas acima.
 
@@ -236,7 +236,7 @@ e Acessórios para Telhado - Brasilit. Este guia técnico está sempre disponív
 Ratificamos que os produtos Brasilit atendem as Normas da Associação Brasileira de Normas Técnicas - ABNT, 
 específicas para cada linha de produto, e cumprimos as exigências legais de garantia de produtos
 conforme a legislação em vigor.`;
-
+      
       // Filtrar não conformidades selecionadas
       const naoConformidadesSelecionadas = formData.naoConformidades
         .filter(nc => nc.selecionado)
@@ -247,7 +247,7 @@ conforme a legislação em vigor.`;
             descricao: completa?.descricao || ''
           };
         });
-
+      
       // Montar a lista de não conformidades com descrições completas (para a seção 2.1)
       const listaNaoConformidades = naoConformidadesSelecionadas.length > 0
         ? `<ul>${naoConformidadesSelecionadas.map(nc => 
@@ -256,7 +256,7 @@ conforme a legislação em vigor.`;
               <p style="margin-left: 20px; margin-top: 5px; margin-bottom: 15px;">${nc.descricao}</p>
             </li>`).join('')}</ul>`
         : '<p>Não foram identificadas não conformidades.</p>';
-
+        
       // Montar a lista de não conformidades apenas com títulos (para a conclusão)
       const listaNaoConformidadesTitulos = naoConformidadesSelecionadas.length > 0
         ? `<ul>${naoConformidadesSelecionadas.map(nc => 
@@ -264,12 +264,12 @@ conforme a legislação em vigor.`;
               <strong>${nc.titulo}</strong>
             </li>`).join('')}</ul>`
         : '<p>Não foram identificadas não conformidades.</p>';
-
+      
       // Criar HTML para o preview
       const html = `
         <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
           <h1 style="text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px;">RELATÓRIO DE VISTORIA TÉCNICA</h1>
-
+          
           <div style="margin-top: 20px;">
             <h2>IDENTIFICAÇÃO DO PROJETO</h2>
             <table style="width: 100%; border-collapse: collapse;">
@@ -303,7 +303,7 @@ conforme a legislação em vigor.`;
               </tr>
             </table>
           </div>
-
+          
           <div style="margin-top: 20px;">
             <h2>RESPONSÁVEIS TÉCNICOS</h2>
             <table style="width: 100%; border-collapse: collapse;">
@@ -333,11 +333,11 @@ conforme a legislação em vigor.`;
               </tr>
             </table>
           </div>
-
+          
           <div style="margin-top: 20px;">
             <h2>1. INTRODUÇÃO</h2>
             <p>${introducaoTexto}</p>
-
+            
             <h3>1.1 DADOS DO PRODUTO</h3>
             <table style="width: 100%; border-collapse: collapse;">
               <tr>
@@ -354,39 +354,39 @@ conforme a legislação em vigor.`;
               </tr>
             </table>
           </div>
-
+          
           <div style="margin-top: 20px;">
             <h2>2. ANÁLISE TÉCNICA</h2>
             <p>${analiseTecnicaTexto}</p>
-
+            
             <h3>2.1 NÃO CONFORMIDADES IDENTIFICADAS</h3>
             ${listaNaoConformidades}
           </div>
-
+          
           <div style="margin-top: 20px;">
             <h2>3. CONCLUSÃO</h2>
             <p>Com base na análise técnica realizada, foram identificadas as seguintes não conformidades:</p>
             ${listaNaoConformidadesTitulos}
             <p>${conclusaoTexto}</p>
-
+            
             <p>${formData.recomendacao || ''}</p>
-
+            
             <p>Desde já, agradecemos e nos colocamos à disposição para quaisquer esclarecimentos que se fizerem necessário.</p>
-
+            
             <p>Atenciosamente,</p>
           </div>
-
+          
           <div style="margin-top: 20px; border-top: 1px solid #ddd; padding-top: 20px;">
             <p><strong>Saint-Gobain do Brasil Prod. Ind. e para Cons. Civil Ltda.</strong><br>
             <strong>Divisão Produtos Para Construção</strong><br>
             <strong>Departamento de Assistência Técnica</strong></p>
-
+            
             <div style="margin-top: 30px; margin-bottom: 10px; border-bottom: 1px solid #000; width: 60%;"></div>
             <p>${formData.elaboradoPor}<br>
             ${formData.departamento} - ${formData.unidade}<br>
             CREA/CAU ${formData.numeroRegistro}</p>
           </div>
-
+          
           ${formData.fotos && formData.fotos.length > 0 ? `
             <div style="margin-top: 20px;">
               <h2>ANEXO: REGISTRO FOTOGRÁFICO</h2>
@@ -402,7 +402,7 @@ conforme a legislação em vigor.`;
           ` : ''}
         </div>
       `;
-
+      
       setPreviewHTML(html);
     } catch (error) {
       console.error('Erro ao gerar preview:', error);
@@ -415,23 +415,23 @@ conforme a legislação em vigor.`;
       setIsGeneratingPreview(false);
     }
   };
-
+  
   // Submissão do formulário
   const onSubmit = (data: RelatorioVistoria) => {
     try {
       // Garantir que o resultado é sempre IMPROCEDENTE
       data.resultado = "IMPROCEDENTE";
-
+      
       console.log('Dados do formulário:', data);
-
+      
       toast({
         title: 'Relatório salvo com sucesso!',
         description: 'O relatório foi salvo e pode ser acessado posteriormente.',
       });
-
+      
       // Gerar preview atualizado
       gerarPreviewRelatorio();
-
+      
       // Mudar para a aba de preview
       setActiveTab('preview');
     } catch (error) {
@@ -443,9 +443,9 @@ conforme a legislação em vigor.`;
       });
     }
   };
-
+  
   // A função de exportação DOCX foi movida para o componente RelatorioExportButton
-
+  
   // Define resultado como IMPROCEDENTE sempre
   useEffect(() => {
     // Definir o resultado como IMPROCEDENTE ao montar o componente
@@ -512,7 +512,7 @@ conforme a legislação em vigor.`;
               </Button>
             </div>
           </div>
-
+          
           {/* Progresso do formulário */}
           <div className="mb-8 max-w-4xl mx-auto">
             <div className="flex justify-between items-center mb-2 text-sm">
@@ -564,10 +564,10 @@ conforme a legislação em vigor.`;
                 <FileText className="h-4 w-4" /> <span className="hidden sm:inline">Preview</span>
               </TabsTrigger>
             </TabsList>
-
+            
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)}>
-
+              
                 {/* Tab 1: Informações Básicas */}
                 <TabsContent value="informacoes-basicas">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -595,7 +595,7 @@ conforme a legislação em vigor.`;
                                 </FormItem>
                               )}
                             />
-
+                            
                             <FormField
                               control={form.control}
                               name="dataVistoria"
@@ -610,7 +610,7 @@ conforme a legislação em vigor.`;
                               )}
                             />
                           </div>
-
+                          
                           <FormField
                             control={form.control}
                             name="cliente"
@@ -624,7 +624,7 @@ conforme a legislação em vigor.`;
                               </FormItem>
                             )}
                           />
-
+                          
                           <FormField
                             control={form.control}
                             name="empreendimento"
@@ -638,7 +638,7 @@ conforme a legislação em vigor.`;
                               </FormItem>
                             )}
                           />
-
+                          
                           <FormField
                             control={form.control}
                             name="endereco"
@@ -652,7 +652,7 @@ conforme a legislação em vigor.`;
                               </FormItem>
                             )}
                           />
-
+                          
                           <div className="grid grid-cols-2 gap-4">
                             <FormField
                               control={form.control}
@@ -667,7 +667,7 @@ conforme a legislação em vigor.`;
                                 </FormItem>
                               )}
                             />
-
+                            
                             <FormField
                               control={form.control}
                               name="uf"
@@ -682,7 +682,7 @@ conforme a legislação em vigor.`;
                               )}
                             />
                           </div>
-
+                          
                           <FormField
                             control={form.control}
                             name="assunto"
@@ -717,11 +717,11 @@ conforme a legislação em vigor.`;
                                     telhas={field.value} 
                                     onChange={(telhas) => {
                                       field.onChange(telhas);
-
+                                      
                                       // Calcula a área total e atualiza o campo específico
                                       const areaTotal = telhas.reduce((total, telha) => total + telha.area, 0);
                                       form.setValue('areaTotal', Math.round(areaTotal * 100) / 100);
-
+                                      
                                       // Mantém compatibilidade com campos legados
                                       if (telhas.length > 0) {
                                         const primeiraTelha = telhas[0];
@@ -737,12 +737,12 @@ conforme a legislação em vigor.`;
                               </FormItem>
                             )}
                           />
-
+                          
                           {/* Campos de garantia removidos pois agora são valores fixos no texto do relatório */}
                         </CardContent>
                       </Card>
                     </div>
-
+                    
                     {/* Coluna 2 - Informações extras como recomendações */}
                     <div className="space-y-6">
                       <Card>
@@ -787,7 +787,7 @@ conforme a legislação em vigor.`;
                     </div>
                   </div>
                 </TabsContent>
-
+                
                 {/* Tab 2: Responsáveis */}
                 <TabsContent value="responsaveis">
                   <div className="max-w-3xl mx-auto">
@@ -813,9 +813,9 @@ conforme a legislação em vigor.`;
                               </FormItem>
                             )}
                           />
-
+                          
                           <FormField
-                                                        control={form.control}
+                            control={form.control}
                             name="numeroRegistro"
                             render={({ field }) => (
                               <FormItem>
@@ -828,7 +828,7 @@ conforme a legislação em vigor.`;
                             )}
                           />
                         </div>
-
+                        
                         <FormField
                           control={form.control}
                           name="departamento"
@@ -842,7 +842,7 @@ conforme a legislação em vigor.`;
                             </FormItem>
                           )}
                         />
-
+                        
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <FormField
                             control={form.control}
@@ -857,7 +857,7 @@ conforme a legislação em vigor.`;
                               </FormItem>
                             )}
                           />
-
+                          
                           <FormField
                             control={form.control}
                             name="regional"
@@ -872,7 +872,7 @@ conforme a legislação em vigor.`;
                             )}
                           />
                         </div>
-
+                        
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <FormField
                             control={form.control}
@@ -887,7 +887,7 @@ conforme a legislação em vigor.`;
                               </FormItem>
                             )}
                           />
-
+                          
                           <FormField
                             control={form.control}
                             name="gerente"
@@ -922,7 +922,7 @@ conforme a legislação em vigor.`;
                     </Card>
                   </div>
                 </TabsContent>
-
+                
                 {/* Tab 3: Não Conformidades */}
                 <TabsContent value="nao-conformidades">
                   <div className="max-w-4xl mx-auto">
@@ -936,7 +936,7 @@ conforme a legislação em vigor.`;
                           Marque os problemas identificados durante a inspeção do telhado com vazamento
                         </CardDescription>
                       </CardHeader>
-
+                      
                       {/* Instrução para técnicos */}
                       <div className="bg-amber-50 border-b border-amber-200 p-4">
                         <h3 className="text-amber-800 font-semibold flex items-center mb-2">
@@ -948,7 +948,7 @@ conforme a legislação em vigor.`;
                           Marque apenas os problemas encontrados e capture fotos das não conformidades como evidência.
                         </p>
                       </div>
-
+                      
                       <CardContent className="pt-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           {watchNaoConformidades.map((nc, index) => {
@@ -973,7 +973,7 @@ conforme a legislação em vigor.`;
                                   >
                                     {index + 1}. {naoConformidadeCompleta?.titulo}
                                   </label>
-
+                                  
                                   <details className="text-sm mt-1">
                                     <summary className="cursor-pointer text-primary-600 hover:text-primary">
                                       Ver descrição detalhada
@@ -982,7 +982,7 @@ conforme a legislação em vigor.`;
                                       {naoConformidadeCompleta?.descricao}
                                     </p>
                                   </details>
-
+                                  
                                   {nc.selecionado && (
                                     <div className="mt-3">
                                       <Button 
@@ -1025,7 +1025,7 @@ conforme a legislação em vigor.`;
                     </Card>
                   </div>
                 </TabsContent>
-
+                
                 {/* Tab 4: Fotos */}
                 <TabsContent value="fotos">
                   <div className="max-w-3xl mx-auto">
@@ -1039,7 +1039,7 @@ conforme a legislação em vigor.`;
                           Adicione fotos das não conformidades identificadas
                         </CardDescription>
                       </CardHeader>
-
+                      
                       {/* Instrução para documentação fotográfica */}
                       <div className="bg-blue-50 border-b border-blue-200 p-4">
                         <h3 className="text-blue-800 font-semibold flex items-center mb-2">
@@ -1051,7 +1051,7 @@ conforme a legislação em vigor.`;
                           Fotos bem documentadas são essenciais para justificar as conclusões do relatório técnico.
                         </p>
                       </div>
-
+                      
                       <CardContent className="space-y-6 pt-6">
                         {/* Lista de não conformidades selecionadas */}
                         {watchNaoConformidades.filter(nc => nc.selecionado).length > 0 && (
@@ -1075,7 +1075,7 @@ conforme a legislação em vigor.`;
                             </div>
                           </div>
                         )}
-
+                      
                         <div className="flex justify-center p-6 border-2 border-dashed rounded-md relative overflow-hidden">
                           <div className="text-center">
                             <Camera className="h-12 w-12 mx-auto text-muted-foreground" />
@@ -1103,7 +1103,7 @@ conforme a legislação em vigor.`;
                             />
                           </div>
                         </div>
-
+                        
                         {/* Lista de fotos */}
                         {fotos.length > 0 && (
                           <div className="space-y-4">
@@ -1163,7 +1163,7 @@ conforme a legislação em vigor.`;
                     </Card>
                   </div>
                 </TabsContent>
-
+                
                 {/* Tab 5: Preview */}
                 <TabsContent value="preview">
                   <div className="max-w-4xl mx-auto">
@@ -1228,7 +1228,7 @@ conforme a legislação em vigor.`;
                           >
                             <FileText className="h-4 w-4 mr-2" /> Atualizar Preview
                           </Button>
-
+                          
                           <Button
                             type="button"
                             variant="default"
@@ -1237,26 +1237,16 @@ conforme a legislação em vigor.`;
                               try {
                                 const formData = form.getValues();
                                 console.log("Gerando documento diretamente...", formData);
-
+                                
                                 // Usar os dados do relatório como estão, sem modificação
                                 console.log("Dados do relatório para exportação:", formData);
-
-                                // Validar que pelo menos uma não conformidade foi selecionada
-                                if (!formData.naoConformidades.some(nc => nc.selecionado)) {
-                                  toast({
-                                    title: 'Atenção',
-                                    description: 'Selecione pelo menos uma não conformidade para gerar o relatório.',
-                                    variant: 'destructive'
-                                  });
-                                  return;
-                                }
-
+                                
                                 // Gerar o blob do documento
                                 const blob = await gerarRelatorioSimples(formData);
-
+                                
                                 // Nome do arquivo
                                 const fileName = `relatorio-vistoria-${formData.protocolo || 'novo'}-${Date.now()}.docx`;
-
+                                
                                 // Salvar o arquivo
                                 const url = window.URL.createObjectURL(blob);
                                 const a = document.createElement('a');
@@ -1266,7 +1256,7 @@ conforme a legislação em vigor.`;
                                 a.click();
                                 window.URL.revokeObjectURL(url);
                                 document.body.removeChild(a);
-
+                                
                                 toast({
                                   title: 'Documento Word gerado com sucesso!',
                                   description: 'O relatório foi exportado no formato DOCX diretamente.',
@@ -1283,7 +1273,7 @@ conforme a legislação em vigor.`;
                           >
                             <Download className="h-4 w-4 mr-2" /> Exportar Direto
                           </Button>
-
+                          
                           <RelatorioExportButton 
                             relatorio={form.getValues()} // Obter dados atuais do formulário
                             label="Exportar DOCX (Atual)"
@@ -1299,7 +1289,7 @@ conforme a legislação em vigor.`;
                               });
                             }}
                           />
-
+                          
                           <ExportSaintGobainButton
                             relatorio={form.getValues()}
                             label="Exportar Saint-Gobain (Recomendado)"
@@ -1313,7 +1303,7 @@ conforme a legislação em vigor.`;
                               });
                             }}
                           />
-
+                          
                           <ExportSaintGobainButtonFix
                             relatorio={form.getValues()}
                             label="Exportar Brasilit (Alternativo)"
