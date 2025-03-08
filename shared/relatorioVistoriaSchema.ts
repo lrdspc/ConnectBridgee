@@ -20,6 +20,35 @@ export const espessuraTelhaEnum = z.enum([
   "8"
 ]);
 
+export const larguraTelhaEnum = z.enum([
+  "0.92",
+  "1.10"
+]);
+
+export const comprimentoTelhaEnum = z.enum([
+  "1.22",
+  "1.53",
+  "1.83",
+  "2.13",
+  "2.44",
+  "3.05",
+  "3.66"
+]);
+
+// Definição de uma telha individual
+export const telhaSchema = z.object({
+  id: z.string().default(() => uuidv4()),
+  espessura: espessuraTelhaEnum.default("6"),
+  largura: larguraTelhaEnum.default("1.10"),
+  comprimento: comprimentoTelhaEnum.default("2.44"),
+  quantidade: z.number().default(0),
+  area: z.number().default(0),
+  peso: z.number().optional(),
+  modelo: modeloTelhaEnum.optional().default("Ondulada"),
+});
+
+export type Telha = z.infer<typeof telhaSchema>;
+
 export const relatorioVistoriaSchema = z.object({
   id: z.string().optional().default(() => uuidv4()),
   protocolo: z.string().optional().default(""),
@@ -40,11 +69,16 @@ export const relatorioVistoriaSchema = z.object({
   regional: z.string().optional().default(""),
   numeroRegistro: z.string().optional().default(""),
   
-  // Produto
+  // Produto - agora é um array de telhas
+  telhas: z.array(telhaSchema).default([]),
+  areaTotal: z.number().optional().default(0),
+  
+  // Mantém compatibilidade com código existente
   espessura: espessuraTelhaEnum.optional().default("6"),
   modeloTelha: modeloTelhaEnum.optional().default("Ondulada"),
   quantidade: z.number().optional().default(0),
   area: z.number().optional().default(0),
+  
   anosGarantia: z.string().default("5"),
   anosGarantiaSistemaCompleto: z.string().default("10"),
   anosGarantiaTotal: z.string().default("10"),
@@ -164,9 +198,95 @@ export const naoConformidadesDisponiveis = [
 
 export const modelosTelhas = modeloTelhaEnum.options;
 export const espessurasTelhas = espessuraTelhaEnum.options;
+export const largurasTelhas = larguraTelhaEnum.options;
+export const comprimentosTelhas = comprimentoTelhaEnum.options;
+
+// Tabela de opções disponíveis e pesos por espessura/largura/comprimento
+export const telhaEspecificacoes: Record<string, Record<string, Record<string, number | null>>> = {
+  // Espessura 5mm
+  "5": {
+    // Largura 0.92m
+    "0.92": {
+      "1.22": 11.5,
+      "1.53": 14.4,
+      "1.83": 17.2,
+      "2.13": 20.0,
+      "2.44": 22.9,
+      "3.05": null, // não disponível
+      "3.66": null, // não disponível
+    },
+    // Largura 1.10m
+    "1.10": {
+      "1.22": 13.5,
+      "1.53": 17.0,
+      "1.83": 20.3,
+      "2.13": 23.6,
+      "2.44": 27.1,
+      "3.05": null, // não disponível
+      "3.66": null, // não disponível
+    }
+  },
+  // Espessura 6mm
+  "6": {
+    // Largura 0.92m
+    "0.92": {
+      "1.22": 13.8,
+      "1.53": 17.3,
+      "1.83": 20.6,
+      "2.13": 24.0,
+      "2.44": 27.5,
+      "3.05": 34.4,
+      "3.66": 41.3,
+    },
+    // Largura 1.10m
+    "1.10": {
+      "1.22": 16.3,
+      "1.53": 20.4,
+      "1.83": 24.4,
+      "2.13": 28.4,
+      "2.44": 32.5,
+      "3.05": 40.7,
+      "3.66": 48.8,
+    }
+  },
+  // Espessura 8mm
+  "8": {
+    // Largura 0.92m
+    "0.92": {
+      "1.22": 18.4,
+      "1.53": 23.0,
+      "1.83": 27.5,
+      "2.13": 32.0,
+      "2.44": 36.7,
+      "3.05": null, // não disponível
+      "3.66": null, // não disponível
+    },
+    // Largura 1.10m
+    "1.10": {
+      "1.22": 21.7,
+      "1.53": 27.2,
+      "1.83": 32.5,
+      "2.13": 37.9,
+      "2.44": 43.4,
+      "3.05": 54.0,
+      "3.66": 65.0,
+    }
+  }
+};
 
 // Função para criar um novo relatório de vistoria com dados padrão
 export function novoRelatorioVistoria(): RelatorioVistoria {
+  const telhaInicial: Telha = {
+    id: uuidv4(),
+    espessura: "6",
+    largura: "1.10",
+    comprimento: "2.44",
+    quantidade: 0,
+    area: 0,
+    peso: 32.5, // Peso correspondente à combinação acima
+    modelo: "Ondulada"
+  };
+  
   return {
     id: uuidv4(),
     protocolo: "",
@@ -186,10 +306,16 @@ export function novoRelatorioVistoria(): RelatorioVistoria {
     regional: "",
     numeroRegistro: "",
     
+    // Novos campos para múltiplas telhas
+    telhas: [telhaInicial],
+    areaTotal: 0,
+    
+    // Mantendo compatibilidade com código existente
     espessura: "6",
     modeloTelha: "Ondulada",
     quantidade: 0,
     area: 0,
+    
     anosGarantia: "5",
     anosGarantiaSistemaCompleto: "10",
     anosGarantiaTotal: "10",
@@ -255,6 +381,39 @@ export function gerarRelatorioAleatorio(): RelatorioVistoria {
   const numeroProtocolo = Math.floor(Math.random() * 900000) + 100000;
   const protocolo = `FAR-${numeroProtocolo}`;
   
+  // Criar telhas aleatórias
+  const espessura = getRandomItem(espessurasTelhas);
+  const largura = getRandomItem(largurasTelhas);
+  const comprimentosDisponiveis = Object.keys(telhaEspecificacoes[espessura][largura])
+    .filter(comp => telhaEspecificacoes[espessura][largura][comp] !== null);
+  const comprimento = getRandomItem(comprimentosDisponiveis);
+  const peso = telhaEspecificacoes[espessura][largura][comprimento] || 0;
+  
+  // Criar de 1 a 3 tipos de telhas para o relatório
+  const numTelhas = Math.floor(Math.random() * 2) + 1; // 1 a 2 tipos de telhas
+  const telhasAleatorias: Telha[] = [];
+  
+  for (let i = 0; i < numTelhas; i++) {
+    const qtd = Math.floor(Math.random() * 500) + 100; // 100 a 600 telhas
+    const compTelha = Number(comprimento);
+    const largTelha = Number(largura);
+    const areaTelha = qtd * compTelha * largTelha;
+    
+    telhasAleatorias.push({
+      id: uuidv4(),
+      espessura: espessura,
+      largura: largura,
+      comprimento: comprimento,
+      quantidade: qtd,
+      area: Math.round(areaTelha * 100) / 100, // Arredonda para 2 casas decimais
+      peso: peso,
+      modelo: getRandomItem(modelosTelhas)
+    });
+  }
+  
+  // Calcular área total
+  const areaTotal = telhasAleatorias.reduce((total, telha) => total + telha.area, 0);
+  
   return {
     id: uuidv4(),
     protocolo: protocolo,
@@ -274,7 +433,12 @@ export function gerarRelatorioAleatorio(): RelatorioVistoria {
     regional: "Sudeste",
     numeroRegistro: `${Math.floor(Math.random() * 90000) + 10000}-D`,
     
-    espessura: getRandomItem(espessurasTelhas),
+    // Novos campos para múltiplas telhas
+    telhas: telhasAleatorias,
+    areaTotal: Math.round(areaTotal * 100) / 100, // Arredonda para 2 casas decimais
+    
+    // Mantendo compatibilidade com código existente
+    espessura: espessura,
     modeloTelha: getRandomItem(modelosTelhas),
     quantidade: quantidade,
     area: area,
