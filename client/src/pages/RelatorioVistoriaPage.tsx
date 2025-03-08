@@ -702,105 +702,40 @@ conforme a legislação em vigor.`;
                         <CardHeader>
                           <CardTitle>Dados do Produto</CardTitle>
                           <CardDescription>
-                            Informações sobre as telhas
+                            Informações sobre as telhas utilizadas
                           </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                          <div className="grid grid-cols-2 gap-4">
-                            <FormField
-                              control={form.control}
-                              name="modeloTelha"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Modelo</FormLabel>
-                                  <Select
-                                    onValueChange={field.onChange}
-                                    defaultValue={field.value}
-                                  >
-                                    <FormControl>
-                                      <SelectTrigger>
-                                        <SelectValue placeholder="Selecione o modelo" />
-                                      </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                      {modelosTelhas.map((modelo) => (
-                                        <SelectItem key={modelo} value={modelo}>
-                                          {modelo}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            
-                            <FormField
-                              control={form.control}
-                              name="espessura"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Espessura (mm)</FormLabel>
-                                  <Select
-                                    onValueChange={field.onChange}
-                                    defaultValue={field.value}
-                                  >
-                                    <FormControl>
-                                      <SelectTrigger>
-                                        <SelectValue placeholder="Selecione a espessura" />
-                                      </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                      {espessurasTelhas.map((espessura) => (
-                                        <SelectItem key={espessura} value={espessura}>
-                                          {espessura}mm
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
-                          
-                          <div className="grid grid-cols-2 gap-4">
-                            <FormField
-                              control={form.control}
-                              name="quantidade"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Quantidade</FormLabel>
-                                  <FormControl>
-                                    <Input 
-                                      type="number" 
-                                      {...field}
-                                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            
-                            <FormField
-                              control={form.control}
-                              name="area"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Área (m²)</FormLabel>
-                                  <FormControl>
-                                    <Input 
-                                      type="number" 
-                                      {...field}
-                                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
+                          <FormField
+                            control={form.control}
+                            name="telhas"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <SeletorTelhas 
+                                    telhas={field.value} 
+                                    onChange={(telhas) => {
+                                      field.onChange(telhas);
+                                      
+                                      // Calcula a área total e atualiza o campo específico
+                                      const areaTotal = telhas.reduce((total, telha) => total + telha.area, 0);
+                                      form.setValue('areaTotal', Math.round(areaTotal * 100) / 100);
+                                      
+                                      // Mantém compatibilidade com campos legados
+                                      if (telhas.length > 0) {
+                                        const primeiraTelha = telhas[0];
+                                        form.setValue('espessura', primeiraTelha.espessura);
+                                        form.setValue('modeloTelha', primeiraTelha.modelo || "Ondulada");
+                                        form.setValue('quantidade', primeiraTelha.quantidade);
+                                        form.setValue('area', primeiraTelha.area);
+                                      }
+                                    }}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
                           
                           <div className="grid grid-cols-3 gap-4">
                             <FormField

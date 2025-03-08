@@ -187,7 +187,7 @@ export function SeletorTelhas({ telhas, onChange }: SeletorTelhasProps) {
                 </div>
                 <CardDescription>
                   {telha.espessura}mm x {telha.largura}m x {telha.comprimento}m
-                  {telha.peso > 0 && ` • Peso: ${telha.peso}kg`}
+                  {telha.peso && telha.peso > 0 && ` • Peso: ${telha.peso}kg`}
                   {telha.area > 0 && ` • Área: ${telha.area}m²`}
                 </CardDescription>
               </CardHeader>
@@ -286,7 +286,7 @@ export function SeletorTelhas({ telhas, onChange }: SeletorTelhasProps) {
               {telha.area > 0 && (
                 <CardFooter className="pt-0 pb-3">
                   <div className="text-sm text-muted-foreground w-full flex justify-between">
-                    <span>Peso Total: {Math.round(telha.peso * telha.quantidade * 100) / 100}kg</span>
+                    <span>Peso Total: {Math.round((telha.peso || 0) * telha.quantidade * 100) / 100}kg</span>
                     <span>Área: {telha.area}m²</span>
                   </div>
                 </CardFooter>
