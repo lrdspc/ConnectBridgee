@@ -639,7 +639,7 @@ export async function gerarRelatorioSaintGobainFix(
                   alignment: AlignmentType.JUSTIFIED,
                   children: [
                     new TextRun({
-                      text: "Com base na análise técnica realizada, foram identificadas as não conformidades listadas acima.",
+                      text: "Com base na análise técnica realizada, foram identificadas as seguintes não conformidades:",
                       size: 24,
                     }),
                   ],
