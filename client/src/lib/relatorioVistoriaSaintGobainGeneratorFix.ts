@@ -413,6 +413,8 @@ export async function gerarRelatorioSaintGobainFix(
 
     // Preparar parágrafos para não conformidades encontradas
     const naoConformidadesParagrafos: Paragraph[] = [];
+    // Parágrafos simplificados (apenas títulos) para a Conclusão
+    const naoConformidadesConclusaoParagrafos: Paragraph[] = [];
     
     // Processar as não conformidades do relatório ou usar as padrões
     if (relatorio.naoConformidades && relatorio.naoConformidades.length > 0) {
@@ -422,6 +424,7 @@ export async function gerarRelatorioSaintGobainFix(
           index: number,
         ) => {
           if (naoConf.selecionado) {
+            // Versão completa para a análise técnica
             naoConformidadesParagrafos.push(
               new Paragraph({
                 alignment: AlignmentType.JUSTIFIED,
@@ -440,11 +443,53 @@ export async function gerarRelatorioSaintGobainFix(
                 ],
               }),
             );
+            
+            // Versão simplificada (apenas título) para a conclusão
+            naoConformidadesConclusaoParagrafos.push(
+              new Paragraph({
+                alignment: AlignmentType.JUSTIFIED,
+                spacing: { after: 120 },
+                bullet: { level: 0 },
+                children: [
+                  new TextRun({
+                    text: naoConf.titulo,
+                    size: 24,
+                  }),
+                ],
+              }),
+            );
           }
         },
       );
     } else {
       // Adicionar não conformidades padrão do modelo conforme o texto original
+      // Títulos para as não conformidades padrão
+      const titulosNaoConformidadesPadrao = [
+        "Armazenagem Incorreta",
+        "Inclinação da Telha Inferior ao Recomendado",
+        "Balanço Livre do Beiral Incorreto",
+        "Recobrimento Incorreto",
+        "Sentido de Montagem Incorreto"
+      ];
+      
+      // Adicionar versões simplificadas para conclusão
+      titulosNaoConformidadesPadrao.forEach(titulo => {
+        naoConformidadesConclusaoParagrafos.push(
+          new Paragraph({
+            alignment: AlignmentType.JUSTIFIED,
+            spacing: { after: 120 },
+            bullet: { level: 0 },
+            children: [
+              new TextRun({
+                text: titulo,
+                size: 24,
+              }),
+            ],
+          }),
+        );
+      });
+      
+      // Adicionar versões completas para análise técnica
       naoConformidadesParagrafos.push(
         new Paragraph({
           alignment: AlignmentType.JUSTIFIED,
@@ -645,6 +690,7 @@ export async function gerarRelatorioSaintGobainFix(
                   ],
                   spacing: { after: 200 },
                 }),
+                ...naoConformidadesConclusaoParagrafos,
                 new Paragraph({
                   alignment: AlignmentType.JUSTIFIED,
                   children: [
