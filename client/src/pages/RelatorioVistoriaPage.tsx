@@ -17,6 +17,7 @@ import { gerarRelatorioSimples } from '@/lib/relatorioVistoriaSimpleGeneratorNew
 import { RelatorioExportButton } from '@/components/relatorios/RelatorioExportButton';
 import { ExportSaintGobainButton } from '@/components/relatorios/ExportSaintGobainButton';
 import { ExportSaintGobainButtonFix } from '@/components/relatorios/ExportSaintGobainButtonFix';
+import { SeletorTelhas } from '@/components/relatorios/SeletorTelhas';
 
 import { DashboardLayoutNew } from '@/layouts/DashboardLayoutNew';
 import { PageTransition } from '@/components/ui/loading-animation';
@@ -737,49 +738,7 @@ conforme a legislação em vigor.`;
                             )}
                           />
                           
-                          <div className="grid grid-cols-3 gap-4">
-                            <FormField
-                              control={form.control}
-                              name="anosGarantia"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Anos de Garantia</FormLabel>
-                                  <FormControl>
-                                    <Input {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            
-                            <FormField
-                              control={form.control}
-                              name="anosGarantiaSistemaCompleto"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Garantia Sistema</FormLabel>
-                                  <FormControl>
-                                    <Input {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            
-                            <FormField
-                              control={form.control}
-                              name="anosGarantiaTotal"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Garantia Total</FormLabel>
-                                  <FormControl>
-                                    <Input {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
+                          {/* Campos de garantia removidos pois agora são valores fixos no texto do relatório */}
                         </CardContent>
                       </Card>
                     </div>
