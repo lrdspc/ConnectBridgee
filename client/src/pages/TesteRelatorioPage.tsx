@@ -212,13 +212,21 @@ export default function TesteRelatorioPage() {
                 
                 <div className="text-center">
                   <h3 className="text-sm font-semibold mb-2">Informações Adicionais</h3>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-muted-foreground mb-2">
                     Esta é uma versão experimental que será implementada do zero para resolver 
                     problemas com a geração de documentos no formato ABNT.
                   </p>
+                  
+                  <div className="rounded-md bg-green-50 p-3 border border-green-200">
+                    <h4 className="text-xs font-semibold text-green-800 mb-1">Importante!</h4>
+                    <p className="text-xs text-green-700">
+                      Use o botão <span className="font-semibold">verde "Brasilit"</span> para gerar documentos 
+                      com o formato correto exigido pela Brasilit. Este é o formato oficial aprovado.
+                    </p>
+                  </div>
                 </div>
               </CardContent>
-              <CardFooter>
+              <CardFooter className="flex flex-col gap-3">
                 <Button 
                   variant="outline" 
                   className="w-full"
@@ -226,6 +234,36 @@ export default function TesteRelatorioPage() {
                 >
                   <Award className="h-4 w-4 mr-2" />
                   Certificar ABNT (Em breve)
+                </Button>
+                
+                <Button 
+                  variant="secondary" 
+                  className="w-full flex items-center gap-2 bg-amber-100 hover:bg-amber-200 border border-amber-300 text-amber-800"
+                  onClick={async () => {
+                    toast({
+                      title: "Executando testes automatizados...",
+                      description: "Verificando geração do relatório Brasilit",
+                    });
+                    
+                    const result = await testRelatorioVistoria();
+                    
+                    if (result.success) {
+                      toast({
+                        title: "Teste concluído com sucesso!",
+                        description: result.message,
+                        variant: "default"
+                      });
+                    } else {
+                      toast({
+                        title: "Falha no teste",
+                        description: result.message,
+                        variant: "destructive"
+                      });
+                    }
+                  }}
+                >
+                  <Terminal className="h-4 w-4" />
+                  Executar Teste Automatizado
                 </Button>
               </CardFooter>
             </Card>
