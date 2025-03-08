@@ -318,3 +318,61 @@ export async function gerarRelatorioVistoriaDoc(relatorio: ExtendedRelatorioVist
     throw new Error(`Não foi possível gerar o documento Word: ${error}`);
   }
 }
+import { RelatorioVistoria } from "../../../shared/relatorioVistoriaSchema";
+import { gerarRelatorioHTML } from "./relatorioGenerator";
+import htmlToDocx from "html-docx-js/dist/html-docx";
+
+// Utilitário para debug
+const DEBUG = false;
+function logDebug(...args: any[]) {
+  if (DEBUG) {
+    console.log("[DocGenerator]", ...args);
+  }
+}
+
+/**
+ * Gera um documento Word (DOCX) a partir dos dados do relatório
+ */
+export async function gerarRelatorioSimples(dados: RelatorioVistoria): Promise<Blob> {
+  try {
+    logDebug('Gerando documento DOCX para relatório:', dados.protocolo);
+    
+    // Gerar o HTML usando nosso novo serviço dedicado
+    const html = gerarRelatorioHTML(dados);
+    
+    // Opções para conversão HTML para DOCX
+    const options = {
+      orientation: 'portrait',
+      margins: { top: 720, right: 720, bottom: 720, left: 864 }, // ~2,5cm e 3cm em TWIPs
+      font: { name: 'Arial', size: 12 }
+    };
+    
+    logDebug('Chamando htmlToDocx com opções:', options);
+    
+    // Implementação à prova de falhas - tentativa sem imagens primeiro
+    try {
+      const buffer = await htmlToDocx(html, options);
+      logDebug('Documento gerado com sucesso, tamanho do buffer:', buffer?.length || 0);
+      
+      // Converter o buffer para Blob
+      return new Blob([buffer], { 
+        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+      });
+    } catch (innerError) {
+      logDebug('Erro ao gerar com imagens, tentando sem imagens:', innerError);
+      
+      // Remover imagens e tentar novamente
+      const htmlSemImagens = html.replace(/<img[^>]*>/g, '<!-- Imagem removida -->');
+      const bufferSemImagens = await htmlToDocx(htmlSemImagens, options);
+      
+      // Converter o buffer para Blob
+      return new Blob([bufferSemImagens], { 
+        type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
+      });
+    }
+    
+  } catch (error) {
+    console.error('Erro ao gerar documento Word:', error);
+    throw new Error(`Falha ao gerar documento: ${error}`);
+  }
+}

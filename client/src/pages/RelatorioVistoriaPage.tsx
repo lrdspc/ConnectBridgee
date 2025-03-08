@@ -1241,6 +1241,16 @@ conforme a legislação em vigor.`;
                                 // Usar os dados do relatório como estão, sem modificação
                                 console.log("Dados do relatório para exportação:", formData);
                                 
+                                // Validar que pelo menos uma não conformidade foi selecionada
+                                if (!formData.naoConformidades.some(nc => nc.selecionado)) {
+                                  toast({
+                                    title: 'Atenção',
+                                    description: 'Selecione pelo menos uma não conformidade para gerar o relatório.',
+                                    variant: 'destructive'
+                                  });
+                                  return;
+                                }
+                                
                                 // Gerar o blob do documento
                                 const blob = await gerarRelatorioSimples(formData);
                                 
