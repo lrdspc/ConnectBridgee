@@ -413,7 +413,8 @@ export async function gerarRelatorioSaintGobainFix(
 
     // Preparar parágrafos para não conformidades encontradas
     const naoConformidadesParagrafos: Paragraph[] = [];
-
+    
+    // Processar as não conformidades do relatório ou usar as padrões
     if (relatorio.naoConformidades && relatorio.naoConformidades.length > 0) {
       relatorio.naoConformidades.forEach(
         (
@@ -589,120 +590,6 @@ export async function gerarRelatorioSaintGobainFix(
         }),
       ],
     });
-
-    if (relatorio.naoConformidades && relatorio.naoConformidades.length > 0) {
-      relatorio.naoConformidades.forEach(
-        (
-          naoConf: { selecionado: boolean; titulo: string; descricao: string },
-          index: number,
-        ) => {
-          if (naoConf.selecionado) {
-            naoConformidadesParagrafos.push(
-              new Paragraph({
-                alignment: AlignmentType.JUSTIFIED,
-                spacing: { after: 200 },
-                bullet: { level: 0 },
-                children: [
-                  new TextRun({
-                    text: `${naoConf.titulo}: `,
-                    size: 24,
-                    bold: true,
-                  }),
-                  new TextRun({
-                    text: naoConf.descricao,
-                    size: 24,
-                  }),
-                ],
-              }),
-            );
-          }
-        },
-      );
-    } else {
-      // Adicionar não conformidades padrão do modelo conforme o texto original
-      naoConformidadesParagrafos.push(
-        new Paragraph({
-          alignment: AlignmentType.JUSTIFIED,
-          spacing: { after: 200 },
-          bullet: { level: 0 },
-          children: [
-            new TextRun({
-              text: "Armazenagem Incorreta: ",
-              size: 24,
-              bold: true,
-            }),
-            new TextRun({
-              text: "Durante a inspeção, foi constatado que as telhas foram armazenadas de forma inadequada, em desacordo com as recomendações técnicas do fabricante. As telhas BRASILIT devem ser armazenadas em local plano, firme, coberto e seco, protegidas das intempéries. O empilhamento deve ser feito horizontalmente, com as telhas apoiadas sobre caibros ou pontaletes de madeira espaçados no máximo a cada 50cm, garantindo um apoio uniforme.",
-              size: 24,
-            }),
-          ],
-        }),
-        new Paragraph({
-          alignment: AlignmentType.JUSTIFIED,
-          spacing: { after: 200 },
-          bullet: { level: 0 },
-          children: [
-            new TextRun({
-              text: "Inclinação da Telha Inferior ao Recomendado: ",
-              size: 24,
-              bold: true,
-            }),
-            new TextRun({
-              text: "A inspeção técnica identificou que a inclinação do telhado está abaixo do mínimo recomendado nas especificações do fabricante. A inclinação é um fator crítico para o desempenho do sistema de cobertura, pois garante o escoamento adequado das águas pluviais e evita o acúmulo de sujeira.",
-              size: 24,
-            }),
-          ],
-        }),
-        new Paragraph({
-          alignment: AlignmentType.JUSTIFIED,
-          spacing: { after: 200 },
-          bullet: { level: 0 },
-          children: [
-            new TextRun({
-              text: "Balanço Livre do Beiral Incorreto: ",
-              size: 24,
-              bold: true,
-            }),
-            new TextRun({
-              text: "Foi constatado que o balanço livre do beiral está em desacordo com as especificações técnicas do fabricante. O balanço do beiral é a distância entre a última terça e a extremidade da telha, sendo um elemento crucial para o correto funcionamento do sistema de cobertura.",
-              size: 24,
-            }),
-          ],
-        }),
-        new Paragraph({
-          alignment: AlignmentType.JUSTIFIED,
-          spacing: { after: 200 },
-          bullet: { level: 0 },
-          children: [
-            new TextRun({
-              text: "Recobrimento Incorreto: ",
-              size: 24,
-              bold: true,
-            }),
-            new TextRun({
-              text: "Foi identificado que o recobrimento entre as telhas não atende às especificações mínimas estabelecidas pelo fabricante. O recobrimento adequado é fundamental para garantir a estanqueidade do sistema de cobertura.",
-              size: 24,
-            }),
-          ],
-        }),
-        new Paragraph({
-          alignment: AlignmentType.JUSTIFIED,
-          spacing: { after: 200 },
-          bullet: { level: 0 },
-          children: [
-            new TextRun({
-              text: "Sentido de Montagem Incorreto: ",
-              size: 24,
-              bold: true,
-            }),
-            new TextRun({
-              text: "A vistoria constatou que a montagem das telhas foi executada em sentido contrário ao tecnicamente recomendado. O sentido correto de montagem das telhas BRASILIT deve considerar os ventos predominantes da região, iniciando-se a colocação no sentido contrário a estes ventos.",
-              size: 24,
-            }),
-          ],
-        }),
-      );
-    }
 
     // Tabela da conclusão - Sem bordas conforme referência
     const tabelaConclusao = new Table({
