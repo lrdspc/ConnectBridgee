@@ -48,6 +48,7 @@ export const telhaSchema = z.object({
 });
 
 export type Telha = z.infer<typeof telhaSchema>;
+export type ComprimentoTelha = z.infer<typeof comprimentoTelhaEnum>;
 
 export const relatorioVistoriaSchema = z.object({
   id: z.string().optional().default(() => uuidv4()),
