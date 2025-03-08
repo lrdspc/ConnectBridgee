@@ -78,6 +78,11 @@ export interface ExportSaintGobainFixButtonProps {
    * @default "Relatório"
    */
   fileNamePrefix?: string;
+  
+  /**
+   * Elementos filhos para renderizar dentro do botão
+   */
+  children?: React.ReactNode;
 }
 
 /**
@@ -98,7 +103,8 @@ export function ExportSaintGobainButtonFix({
   loadingLabel = "Gerando documento...",
   onExportSuccess,
   onExportError,
-  fileNamePrefix = "Relatório"
+  fileNamePrefix = "Relatório",
+  children
 }: ExportSaintGobainFixButtonProps) {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -173,6 +179,7 @@ export function ExportSaintGobainButtonFix({
         <>
           <Download className="mr-2 h-4 w-4" />
           {label}
+          {children}
         </>
       )}
     </Button>

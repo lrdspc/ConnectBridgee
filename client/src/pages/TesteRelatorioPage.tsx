@@ -198,15 +198,18 @@ export default function TesteRelatorioPage() {
                     <ExportSaintGobainButtonFix
                       relatorio={relatorio}
                       variant="default"
-                      className="bg-green-600 hover:bg-green-700 text-white gap-2"
-                      label="Brasilit"
+                      className="bg-green-600 hover:bg-green-700 text-white gap-2 relative"
+                      label="Brasilit (Recomendado)"
                       onExportSuccess={() => {
                         toast({
                           title: "Documento Brasilit gerado",
-                          description: "Documento gerado com formatação Brasilit oficial",
+                          description: "Documento gerado com formatação Brasilit oficial aprovada",
+                          variant: "default"
                         });
                       }}
-                    />
+                    >
+                      <Check className="h-3 w-3 absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-white text-green-600 rounded-full p-0.5" />
+                    </ExportSaintGobainButtonFix>
                   </div>
                 </div>
                 
@@ -220,7 +223,7 @@ export default function TesteRelatorioPage() {
                   <div className="rounded-md bg-green-50 p-3 border border-green-200">
                     <h4 className="text-xs font-semibold text-green-800 mb-1">Importante!</h4>
                     <p className="text-xs text-green-700">
-                      Use o botão <span className="font-semibold">verde "Brasilit"</span> para gerar documentos 
+                      Use o botão <span className="font-semibold">verde "Brasilit (Recomendado)"</span> para gerar documentos 
                       com o formato correto exigido pela Brasilit. Este é o formato oficial aprovado.
                     </p>
                   </div>
