@@ -386,7 +386,7 @@ export function gerarRelatorioAleatorio(): RelatorioVistoria {
   const espessura = getRandomItem(espessurasTelhas);
   const largura = getRandomItem(largurasTelhas);
   const comprimentosDisponiveis = Object.keys(telhaEspecificacoes[espessura][largura])
-    .filter(comp => telhaEspecificacoes[espessura][largura][comp] !== null);
+    .filter(comp => telhaEspecificacoes[espessura][largura][comp] !== null) as ComprimentoTelha[];
   const comprimento = getRandomItem(comprimentosDisponiveis);
   const peso = telhaEspecificacoes[espessura][largura][comprimento] || 0;
   
@@ -404,7 +404,7 @@ export function gerarRelatorioAleatorio(): RelatorioVistoria {
       id: uuidv4(),
       espessura: espessura,
       largura: largura,
-      comprimento: comprimento,
+      comprimento: comprimento as ComprimentoTelha,
       quantidade: qtd,
       area: Math.round(areaTelha * 100) / 100, // Arredonda para 2 casas decimais
       peso: peso,

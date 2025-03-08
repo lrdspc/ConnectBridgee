@@ -22,6 +22,7 @@ import { Plus, Trash2, RefreshCw } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 import { 
   Telha,
+  ComprimentoTelha,
   telhaEspecificacoes, 
   espessurasTelhas, 
   largurasTelhas, 
@@ -80,7 +81,8 @@ export function SeletorTelhas({ telhas, onChange }: SeletorTelhasProps) {
         if (campo === 'espessura' || campo === 'largura') {
           // Verifica se o comprimento atual está disponível para essa combinação
           const comprimentosDisponiveis = getComprimentosDisponiveis(telhaNova.espessura, telhaNova.largura);
-          if (!comprimentosDisponiveis.includes(telhaNova.comprimento)) {
+          const comprimentoAtual = telhaNova.comprimento as ComprimentoTelha;
+          if (!comprimentosDisponiveis.includes(comprimentoAtual)) {
             // Se não estiver disponível, seleciona o primeiro disponível
             telhaNova.comprimento = comprimentosDisponiveis[0];
           }
@@ -106,11 +108,11 @@ export function SeletorTelhas({ telhas, onChange }: SeletorTelhasProps) {
   };
 
   // Obtém comprimentos disponíveis para uma combinação de espessura e largura
-  const getComprimentosDisponiveis = (espessura: string, largura: string) => {
+  const getComprimentosDisponiveis = (espessura: string, largura: string): ComprimentoTelha[] => {
     const comprimentosMap = telhaEspecificacoes[espessura]?.[largura] || {};
     return Object.keys(comprimentosMap).filter(
       comp => comprimentosMap[comp] !== null
-    );
+    ) as ComprimentoTelha[];
   };
   
   // Obtém o peso para uma combinação específica
