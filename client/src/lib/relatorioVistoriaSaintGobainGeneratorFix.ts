@@ -816,18 +816,7 @@ export async function gerarRelatorioSaintGobainFix(
             // Tabela de conclusão
             tabelaConclusao,
 
-            // Espaço para assinaturas
-            new Paragraph({
-              alignment: AlignmentType.CENTER,
-              spacing: { before: 360 },
-              children: [
-                new TextRun({
-                  text: "Brasilit - Divisão de Assistência Técnica",
-                  size: 24,
-                  bold: true,
-                }),
-              ],
-            }),
+            // Assinaturas já incluídas na seção de conclusão
           ],
         },
       ],

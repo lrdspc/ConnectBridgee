@@ -9,6 +9,7 @@ import { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { TestLayout } from "@/layouts/TestLayout";
 import { PageTransition } from "@/components/ui/loading-animation";
 import { gerarRelatorioSimples } from "@/lib/relatorioVistoriaSimpleGenerator";
+import { ExportSaintGobainButtonFix } from "@/components/relatorios/ExportSaintGobainButtonFix";
 
 /**
  * Página de teste para o gerador de relatórios
