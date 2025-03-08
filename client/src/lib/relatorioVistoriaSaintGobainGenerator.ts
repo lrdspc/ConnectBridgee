@@ -999,13 +999,14 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
         default: {
           document: {
             run: {
-              font: "Arial",
-              size: 20 // 10pt
+              font: "Times New Roman",
+              size: 24 // 12pt
             },
             paragraph: {
               spacing: {
-                line: 276, // 1.15x line spacing
-              }
+                line: 360, // 1.5x line spacing (ABNT)
+              },
+              alignment: AlignmentType.JUSTIFIED, // Texto justificado conforme ABNT
             }
           }
         }
@@ -1015,10 +1016,10 @@ export async function gerarRelatorioSaintGobain(relatorio: RelatorioVistoria | a
           properties: {
             page: {
               margin: {
-                top: 567, // 1cm em twips
-                right: 567, // 1cm em twips
-                bottom: 567, // 1cm em twips
-                left: 567 // 1cm em twips
+                top: 1134, // 2.5cm em twips (1cm ≈ 567 twips)
+                right: 1134, // 2.5cm em twips
+                bottom: 1134, // 2.5cm em twips
+                left: 1361 // 3.0cm em twips para margem esquerda ABNT
               }
             }
           },
