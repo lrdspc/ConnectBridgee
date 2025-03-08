@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, FileDown, File, Award, Download } from "lucide-react";
+import { Loader2, FileDown, File, Award, Download, Check, Terminal } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { novoRelatorioVistoria, gerarRelatorioAleatorio } from "@shared/relatorioVistoriaSchema";
 import { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
@@ -10,6 +10,7 @@ import { TestLayout } from "@/layouts/TestLayout";
 import { PageTransition } from "@/components/ui/loading-animation";
 import { gerarRelatorioSimples } from "@/lib/relatorioVistoriaSimpleGenerator";
 import { ExportSaintGobainButtonFix } from "@/components/relatorios/ExportSaintGobainButtonFix";
+import { testRelatorioVistoria } from "@/lib/testReport";
 
 /**
  * Página de teste para o gerador de relatórios
