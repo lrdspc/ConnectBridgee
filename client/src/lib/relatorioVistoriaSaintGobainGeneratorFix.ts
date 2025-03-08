@@ -136,7 +136,7 @@ export async function gerarRelatorioSaintGobainFix(
                       size: 24, // 10pt
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
 
                 new Paragraph({
@@ -146,7 +146,7 @@ export async function gerarRelatorioSaintGobainFix(
                       size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
 
                 new Paragraph({
@@ -156,7 +156,7 @@ export async function gerarRelatorioSaintGobainFix(
                       size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
 
                 new Paragraph({
@@ -166,7 +166,7 @@ export async function gerarRelatorioSaintGobainFix(
                       size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
 
                 new Paragraph({
@@ -176,7 +176,7 @@ export async function gerarRelatorioSaintGobainFix(
                       size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
 
                 new Paragraph({
@@ -186,7 +186,7 @@ export async function gerarRelatorioSaintGobainFix(
                       size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
 
                 new Paragraph({
@@ -196,7 +196,7 @@ export async function gerarRelatorioSaintGobainFix(
                       size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
               ],
             }),
@@ -231,7 +231,7 @@ export async function gerarRelatorioSaintGobainFix(
                       size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
 
                 new Paragraph({
@@ -241,7 +241,7 @@ export async function gerarRelatorioSaintGobainFix(
                       size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
 
                 new Paragraph({
@@ -251,7 +251,7 @@ export async function gerarRelatorioSaintGobainFix(
                       size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
 
                 new Paragraph({
@@ -261,7 +261,7 @@ export async function gerarRelatorioSaintGobainFix(
                       size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
 
                 new Paragraph({
@@ -271,7 +271,7 @@ export async function gerarRelatorioSaintGobainFix(
                       size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
 
                 new Paragraph({
@@ -281,7 +281,7 @@ export async function gerarRelatorioSaintGobainFix(
                       size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
               ],
             }),
@@ -342,7 +342,7 @@ export async function gerarRelatorioSaintGobainFix(
                       size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
                 new Paragraph({
                   alignment: AlignmentType.JUSTIFIED,
@@ -352,7 +352,7 @@ export async function gerarRelatorioSaintGobainFix(
                       size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
                 new Paragraph({
                   alignment: AlignmentType.JUSTIFIED,
@@ -362,7 +362,7 @@ export async function gerarRelatorioSaintGobainFix(
                       size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
                 new Paragraph({
                   alignment: AlignmentType.JUSTIFIED,
@@ -372,7 +372,7 @@ export async function gerarRelatorioSaintGobainFix(
                       size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
                 new Paragraph({
                   alignment: AlignmentType.JUSTIFIED,
@@ -382,7 +382,7 @@ export async function gerarRelatorioSaintGobainFix(
                       size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
                 new Paragraph({
                   alignment: AlignmentType.JUSTIFIED,
@@ -392,7 +392,7 @@ export async function gerarRelatorioSaintGobainFix(
                       size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
                 new Paragraph({
                   alignment: AlignmentType.JUSTIFIED,
@@ -402,7 +402,7 @@ export async function gerarRelatorioSaintGobainFix(
                       size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
               ],
             }),
@@ -463,7 +463,7 @@ export async function gerarRelatorioSaintGobainFix(
                       size: 24,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
               ],
             }),
@@ -485,7 +485,7 @@ export async function gerarRelatorioSaintGobainFix(
             naoConformidadesParagrafos.push(
               new Paragraph({
                 alignment: AlignmentType.JUSTIFIED,
-                spacing: { after: 120 },
+                spacing: { after: 200 },
                 bullet: { level: 0 },
                 children: [
                   new TextRun({
@@ -524,7 +524,7 @@ export async function gerarRelatorioSaintGobainFix(
         }),
         new Paragraph({
           alignment: AlignmentType.JUSTIFIED,
-          spacing: { after: 120 },
+          spacing: { after: 200 },
           bullet: { level: 0 },
           children: [
             new TextRun({
@@ -540,7 +540,7 @@ export async function gerarRelatorioSaintGobainFix(
         }),
         new Paragraph({
           alignment: AlignmentType.JUSTIFIED,
-          spacing: { after: 120 },
+          spacing: { after: 200 },
           bullet: { level: 0 },
           children: [
             new TextRun({
@@ -556,7 +556,7 @@ export async function gerarRelatorioSaintGobainFix(
         }),
         new Paragraph({
           alignment: AlignmentType.JUSTIFIED,
-          spacing: { after: 120 },
+          spacing: { after: 200 },
           bullet: { level: 0 },
           children: [
             new TextRun({
@@ -572,7 +572,7 @@ export async function gerarRelatorioSaintGobainFix(
         }),
         new Paragraph({
           alignment: AlignmentType.JUSTIFIED,
-          spacing: { after: 120 },
+          spacing: { after: 200 },
           bullet: { level: 0 },
           children: [
             new TextRun({
@@ -713,7 +713,7 @@ export async function gerarRelatorioSaintGobainFix(
                       bold: true,
                     }),
                   ],
-                  spacing: { after: 120 },
+                  spacing: { after: 200 },
                 }),
                 new Paragraph({
                   children: [
@@ -768,7 +768,7 @@ export async function gerarRelatorioSaintGobainFix(
             // Cabeçalho com logo Brasilit
             new Paragraph({
               alignment: AlignmentType.CENTER,
-              spacing: { after: 120 },
+              spacing: { after: 200 },
               children: [
                 new TextRun({
                   text: "BRASILIT",
@@ -796,7 +796,7 @@ export async function gerarRelatorioSaintGobainFix(
 
             // Espaçamento entre tabelas
             new Paragraph({
-              spacing: { before: 120, after: 120 },
+              spacing: { before: 200, after: 200 },
             }),
 
             // Tabela de responsáveis
@@ -804,7 +804,7 @@ export async function gerarRelatorioSaintGobainFix(
 
             // Espaçamento entre tabelas
             new Paragraph({
-              spacing: { before: 120, after: 120 },
+              spacing: { before: 200, after: 200 },
             }),
 
             // Tabela de introdução
@@ -812,7 +812,7 @@ export async function gerarRelatorioSaintGobainFix(
 
             // Espaçamento entre tabelas
             new Paragraph({
-              spacing: { before: 120, after: 120 },
+              spacing: { before: 200, after: 200 },
             }),
 
             // Tabela de análise técnica
@@ -820,7 +820,7 @@ export async function gerarRelatorioSaintGobainFix(
 
             // Espaçamento entre tabelas
             new Paragraph({
-              spacing: { before: 120, after: 120 },
+              spacing: { before: 200, after: 200 },
             }),
 
             // Tabela de conclusão
