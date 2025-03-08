@@ -1229,67 +1229,6 @@ conforme a legislação em vigor.`;
                             <FileText className="h-4 w-4 mr-2" /> Atualizar Preview
                           </Button>
                           
-                          <Button
-                            type="button"
-                            variant="default"
-                            className="sm:w-auto w-full"
-                            onClick={async () => {
-                              try {
-                                const formData = form.getValues();
-                                console.log("Gerando documento diretamente...", formData);
-                                
-                                // Usar os dados do relatório como estão, sem modificação
-                                console.log("Dados do relatório para exportação:", formData);
-                                
-                                // Gerar o blob do documento
-                                const blob = await gerarRelatorioSimples(formData);
-                                
-                                // Nome do arquivo
-                                const fileName = `relatorio-vistoria-${formData.protocolo || 'novo'}-${Date.now()}.docx`;
-                                
-                                // Salvar o arquivo
-                                const url = window.URL.createObjectURL(blob);
-                                const a = document.createElement('a');
-                                a.href = url;
-                                a.download = fileName;
-                                document.body.appendChild(a);
-                                a.click();
-                                window.URL.revokeObjectURL(url);
-                                document.body.removeChild(a);
-                                
-                                toast({
-                                  title: 'Documento Word gerado com sucesso!',
-                                  description: 'O relatório foi exportado no formato DOCX diretamente.',
-                                });
-                              } catch (error) {
-                                console.error("Erro ao gerar documento:", error);
-                                toast({
-                                  title: 'Erro ao gerar documento',
-                                  description: String(error),
-                                  variant: 'destructive'
-                                });
-                              }
-                            }}
-                          >
-                            <Download className="h-4 w-4 mr-2" /> Exportar Direto
-                          </Button>
-                          
-                          <RelatorioExportButton 
-                            relatorio={form.getValues()} // Obter dados atuais do formulário
-                            label="Exportar DOCX (Atual)"
-                            loadingLabel="Gerando..."
-                            className="sm:w-auto w-full mr-2"
-                            fileNamePrefix={`relatorio-vistoria-${form.getValues().protocolo || 'novo'}`}
-                            onExportSuccess={(fileName) => {
-                              console.log("Dados enviados para exportação:", form.getValues());
-                              toast({
-                                title: 'Documento Word gerado com sucesso!',
-                                description: 'O relatório foi exportado no formato DOCX com formatação ABNT.',
-                                variant: 'default'
-                              });
-                            }}
-                          />
-                          
                           <ExportSaintGobainButton
                             relatorio={form.getValues()}
                             label="Exportar Saint-Gobain (Recomendado)"
@@ -1297,22 +1236,8 @@ conforme a legislação em vigor.`;
                             fileNamePrefix={`SG-vistoria-${form.getValues().protocolo || 'novo'}`}
                             onExportSuccess={(fileName) => {
                               toast({
-                                title: 'Documento Saint-Gobain gerado!',
-                                description: 'O relatório foi exportado no formato completo Saint-Gobain.',
-                                variant: 'default'
-                              });
-                            }}
-                          />
-                          
-                          <ExportSaintGobainButtonFix
-                            relatorio={form.getValues()}
-                            label="Exportar Brasilit (Alternativo)"
-                            className="sm:w-auto w-full bg-green-600 text-white hover:bg-green-700 opacity-70 mt-2"
-                            fileNamePrefix={`BR-vistoria-${form.getValues().protocolo || 'novo'}`}
-                            onExportSuccess={(fileName) => {
-                              toast({
-                                title: 'Documento Brasilit alternativo gerado!',
-                                description: 'Esta é uma versão alternativa do relatório com formato ABNT.',
+                                title: 'Documento gerado com sucesso!',
+                                description: 'O relatório foi exportado no formato Saint-Gobain.',
                                 variant: 'default'
                               });
                             }}
