@@ -146,7 +146,11 @@ export function SeletorTelhas({ telhas, onChange }: SeletorTelhasProps) {
           </p>
         </div>
         <Button 
-          onClick={adicionarTelha} 
+          onClick={(e) => {
+            e.preventDefault(); // Previne que o formulário seja enviado
+            adicionarTelha();
+          }}
+          type="button" // Especifica explicitamente que não é um botão de envio
           size="sm"
           variant="outline"
         >
@@ -180,7 +184,11 @@ export function SeletorTelhas({ telhas, onChange }: SeletorTelhasProps) {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => removerTelha(telha.id)}
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      removerTelha(telha.id);
+                    }}
                     className="h-8 w-8 p-0"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -199,7 +207,10 @@ export function SeletorTelhas({ telhas, onChange }: SeletorTelhasProps) {
                     <Label htmlFor={`espessura-${telha.id}`}>Espessura</Label>
                     <Select
                       value={telha.espessura}
-                      onValueChange={(value) => atualizarTelha(telha.id, 'espessura', value)}
+                      onValueChange={(value) => {
+                        // Evita propagação de evento que possa causar submit
+                        atualizarTelha(telha.id, 'espessura', value);
+                      }}
                     >
                       <SelectTrigger id={`espessura-${telha.id}`}>
                         <SelectValue placeholder="Selecione a espessura" />
@@ -218,7 +229,10 @@ export function SeletorTelhas({ telhas, onChange }: SeletorTelhasProps) {
                     <Label htmlFor={`largura-${telha.id}`}>Largura</Label>
                     <Select
                       value={telha.largura}
-                      onValueChange={(value) => atualizarTelha(telha.id, 'largura', value)}
+                      onValueChange={(value) => {
+                        // Evita propagação de evento que possa causar submit
+                        atualizarTelha(telha.id, 'largura', value);
+                      }}
                     >
                       <SelectTrigger id={`largura-${telha.id}`}>
                         <SelectValue placeholder="Selecione a largura" />
@@ -237,7 +251,10 @@ export function SeletorTelhas({ telhas, onChange }: SeletorTelhasProps) {
                     <Label htmlFor={`comprimento-${telha.id}`}>Comprimento</Label>
                     <Select
                       value={telha.comprimento}
-                      onValueChange={(value) => atualizarTelha(telha.id, 'comprimento', value)}
+                      onValueChange={(value) => {
+                        // Evita propagação de evento que possa causar submit
+                        atualizarTelha(telha.id, 'comprimento', value);
+                      }}
                     >
                       <SelectTrigger id={`comprimento-${telha.id}`}>
                         <SelectValue placeholder="Selecione o comprimento" />
@@ -261,7 +278,16 @@ export function SeletorTelhas({ telhas, onChange }: SeletorTelhasProps) {
                       type="number"
                       min="0"
                       value={telha.quantidade}
-                      onChange={(e) => atualizarTelha(telha.id, 'quantidade', parseInt(e.target.value) || 0)}
+                      onChange={(e) => {
+                        e.preventDefault(); // Previne que o formulário seja enviado
+                        atualizarTelha(telha.id, 'quantidade', parseInt(e.target.value) || 0);
+                      }}
+                      // Adiciona manipulador de KeyDown para evitar envio do formulário ao pressionar Enter
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                        }
+                      }}
                     />
                   </div>
                   
@@ -269,7 +295,10 @@ export function SeletorTelhas({ telhas, onChange }: SeletorTelhasProps) {
                     <Label htmlFor={`modelo-${telha.id}`}>Modelo</Label>
                     <Select
                       value={telha.modelo || ""}
-                      onValueChange={(value) => atualizarTelha(telha.id, 'modelo', value)}
+                      onValueChange={(value) => {
+                        // Evita propagação de evento que possa causar submit
+                        atualizarTelha(telha.id, 'modelo', value);
+                      }}
                     >
                       <SelectTrigger id={`modelo-${telha.id}`}>
                         <SelectValue placeholder="Selecione o modelo" />
