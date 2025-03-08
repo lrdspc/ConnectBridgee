@@ -1396,29 +1396,29 @@ conforme a legislação em vigor.`;
                             }}
                           />
                           
-                          <ExportSaintGobainButton
+                          <ExportSaintGobainButtonFix
                             relatorio={form.getValues()}
-                            label="Exportar Saint-Gobain"
-                            className="sm:w-auto w-full bg-blue-600 text-white hover:bg-blue-700"
-                            fileNamePrefix={`SG-vistoria-${form.getValues().protocolo || 'novo'}`}
+                            label="Exportar Brasilit"
+                            className="sm:w-auto w-full bg-green-600 text-white hover:bg-green-700"
+                            fileNamePrefix={`BR-vistoria-${form.getValues().protocolo || 'novo'}`}
                             onExportSuccess={(fileName) => {
                               toast({
-                                title: 'Documento Saint-Gobain gerado!',
-                                description: 'O relatório foi exportado no formato exato do Saint-Gobain Brasil.',
+                                title: 'Documento Brasilit gerado!',
+                                description: 'O relatório foi exportado no formato correto da Brasilit/Saint-Gobain.',
                                 variant: 'default'
                               });
                             }}
                           />
                           
-                          <ExportSaintGobainButtonFix
+                          <ExportSaintGobainButton
                             relatorio={form.getValues()}
-                            label="Exportar Brasilit (Corrigido)"
-                            className="sm:w-auto w-full bg-green-600 text-white hover:bg-green-700 mt-2"
-                            fileNamePrefix={`BR-vistoria-${form.getValues().protocolo || 'novo'}`}
+                            label="Exportar Saint-Gobain (Legado)"
+                            className="sm:w-auto w-full bg-blue-600 text-white hover:bg-blue-700 opacity-70 mt-2"
+                            fileNamePrefix={`SG-vistoria-${form.getValues().protocolo || 'novo'}`}
                             onExportSuccess={(fileName) => {
                               toast({
-                                title: 'Documento Brasilit Corrigido!',
-                                description: 'O relatório foi exportado no formato corrigido para a Brasilit.',
+                                title: 'Documento Saint-Gobain gerado!',
+                                description: 'O relatório foi exportado no formato antigo. Considere usar o botão Brasilit.',
                                 variant: 'default'
                               });
                             }}

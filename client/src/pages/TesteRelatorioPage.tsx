@@ -172,14 +172,14 @@ export default function TesteRelatorioPage() {
                   <File className="h-10 w-10 text-primary mb-2" />
                   <h3 className="font-semibold">Relatório ABNT</h3>
                   <p className="text-sm text-muted-foreground text-center mt-1 mb-4">
-                    Documento DOCX formato ABNT com margens corretas e fonte Arial
+                    Documento DOCX formato ABNT com margens corretas e fonte Times New Roman
                   </p>
                   
-                  <div className="flex justify-center w-full">
+                  <div className="flex justify-center w-full gap-2 flex-wrap">
                     <Button 
                       onClick={gerarRelatorio} 
                       disabled={isGenerating}
-                      className="w-full md:w-auto gap-2"
+                      className="gap-2"
                     >
                       {isGenerating ? (
                         <>
@@ -189,10 +189,23 @@ export default function TesteRelatorioPage() {
                       ) : (
                         <>
                           <FileDown className="h-4 w-4" />
-                          Gerar DOCX (ABNT)
+                          DOCX (ABNT)
                         </>
                       )}
                     </Button>
+                    
+                    <ExportSaintGobainButtonFix
+                      relatorio={relatorio}
+                      variant="default"
+                      className="bg-green-600 hover:bg-green-700 text-white gap-2"
+                      label="Brasilit"
+                      onExportSuccess={() => {
+                        toast({
+                          title: "Documento Brasilit gerado",
+                          description: "Documento gerado com formatação Brasilit oficial",
+                        });
+                      }}
+                    />
                   </div>
                 </div>
                 
