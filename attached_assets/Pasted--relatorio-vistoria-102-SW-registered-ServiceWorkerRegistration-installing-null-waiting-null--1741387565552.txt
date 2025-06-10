@@ -1,0 +1,35 @@
+
+relatorio-vistoria:102 SW registered:  ServiceWorkerRegistration {installing: null, waiting: null, active: ServiceWorker, navigationPreload: NavigationPreloadManager, scope: 'https://b46bca6e-69ea-4922-b0fe-2678a7cbbdb1-00-wkfnonlmu9lr.riker.replit.dev/', …}
+chunk-XQLYTHWV.js?v=5b25dfe8:521 Warning: validateDOMNesting(...): <a> cannot appear as a descendant of <a>.
+    at a
+    at a
+    at https://b46bca6e-69ea-4922-b0fe-2678a7cbbdb1-00-wkfnonlmu9lr.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=5b25dfe8:337:18
+    at div
+    at aside
+    at div
+    at div
+    at DashboardLayoutNew (https://b46bca6e-69ea-4922-b0fe-2678a7cbbdb1-00-wkfnonlmu9lr.riker.replit.dev/src/layouts/DashboardLayoutNew.tsx:44:38)
+    at div
+    at PageTransition (https://b46bca6e-69ea-4922-b0fe-2678a7cbbdb1-00-wkfnonlmu9lr.riker.replit.dev/src/components/ui/loading-animation.tsx:147:34)
+    at RelatorioVistoriaPage (https://b46bca6e-69ea-4922-b0fe-2678a7cbbdb1-00-wkfnonlmu9lr.riker.replit.dev/src/pages/RelatorioVistoriaPage.tsx:81:21)
+    at Route (https://b46bca6e-69ea-4922-b0fe-2678a7cbbdb1-00-wkfnonlmu9lr.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=5b25dfe8:323:16)
+    at Switch (https://b46bca6e-69ea-4922-b0fe-2678a7cbbdb1-00-wkfnonlmu9lr.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=5b25dfe8:379:17)
+    at Suspense
+    at div
+    at QueryClientProvider (https://b46bca6e-69ea-4922-b0fe-2678a7cbbdb1-00-wkfnonlmu9lr.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=5b25dfe8:2805:3)
+    at App
+    at QueryClientProvider (https://b46bca6e-69ea-4922-b0fe-2678a7cbbdb1-00-wkfnonlmu9lr.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=5b25dfe8:2805:3)
+printWarning @ chunk-XQLYTHWV.js?v=5b25dfe8:521
+error @ chunk-XQLYTHWV.js?v=5b25dfe8:505
+validateDOMNesting @ chunk-XQLYTHWV.js?v=5b25dfe8:8256
+createInstance @ chunk-XQLYTHWV.js?v=5b25dfe8:8328
+completeWork @ chunk-XQLYTHWV.js?v=5b25dfe8:16290
+completeUnitOfWork @ chunk-XQLYTHWV.js?v=5b25dfe8:19224
+performUnitOfWork @ chunk-XQLYTHWV.js?v=5b25dfe8:19206
+workLoopConcurrent @ chunk-XQLYTHWV.js?v=5b25dfe8:19189
+renderRootConcurrent @ chunk-XQLYTHWV.js?v=5b25dfe8:19164
+performConcurrentWorkOnRoot @ chunk-XQLYTHWV.js?v=5b25dfe8:18678
+workLoop @ chunk-XQLYTHWV.js?v=5b25dfe8:197
+flushWork @ chunk-XQLYTHWV.js?v=5b25dfe8:176
+performWorkUntilDeadline @ chunk-XQLYTHWV.js?v=5b25dfe8:384Understand this errorAI
+db.ts:341 Development database initialized with sample data
