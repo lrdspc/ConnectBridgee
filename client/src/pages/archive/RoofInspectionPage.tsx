@@ -1,6 +1,6 @@
 import { useParams, useLocation } from "wouter";
-import Header from "../components/layout/Header";
-import { RoofInspectionForm } from "../components/inspections/RoofInspectionForm";
+import Header from "../../components/Layout/Header";
+import { RoofInspectionForm } from "../../components/inspections/RoofInspectionForm";
 import { useToast } from "@/hooks/use-toast";
 
 const RoofInspectionPage = () => {

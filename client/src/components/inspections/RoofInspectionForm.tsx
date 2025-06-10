@@ -5,15 +5,15 @@ import { useLocation } from "wouter";
 import { v4 as uuidv4 } from "uuid";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { 
-  inspectionSchema, 
-  constructionTypes, 
-  tileModels, 
-  roofIssues, 
+import {
+  inspectionSchema,
+  constructionTypes,
+  tileModels,
+  roofIssues,
   regions,
   type Inspection,
   type TileSpec
-} from "../../shared/inspectionSchema";
+} from "@shared/schema";
 import { generateRandomInspection } from "../../lib/randomData";
 
 // UI Components

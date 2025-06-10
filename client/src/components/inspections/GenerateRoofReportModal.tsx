@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { generateRoofInspectionReport } from "../../lib/roofInspectionReportGenerator";
-import { Inspection } from "../../shared/inspectionSchema";
+import { Inspection } from "@shared/schema";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";

@@ -10,6 +10,9 @@ import {
 } from "@/components/ui/toast"
 import { useToast } from "@/hooks/use-toast"
 
+// Export ToastProvider for use in main.tsx
+export { ToastProvider }
+
 export function Toaster() {
   const { toasts } = useToast()
 

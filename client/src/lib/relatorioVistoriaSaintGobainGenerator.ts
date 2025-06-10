@@ -39,7 +39,7 @@ import {
   WidthType,
   ShadingType
 } from "docx";
-import type { RelatorioVistoria } from "../../../shared/relatorioVistoriaSchema";
+import type { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 
 function log(...args: any[]) {
   console.log("[RelatorioVistoriaSaintGobainGenerator]", ...args);

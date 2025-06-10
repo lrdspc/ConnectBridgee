@@ -1,4 +1,4 @@
-import { DashboardLayoutNew } from '../layouts/DashboardLayoutNew';
+import { DashboardLayoutNew } from '../../layouts/DashboardLayoutNew';
 import { PageTransition } from '@/components/ui/loading-animation';
 import { InspectionList } from '@/components/inspections/InspectionList';
 import { useAuth } from '@/hooks/useAuth';

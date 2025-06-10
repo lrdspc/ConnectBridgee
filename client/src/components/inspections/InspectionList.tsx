@@ -15,7 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Inspection } from "../../shared/inspectionSchema";
+import { Inspection } from "@shared/schema";
 import { LoadingAnimation } from "@/components/ui/loading-animation";
 import { formatDate } from "@/lib/utils";
 import { GenerateRoofReportModal } from "./GenerateRoofReportModal";

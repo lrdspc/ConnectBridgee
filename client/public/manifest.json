@@ -35,36 +35,20 @@
       "purpose": "maskable"
     }
   ],
-  "screenshots": [
-    {
-      "src": "/screenshots/screenshot1.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Tela de Login"
-    },
-    {
-      "src": "/screenshots/screenshot2.png",
-      "sizes": "720x1280",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Dashboard de Visitas"
-    }
-  ],
   "shortcuts": [
     {
       "name": "Nova Visita",
       "short_name": "Nova Visita",
       "description": "Criar uma nova visita técnica",
-      "url": "/new-visit",
-      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+      "url": "/visitas/nova",
+      "icons": [{ "src": "/icons/icon-192x192.svg", "sizes": "192x192", "type": "image/svg+xml" }]
     },
     {
       "name": "Lista de Visitas",
       "short_name": "Visitas",
       "description": "Ver todas as visitas",
-      "url": "/visits",
-      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+      "url": "/visitas",
+      "icons": [{ "src": "/icons/icon-192x192.svg", "sizes": "192x192", "type": "image/svg+xml" }]
     }
   ],
   "share_target": {

@@ -1,5 +1,5 @@
 import { Document, Paragraph, TextRun, Packer, AlignmentType, Header, Footer, HeadingLevel, BorderStyle, Table, TableRow, TableCell, WidthType, ImageRun, IImageOptions } from "docx";
-import { RelatorioVistoria } from "../../../shared/relatorioVistoriaSchema";
+import { RelatorioVistoria } from "@shared/relatorioVistoriaSchema";
 import { 
   TEMPLATE_INTRODUCAO, 
   TEMPLATE_ANALISE_TECNICA,

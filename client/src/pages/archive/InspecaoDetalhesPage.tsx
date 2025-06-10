@@ -4,7 +4,7 @@ import { DashboardLayoutNew } from '../../layouts/DashboardLayoutNew';
 import { PageTransition, LoadingAnimation } from '@/components/ui/loading-animation';
 import { useToast } from "@/hooks/use-toast";
 import { GenerateRoofReportModal } from "@/components/inspections/GenerateRoofReportModal";
-import { Inspection } from "../../shared/inspectionSchema";
+import { Inspection } from "@shared/schema";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { formatDate } from "@/lib/utils";

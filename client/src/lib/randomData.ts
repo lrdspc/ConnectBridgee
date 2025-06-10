@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { Inspection, TileSpec, constructionTypes, tileModels, roofIssues, regions } from "../shared/inspectionSchema";
+import { Inspection, TileSpec, constructionTypes, tileModels, roofIssues, regions } from "@shared/schema";
 
 // Lista de nomes de clientes para fins de demonstração
 const demoClientNames = [

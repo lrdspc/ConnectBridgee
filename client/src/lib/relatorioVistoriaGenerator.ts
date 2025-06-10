@@ -1,6 +1,6 @@
 
 import { Document, Paragraph, TextRun, Packer, AlignmentType, Header, Footer, HeadingLevel, BorderStyle, Table, TableRow, TableCell, WidthType, ImageRun } from "docx";
-import { RelatorioVistoria, naoConformidadesDisponiveis } from "../../shared/relatorioVistoriaSchema";
+import { RelatorioVistoria, naoConformidadesDisponiveis } from "@shared/relatorioVistoriaSchema";
 import { aplicarTemplateIntroducao, aplicarTemplateConclusao, TEMPLATE_ANALISE_TECNICA } from "./relatorioVistoriaTemplates";
 
 // Converte dataURL para um Buffer que pode ser usado pelo docx

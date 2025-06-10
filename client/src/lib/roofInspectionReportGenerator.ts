@@ -16,7 +16,7 @@ import {
   TableLayoutType,
   Footer
 } from "docx";
-import { Inspection } from "../shared/inspectionSchema";
+import { Inspection } from "@shared/schema";
 
 // Converte dataURL para um Buffer que pode ser usado pelo docx
 async function dataUrlToBuffer(dataUrl: string): Promise<Uint8Array> {

@@ -27,12 +27,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LoadingAnimation } from "@/components/ui/loading-animation";
 import { PageTransition } from '@/components/ui/loading-animation';
 
-import { 
-  problemasPredefinidosFAR, 
-  modelosTelhasFAR, 
+import {
+  problemasPredefinidosFAR,
+  modelosTelhasFAR,
   espessurasTelhasFAR,
   FARReport
-} from "../../../shared/farReportSchema";
+} from "@shared/farReportSchema";
 
 type TelhaSpec = {
   id: string;
