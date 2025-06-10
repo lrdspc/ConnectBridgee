@@ -1,13 +1,11 @@
-
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import "./styles/map.css";
-
-import "./css/responsive.css"; // CSS responsivo global
+import "./css/responsive.css"; // Global responsive CSS
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
-import { Toaster } from "@/components/ui/toaster";
+import { ToastProvider } from "./components/ui/Toaster";
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 
@@ -22,7 +20,8 @@ window.addEventListener('offline', () => {
 
 createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
-    <App />
-    <Toaster />
+    <ToastProvider>
+      <App />
+    </ToastProvider>
   </QueryClientProvider>
 );

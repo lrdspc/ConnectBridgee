@@ -48,7 +48,7 @@ export function LoadingAnimation({
     <div className={cn("flex flex-col items-center justify-center p-4", className)}>
       {renderIcon()}
       {text && (
-        <p className="mt-2 text-sm text-neutral-600">{text}</p>
+        <p className="mt-2 text-sm text-muted-foreground">{text}</p>
       )}
     </div>
   );
@@ -56,20 +56,20 @@ export function LoadingAnimation({
 
 export function SkeletonCard() {
   return (
-    <div className="bg-white rounded-xl p-4 shadow-sm animate-pulse">
+    <div className="bg-card rounded-xl p-4 shadow-sm animate-pulse">
       <div className="flex justify-between items-start mb-2">
         <div>
-          <div className="h-5 bg-neutral-200 rounded w-40 mb-2"></div>
-          <div className="h-4 bg-neutral-200 rounded w-56"></div>
+          <div className="h-5 bg-muted rounded w-40 mb-2"></div>
+          <div className="h-4 bg-muted rounded w-56"></div>
         </div>
         <div className="flex flex-col items-end">
-          <div className="h-4 bg-neutral-200 rounded w-20 mb-1"></div>
-          <div className="h-4 bg-neutral-200 rounded w-16"></div>
+          <div className="h-4 bg-muted rounded w-20 mb-1"></div>
+          <div className="h-4 bg-muted rounded w-16"></div>
         </div>
       </div>
       <div className="flex justify-between items-center mt-4">
-        <div className="h-4 bg-neutral-200 rounded w-32"></div>
-        <div className="h-4 bg-neutral-200 rounded w-20"></div>
+        <div className="h-4 bg-muted rounded w-32"></div>
+        <div className="h-4 bg-muted rounded w-20"></div>
       </div>
     </div>
   );
@@ -84,3 +84,6 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
+
+LoadingAnimation.displayName = "LoadingAnimation";
+export default LoadingAnimation;
