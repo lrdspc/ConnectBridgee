@@ -183,7 +183,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
           <div className="py-2 px-3">
             {menuItems.map((item) => (
               <Link key={item.path} href={item.path}>
-                <a 
+                <span 
                   className={cn(
                     "flex items-center rounded-md text-sm transition-colors mb-1",
                     location === item.path 
@@ -211,7 +211,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
                       )}
                     </>
                   )}
-                </a>
+                </span>
               </Link>
             ))}
             
@@ -219,7 +219,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
             
             {/* Configurações e Logout */}
             <Link href="/configuracoes">
-              <a 
+              <span 
                 className={cn(
                   "flex items-center rounded-md text-sm transition-colors text-gray-700 hover:bg-gray-100 mb-1",
                   sidebarCollapsed ? "justify-center p-2" : "px-3 py-2"
@@ -227,7 +227,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
               >
                 <Settings className={cn("h-5 w-5 text-gray-600", sidebarCollapsed ? "mx-0" : "mr-3")} />
                 {!sidebarCollapsed && <span>Configurações</span>}
-              </a>
+              </span>
             </Link>
             
             <button 
@@ -284,7 +284,7 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
             <div className="overflow-y-auto max-h-[calc(100vh-200px)] py-2 px-2">
               {menuItems.map((item) => (
                 <Link key={item.path} href={item.path}>
-                  <a 
+                  <span 
                     className={cn(
                       "flex items-center px-3 py-2 rounded-md text-sm transition-colors mb-1",
                       location === item.path 
@@ -306,20 +306,20 @@ export function DashboardLayoutNew({ children }: DashboardLayoutProps) {
                         {item.badge}
                       </Badge>
                     )}
-                  </a>
+                  </span>
                 </Link>
               ))}
               
               <Separator className="my-2" />
               
               <Link href="/configuracoes">
-                <a 
+                <span 
                   className="flex items-center px-3 py-2 rounded-md text-sm transition-colors text-gray-700 hover:bg-gray-100 mb-1"
                   onClick={() => setSidebarOpen(false)}
                 >
                   <Settings className="h-5 w-5 text-gray-600 mr-3" />
                   <span>Configurações</span>
-                </a>
+                </span>
               </Link>
               
               <button 

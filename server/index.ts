@@ -62,7 +62,6 @@ app.use((req, res, next) => {
     const serverInstance = server.listen({
       port,
       host: "0.0.0.0", // Ensures binding for external access
-      reusePort: true,
     }, () => {
       log(`serving on port ${port} (http://0.0.0.0:${port})`);
     }).on('error', (err: any) => {
