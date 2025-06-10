@@ -13,8 +13,8 @@ import {
   novoRelatorioVistoria,
   gerarRelatorioAleatorio
 } from '@shared/relatorioVistoriaSchema';
-// Mantemos apenas o botão Saint-Gobain conforme solicitado
-import { ExportSaintGobainButton } from '@/components/relatorios/ExportSaintGobainButton';
+// Usando o novo gerador unificado
+import { BrasiliteExportButton, SaintGobainExportButton, SimpleExportButton } from '@/components/relatorios/UnifiedExportButton';
 import { SeletorTelhas } from '@/components/relatorios/SeletorTelhas';
 
 import { DashboardLayoutNew } from '@/layouts/DashboardLayoutNew';
@@ -1227,21 +1227,49 @@ conforme a legislação em vigor.`;
                             <FileText className="h-4 w-4 mr-2" /> Atualizar Preview
                           </Button>
                           
-                          {/* Mantendo apenas o botão de exportação Saint-Gobain conforme solicitado */}
-                          
-                          <ExportSaintGobainButton
-                            relatorio={form.getValues()}
-                            label="Exportar Saint-Gobain (Recomendado)"
-                            className="sm:w-auto w-full bg-blue-600 text-white hover:bg-blue-700"
-                            fileNamePrefix={`SG-vistoria-${form.getValues().protocolo || 'novo'}`}
-                            onExportSuccess={(fileName) => {
-                              toast({
-                                title: 'Documento Saint-Gobain gerado!',
-                                description: 'O relatório foi exportado no formato completo Saint-Gobain.',
-                                variant: 'default'
-                              });
-                            }}
-                          />
+                          {/* Novos botões unificados de exportação */}
+                          <div className="flex flex-col sm:flex-row gap-2">
+
+                            <BrasiliteExportButton
+                              relatorio={form.getValues()}
+                              className="sm:w-auto w-full"
+                              fileNamePrefix={`Brasilit-vistoria-${form.getValues().protocolo || 'novo'}`}
+                              onExportSuccess={(fileName) => {
+                                toast({
+                                  title: 'Documento Brasilit gerado!',
+                                  description: 'O relatório foi exportado com formatação Brasilit oficial.',
+                                  variant: 'default'
+                                });
+                              }}
+                            />
+
+                            <SaintGobainExportButton
+                              relatorio={form.getValues()}
+                              className="sm:w-auto w-full"
+                              fileNamePrefix={`SG-vistoria-${form.getValues().protocolo || 'novo'}`}
+                              onExportSuccess={(fileName) => {
+                                toast({
+                                  title: 'Documento Saint-Gobain gerado!',
+                                  description: 'O relatório foi exportado no formato Saint-Gobain.',
+                                  variant: 'default'
+                                });
+                              }}
+                            />
+
+                            <SimpleExportButton
+                              relatorio={form.getValues()}
+                              className="sm:w-auto w-full"
+                              fileNamePrefix={`Simples-vistoria-${form.getValues().protocolo || 'novo'}`}
+                              onExportSuccess={(fileName) => {
+                                toast({
+                                  title: 'Documento simples gerado!',
+                                  description: 'O relatório foi exportado em formato simplificado.',
+                                  variant: 'default'
+                                });
+                              }}
+                            />
+
+                          </div>
 
                         </div>
                       </CardFooter>

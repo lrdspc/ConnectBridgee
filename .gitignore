@@ -66,3 +66,19 @@ so/
 
 # Development files
 replit.nix
+
+# Upload directories
+uploads/
+temp/
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# IDE files
+.vscode/settings.json
+.vscode/launch.json
+
+# Temporary files
+*.tmp
+*.temp

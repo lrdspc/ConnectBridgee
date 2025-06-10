@@ -138,13 +138,35 @@ npm run db:migrate
 ```
 
 ### Variáveis de Ambiente
-Crie um arquivo `.env` na raiz do projeto:
+Copie o arquivo de exemplo e configure suas variáveis:
 
+```bash
+# Copie o arquivo de exemplo
+cp .env.example .env
+
+# Edite o arquivo .env com suas configurações
+```
+
+#### Configurações Principais:
 ```env
-DATABASE_URL="file:./database.sqlite"
+# Banco de Dados (escolha uma opção)
+DATABASE_URL="file:./database.sqlite"                    # SQLite (desenvolvimento)
+# DATABASE_URL="postgresql://user:pass@localhost:5432/db" # PostgreSQL (produção)
+
+# Servidor
 PORT=5000
 NODE_ENV=development
+
+# Segurança (ALTERE EM PRODUÇÃO!)
+JWT_SECRET="sua-chave-jwt-secreta-minimo-32-caracteres"
+SESSION_SECRET="sua-chave-sessao-secreta-minimo-32-caracteres"
+
+# Upload de Arquivos
+UPLOAD_MAX_SIZE=10485760  # 10MB
+UPLOAD_ALLOWED_TYPES="image/jpeg,image/png,image/gif,application/pdf"
 ```
+
+> ⚠️ **Importante**: Nunca commite o arquivo `.env` com dados sensíveis. Use `.env.example` como template.
 
 ## 📋 Não Conformidades Técnicas
 
