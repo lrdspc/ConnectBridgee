@@ -6,7 +6,7 @@ echo ========================================
 echo.
 
 REM Configurar variáveis
-set REPO_NAME=connectbridge
+set REPO_NAME=ConnectBridgee
 set DESCRIPTION=Sistema de Relatórios de Vistoria Técnica para telhas Brasilit/Saint-Gobain
 
 echo 🚀 PASSO 1: Abrindo GitHub para criar repositório...

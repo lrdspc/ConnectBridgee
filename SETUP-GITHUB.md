@@ -4,7 +4,7 @@
 
 ### Opção A: Via Interface Web (Recomendado)
 1. Acesse: https://github.com/new
-2. **Repository name**: `connectbridge`
+2. **Repository name**: `ConnectBridgee`
 3. **Description**: `Sistema de Relatórios de Vistoria Técnica para telhas Brasilit/Saint-Gobain`
 4. **Visibility**: 
    - ☑️ Public (se quiser público)
@@ -18,7 +18,7 @@
 
 ### Opção B: Via GitHub CLI (se tiver instalado)
 ```bash
-gh repo create connectbridge --description "Sistema de Relatórios de Vistoria Técnica" --public
+gh repo create ConnectBridgee --description "Sistema de Relatórios de Vistoria Técnica" --public
 ```
 
 ## 2. Conectar Repositório Local ao GitHub
@@ -27,16 +27,16 @@ Após criar o repositório no GitHub, execute os comandos abaixo:
 
 ### Se for público:
 ```bash
-cd "c:\Users\lrdsp\Desktop\ReplitExport-lrdspc\ConnectBridge"
-git remote add origin https://github.com/[SEU-USUARIO]/connectbridge.git
+cd "C:\Users\lrdsp\Documents\GitHub\ConnectBridgee"
+git remote add origin https://github.com/[SEU-USUARIO]/ConnectBridgee.git
 git branch -M main
 git push -u origin main
 ```
 
 ### Se for privado:
 ```bash
-cd "c:\Users\lrdsp\Desktop\ReplitExport-lrdspc\ConnectBridge"
-git remote add origin https://github.com/[SEU-USUARIO]/connectbridge.git
+cd "C:\Users\lrdsp\Documents\GitHub\ConnectBridgee"
+git remote add origin https://github.com/[SEU-USUARIO]/ConnectBridgee.git
 git branch -M main
 git push -u origin main
 ```
@@ -102,13 +102,13 @@ git remote -v
 
 ## 🎯 NOMES SUGERIDOS PARA O REPOSITÓRIO
 
-Se `connectbridge` não estiver disponível, tente:
-- `connectbridge-relatorios`
+Se `ConnectBridgee` não estiver disponível, tente:
+- `ConnectBridgee-relatorios`
 - `sistema-vistoria-brasilit`
 - `relatorio-vistoria-tecnica`
-- `connectbridge-app`
+- `ConnectBridgee-app`
 - `brasilit-reports`
-- `connectbridge-system`
+- `ConnectBridgee-system`
 
 ## ⚠️ IMPORTANTE
 

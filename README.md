@@ -37,8 +37,8 @@ Sistema completo para geração de relatórios de vistoria técnica para telhas 
 ### Instalação
 ```bash
 # Clone o repositório
-git clone https://github.com/[SEU-USUARIO]/connectbridge.git
-cd connectbridge
+git clone https://github.com/[SEU-USUARIO]/ConnectBridgee.git
+cd ConnectBridgee
 
 # Instale as dependências
 npm install
@@ -64,7 +64,7 @@ npm run db:studio    # Abre interface do banco de dados
 ## 🏗️ Estrutura do Projeto
 
 ```
-ConnectBridge/
+ConnectBridgee/
 ├── client/                 # Frontend React
 │   ├── src/
 │   │   ├── components/    # Componentes reutilizáveis
