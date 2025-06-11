@@ -116,6 +116,10 @@ Se `ConnectBridgee` não estiver disponível, tente:
 2. **Verifique se tem acesso** de escrita ao repositório
 3. **Configure autenticação** (token ou SSH) se necessário
 4. **Faça backup** antes de fazer push pela primeira vez
+5. **Nunca comite o arquivo .env** - ele contém informações sensíveis
+   - Use os scripts `criar-repositorio-automatico.ps1` ou `criar-repositorio.bat` que já removem o .env automaticamente
+   - Ou execute manualmente: `git rm --cached .env` antes do primeiro push
+   - O arquivo `.env.example` serve como template e deve ser commitado
 
 ## 📞 Se Tiver Problemas
 

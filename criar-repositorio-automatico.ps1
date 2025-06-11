@@ -7,6 +7,15 @@ Write-Host ""
 # Navegar para o diretório do projeto
 Set-Location "C:\Users\lrdsp\Documents\GitHub\ConnectBridgee"
 
+# Remover arquivo .env do controle de versão (mantendo-o localmente)
+Write-Host "🔒 Removendo arquivo .env do controle de versão (mantendo-o localmente)..." -ForegroundColor Yellow
+git rm --cached .env 2>$null
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "✅ Arquivo .env removido do controle de versão com sucesso!" -ForegroundColor Green
+} else {
+    Write-Host "ℹ️ Arquivo .env não estava no controle de versão ou não existe." -ForegroundColor Blue
+}
+
 # Verificar se GitHub CLI está disponível
 $ghPath = Get-Command "gh.exe" -ErrorAction SilentlyContinue
 if (-not $ghPath) {

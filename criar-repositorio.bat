@@ -52,7 +52,18 @@ if %ERRORLEVEL% neq 0 (
 echo ✅ Remote adicionado com sucesso!
 echo.
 
-echo 📤 PASSO 3: Enviando código para o GitHub...
+echo 🔒 PASSO 3: Removendo arquivo .env do controle de versão...
+echo.
+echo Removendo arquivo .env (mantendo-o localmente)...
+git rm --cached .env 2>nul
+if %ERRORLEVEL% equ 0 (
+    echo ✅ Arquivo .env removido do controle de versão com sucesso!
+) else (
+    echo ℹ️ Arquivo .env não estava no controle de versão ou não existe.
+)
+echo.
+
+echo 📤 PASSO 4: Enviando código para o GitHub...
 echo.
 
 REM Configurar branch principal
